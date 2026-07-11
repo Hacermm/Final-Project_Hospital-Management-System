@@ -15,5 +15,9 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
-    })->create();
+        // API route-ları həmişə JSON qaytarsın (Accept başlığı olmasa belə)
+        $exceptions->shouldRenderJsonWhen(function ($request) {
+            return $request->is('api/*');
+        });
+    })
+    ->create();
