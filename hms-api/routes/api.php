@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Route;
 use App\Models\User;
 use App\Http\Controllers\Api\DepartmentController;
 use App\Http\Controllers\Api\DoctorController;
+use App\Http\Controllers\Api\PatientController;
+use App\Http\Controllers\Api\DoctorScheduleController;
+use App\Http\Controllers\Api\AppointmentController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -26,6 +29,8 @@ Route::middleware(['auth:sanctum', 'role:admin|super_admin'])->group(function ()
     Route::put('/departments/{department}', [DepartmentController::class, 'update']);
     Route::delete('/departments/{department}', [DepartmentController::class, 'destroy']);
 });
+
+
 
 Route::post('/forgot-password', [PasswordResetController::class, 'sendCode'])
     ->middleware('throttle:5,1');
@@ -62,3 +67,31 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::get('/login', function () {
     return response()->json(['message' => 'Giriş tələb olunur.'], 401);
 })->name('login');
+
+
+Route::middleware(['auth:sanctum', 'role:admin|super_admin|doctor'])->group(function () {
+    Route::get('/patients', [PatientController::class, 'index']);
+    Route::get('/patients/{patient}', [PatientController::class, 'show']);
+});
+
+Route::middleware(['auth:sanctum', 'role:admin|super_admin'])->group(function () {
+    Route::post('/patients', [PatientController::class, 'store']);
+    Route::put('/patients/{patient}', [PatientController::class, 'update']);
+    Route::delete('/patients/{patient}', [PatientController::class, 'destroy']);
+});
+Route::get('/doctors/{doctor}/schedules', [DoctorScheduleController::class, 'index']);
+
+Route::middleware(['auth:sanctum', 'role:doctor|admin|super_admin'])->group(function () {
+    Route::post('/doctors/{doctor}/schedules', [DoctorScheduleController::class, 'store']);
+    Route::put('/schedules/{schedule}', [DoctorScheduleController::class, 'update']);
+    Route::delete('/schedules/{schedule}', [DoctorScheduleController::class, 'destroy']);
+});
+Route::get('/doctors/{doctor}/slots', [AppointmentController::class, 'slots']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/appointments', [AppointmentController::class, 'index']);
+    Route::get('/appointments/{appointment}', [AppointmentController::class, 'show']);
+    Route::post('/appointments', [AppointmentController::class, 'store']);
+    Route::put('/appointments/{appointment}', [AppointmentController::class, 'update']);
+    Route::delete('/appointments/{appointment}', [AppointmentController::class, 'destroy']);
+});

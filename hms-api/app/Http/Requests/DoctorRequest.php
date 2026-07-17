@@ -28,8 +28,8 @@ class DoctorRequest extends FormRequest
             'department_id' => ['nullable', 'exists:departments,id'],
             'specialization' => ['required', 'string', 'max:255'],
             'bio' => ['nullable', 'string'],
-            'experience_years' => ['nullable', 'integer', 'min:0'],
-            'consultation_fee' => ['nullable', 'numeric', 'min:0'],
+            'experience_years' => ['nullable', 'integer', 'min:0', 'max:70'],
+            'consultation_fee' => ['nullable', 'numeric', 'min:0', 'max:100000'],
             'phone' => ['nullable', 'string', 'max:255'],
         ];
     }
