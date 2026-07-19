@@ -10,6 +10,8 @@ use App\Http\Controllers\Api\DoctorController;
 use App\Http\Controllers\Api\PatientController;
 use App\Http\Controllers\Api\DoctorScheduleController;
 use App\Http\Controllers\Api\AppointmentController;
+use App\Http\Controllers\Api\MedicalRecordController;
+
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -94,4 +96,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/appointments', [AppointmentController::class, 'store']);
     Route::put('/appointments/{appointment}', [AppointmentController::class, 'update']);
     Route::delete('/appointments/{appointment}', [AppointmentController::class, 'destroy']);
+});
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/medical-records', [MedicalRecordController::class, 'index']);
+    Route::get('/medical-records/{medicalRecord}', [MedicalRecordController::class, 'show']);
+    Route::post('/medical-records', [MedicalRecordController::class, 'store']);
 });

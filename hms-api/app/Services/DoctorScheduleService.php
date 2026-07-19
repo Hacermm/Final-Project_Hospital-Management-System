@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 class DoctorScheduleService
 {
-   
+
     public function getForDoctor(Doctor $doctor): Collection
     {
         return $doctor->schedules()->orderByRaw(
@@ -18,6 +18,16 @@ class DoctorScheduleService
 
     public function create(Doctor $doctor, array $data): DoctorSchedule
     {
+        $exists = $doctor->schedules()
+            ->where('day_of_week', $data['day_of_week'])
+            ->exists();
+
+        if ($exists) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'day_of_week' => ['Bu gün üçün artıq iş qrafikiniz var. Əvvəlcə onu silin və ya redaktə edin.'],
+            ]);
+        }
+
         return $doctor->schedules()->create($data);
     }
 
