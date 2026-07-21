@@ -22,6 +22,10 @@ import BookAppointment from './pages/patient/BookAppointment.jsx'
 import MyAppointments from './pages/patient/MyAppointments.jsx'
 import DoctorAppointments from './pages/doctor/DoctorAppointments.jsx'
 import DoctorSchedule from './pages/doctor/DoctorSchedule.jsx'
+import WriteMedicalRecord from './pages/doctor/WriteMedicalRecord.jsx'
+import MedicalHistory from './pages/patient/MedicalHistory.jsx'
+import UploadLabTest from './pages/doctor/UploadLabTest.jsx'
+import MyLabTests from './pages/patient/MyLabTests.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -73,6 +77,18 @@ createRoot(document.getElementById('root')).render(
         } />
         <Route path="/doctor/schedule" element={
           <ProtectedRoute allowedRole="doctor"><DoctorSchedule /></ProtectedRoute>
+        } />
+        <Route path="/doctor/records/new" element={
+          <ProtectedRoute allowedRole="doctor"><WriteMedicalRecord /></ProtectedRoute>
+        } />
+        <Route path="/patient/history" element={
+          <ProtectedRoute allowedRole="patient"><MedicalHistory /></ProtectedRoute>
+        } />
+        <Route path="/doctor/lab-tests" element={
+          <ProtectedRoute allowedRole="doctor"><UploadLabTest /></ProtectedRoute>
+        } />
+        <Route path="/patient/lab-tests" element={
+          <ProtectedRoute allowedRole="patient"><MyLabTests /></ProtectedRoute>
         } />
       </Routes>
     </BrowserRouter>

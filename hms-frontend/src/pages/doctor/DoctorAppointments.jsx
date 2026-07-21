@@ -47,6 +47,9 @@ export default function DoctorAppointments() {
           <Link to="/doctor/schedule" className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
             İş qrafikim
           </Link>
+          <Link to="/doctor/records/new" className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+          Tibbi qeyd yaz
+        </Link>
         </div>
 
         <div className="flex gap-2 mb-6">

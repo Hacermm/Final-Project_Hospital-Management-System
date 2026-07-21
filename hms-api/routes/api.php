@@ -11,7 +11,7 @@ use App\Http\Controllers\Api\PatientController;
 use App\Http\Controllers\Api\DoctorScheduleController;
 use App\Http\Controllers\Api\AppointmentController;
 use App\Http\Controllers\Api\MedicalRecordController;
-
+use App\Http\Controllers\Api\LabTestController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -100,5 +100,11 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/medical-records', [MedicalRecordController::class, 'index']);
     Route::get('/medical-records/{medicalRecord}', [MedicalRecordController::class, 'show']);
+    Route::get('/medical-records/{medicalRecord}/pdf', [MedicalRecordController::class, 'downloadPdf']);
     Route::post('/medical-records', [MedicalRecordController::class, 'store']);
+});
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/lab-tests', [LabTestController::class, 'index']);
+    Route::post('/lab-tests', [LabTestController::class, 'store']);
+    Route::get('/lab-tests/{labTest}/download', [LabTestController::class, 'download']);
 });

@@ -44,6 +44,9 @@ export default function MyAppointments() {
           <Link to="/patient/book" className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
             + Yeni randevu
           </Link>
+          <Link to="/patient/history" className="text-blue-600 hover:underline">
+            Tibbi tarixçəm →
+        </Link>
         </div>
 
         {message && <p className="mb-4 text-sm font-medium">{message}</p>}

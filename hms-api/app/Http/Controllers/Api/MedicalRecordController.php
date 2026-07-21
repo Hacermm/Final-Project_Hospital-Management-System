@@ -9,6 +9,8 @@ use App\Models\MedicalRecord;
 use App\Services\MedicalRecordService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+ use Barryvdh\DomPDF\Facade\Pdf;
+
 
 class MedicalRecordController extends Controller
 {
@@ -59,5 +61,15 @@ class MedicalRecordController extends Controller
         $isAdmin = $user->hasAnyRole(['admin', 'super_admin']);
 
         abort_unless($isDoctor || $isPatient || $isAdmin, 403);
+    }
+    public function downloadPdf(Request $request, MedicalRecord $medicalRecord): \Illuminate\Http\Response
+    {
+        $this->authorizeAccess($request, $medicalRecord);
+
+        $medicalRecord->load(['doctor.user', 'patient.user', 'prescriptions']);
+
+        $pdf = Pdf::loadView('pdf.prescription', ['record' => $medicalRecord]);
+
+        return $pdf->download("resept-{$medicalRecord->id}.pdf");
     }
 }
