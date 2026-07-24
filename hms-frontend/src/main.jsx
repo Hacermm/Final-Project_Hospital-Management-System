@@ -26,6 +26,7 @@ import WriteMedicalRecord from './pages/doctor/WriteMedicalRecord.jsx'
 import MedicalHistory from './pages/patient/MedicalHistory.jsx'
 import UploadLabTest from './pages/doctor/UploadLabTest.jsx'
 import MyLabTests from './pages/patient/MyLabTests.jsx'
+import Chat from './pages/Chat.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -89,6 +90,9 @@ createRoot(document.getElementById('root')).render(
         } />
         <Route path="/patient/lab-tests" element={
           <ProtectedRoute allowedRole="patient"><MyLabTests /></ProtectedRoute>
+        } />
+        <Route path="/chat" element={
+         <ProtectedRoute><Chat /></ProtectedRoute>
         } />
       </Routes>
     </BrowserRouter>

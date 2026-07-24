@@ -22,42 +22,27 @@ export default function ForgotPassword() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
-        <h1 className="text-2xl font-bold text-center mb-2 text-gray-800">
-          Parolu unutdunuz?
-        </h1>
-        <p className="text-center text-sm text-gray-600 mb-6">
-          Email daxil edin, bərpa kodu göndərəcəyik.
-        </p>
-
+    <div className="min-h-screen flex items-center justify-center bg-[#0f172a] px-4 relative overflow-hidden">
+      <div className="absolute top-1/3 left-1/4 w-72 h-72 bg-amber-600/15 rounded-full blur-[100px]" />
+      <div className="glass-card p-8 w-full max-w-md relative z-10 animate-fade-in-up">
+        <div className="text-center mb-8">
+          <div className="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center mb-4">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/>
+            </svg>
+          </div>
+          <h1 className="text-2xl font-bold text-white">Parolu unutdunuz?</h1>
+          <p className="text-sm text-slate-500 mt-1">Email daxil edin, bərpa kodu göndərəcəyik.</p>
+        </div>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            placeholder="email@example.com"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-          />
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition disabled:opacity-50"
-          >
+          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="email@example.com" className="hms-input" />
+          <button type="submit" disabled={loading} className="hms-btn w-full !py-3 !bg-gradient-to-r !from-amber-600 !to-orange-600 hover:!from-amber-500 hover:!to-orange-500">
             {loading ? "Göndərilir..." : "Kod göndər"}
           </button>
         </form>
-
-        {message && (
-          <p className="mt-4 text-center text-sm font-medium">{message}</p>
-        )}
-
-        <p className="mt-4 text-center text-sm text-gray-600">
-          Kodu aldın?{" "}
-          <Link to="/reset-password" className="text-blue-600 hover:underline">
-            Parolu sıfırla
-          </Link>
+        {message && <p className={`mt-4 text-center text-sm font-medium ${message.startsWith("✅") ? "hms-message-success" : "hms-message-error"}`}>{message}</p>}
+        <p className="mt-6 text-center text-sm text-slate-500">
+          Kodu aldın?{" "}<Link to="/reset-password" className="text-indigo-400 hover:text-indigo-300 font-medium">Parolu sıfırla</Link>
         </p>
       </div>
     </div>

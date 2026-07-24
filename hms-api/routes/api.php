@@ -12,6 +12,11 @@ use App\Http\Controllers\Api\DoctorScheduleController;
 use App\Http\Controllers\Api\AppointmentController;
 use App\Http\Controllers\Api\MedicalRecordController;
 use App\Http\Controllers\Api\LabTestController;
+use App\Http\Controllers\Api\ChatController;
+use Illuminate\Support\Facades\Broadcast;
+
+Broadcast::routes(['middleware' => ['auth:sanctum']]);
+
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -107,4 +112,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/lab-tests', [LabTestController::class, 'index']);
     Route::post('/lab-tests', [LabTestController::class, 'store']);
     Route::get('/lab-tests/{labTest}/download', [LabTestController::class, 'download']);
+});
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/conversations', [ChatController::class, 'conversations']);
+    Route::post('/conversations', [ChatController::class, 'startConversation']);
+    Route::get('/conversations/{conversation}/messages', [ChatController::class, 'messages']);
+    Route::post('/conversations/{conversation}/messages', [ChatController::class, 'sendMessage']);
 });

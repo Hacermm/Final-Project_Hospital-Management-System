@@ -11,6 +11,7 @@ class PatientResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'user_id' => $this->user_id,
             'name' => $this->user?->name,
             'email' => $this->user?->email,
             'date_of_birth' => $this->date_of_birth?->format('Y-m-d'),
