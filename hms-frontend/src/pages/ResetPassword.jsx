@@ -7,7 +7,6 @@ export default function ResetPassword() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
@@ -27,31 +26,62 @@ export default function ResetPassword() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0f172a] px-4 relative overflow-hidden">
-      <div className="absolute bottom-1/4 right-1/4 w-72 h-72 bg-emerald-600/15 rounded-full blur-[100px]" />
-      <div className="glass-card p-8 w-full max-w-md relative z-10 animate-fade-in-up">
+    <div className="min-h-screen flex items-center justify-center px-4 py-16 relative overflow-hidden" style={{ background: "linear-gradient(135deg, #001f3f 0%, #003b6d 100%)" }}>
+      <div className="w-full max-w-md relative z-10 animate-scale-in apollo-card-dark p-8 sm:p-10 shadow-2xl">
         <div className="text-center mb-8">
-          <div className="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center mb-4">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
-            </svg>
-          </div>
-          <h1 className="text-2xl font-bold text-white">Yeni parol təyin et</h1>
-          <p className="text-sm text-slate-500 mt-1">Bərpa kodunu və yeni parolu daxil edin</p>
+          <Link to="/" className="inline-flex items-center gap-3.5 mb-6 group">
+            <div
+              className="w-12 h-12 rounded-2xl flex items-center justify-center text-white shadow-lg transition-transform group-hover:scale-105"
+              style={{ background: "linear-gradient(135deg, #003b6d 0%, #001f3f 100%)", border: "2px solid #fdb931" }}
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fdb931" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M4.93 19.07l14.14-14.14"/>
+              </svg>
+            </div>
+            <div className="flex flex-col text-left">
+              <span className="font-display font-extrabold text-2xl tracking-tight text-white leading-none">
+                Nova<span style={{ color: "#fdb931" }}>Care</span>
+              </span>
+              <span className="text-[10px] font-black tracking-[0.24em] uppercase mt-1 text-slate-300">
+                HEALTHCARE & HOSPITALS
+              </span>
+            </div>
+          </Link>
+          <h1 className="font-display text-2xl font-extrabold text-white">Yeni Parol Təyin Et</h1>
+          <p className="text-xs text-slate-300 mt-1.5 font-normal">Kodu və yeni parolu daxil edin</p>
         </div>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input name="email" type="email" value={form.email} onChange={handleChange} required placeholder="email@example.com" className="hms-input" />
-          <input name="code" value={form.code} onChange={handleChange} required placeholder="6 rəqəmli kod" maxLength={6} className="hms-input tracking-[0.3em] text-center" />
-          <input name="password" type="password" value={form.password} onChange={handleChange} required placeholder="Yeni parol" className="hms-input" />
-          <input name="password_confirmation" type="password" value={form.password_confirmation} onChange={handleChange} required placeholder="Yeni parolu təkrarla" className="hms-input" />
-          <button type="submit" disabled={loading} className="hms-btn w-full !py-3 !bg-gradient-to-r !from-emerald-600 !to-teal-600 hover:!from-emerald-500 hover:!to-teal-500">
-            {loading ? "Yenilənir..." : "Parolu dəyiş"}
+
+        <form onSubmit={handleSubmit} className="space-y-3.5">
+          <div>
+            <label className="block text-xs font-bold text-slate-200 mb-1.5 uppercase tracking-wider">Email</label>
+            <input name="email" type="email" value={form.email} onChange={handleChange} required placeholder="email@example.com" className="apollo-input !bg-white/10 !border-white/20 !text-white placeholder:!text-slate-400" />
+          </div>
+          <div>
+            <label className="block text-xs font-bold text-slate-200 mb-1.5 uppercase tracking-wider">6 Rəqəmli Bərpa Kodu</label>
+            <input name="code" value={form.code} onChange={handleChange} required placeholder="123456" maxLength={6} className="apollo-input !bg-white/10 !border-white/20 !text-white placeholder:!text-slate-400 tracking-[0.3em] text-center font-bold" />
+          </div>
+          <div>
+            <label className="block text-xs font-bold text-slate-200 mb-1.5 uppercase tracking-wider">Yeni Parol</label>
+            <input name="password" type="password" value={form.password} onChange={handleChange} required placeholder="••••••••" className="apollo-input !bg-white/10 !border-white/20 !text-white placeholder:!text-slate-400" />
+          </div>
+          <div>
+            <label className="block text-xs font-bold text-slate-200 mb-1.5 uppercase tracking-wider">Parol Təkrarı</label>
+            <input name="password_confirmation" type="password" value={form.password_confirmation} onChange={handleChange} required placeholder="••••••••" className="apollo-input !bg-white/10 !border-white/20 !text-white placeholder:!text-slate-400" />
+          </div>
+          <button type="submit" disabled={loading} className="btn-apollo-gold w-full !py-3.5 text-xs font-bold shadow-xl mt-2 disabled:opacity-50">
+            {loading ? "Yenilənir..." : "PAROLU DƏYİŞ ➔"}
           </button>
         </form>
-        {message && <p className={`mt-4 text-center text-sm font-medium ${message.startsWith("✅") ? "hms-message-success" : "hms-message-error"}`}>{message}</p>}
-        <p className="mt-6 text-center text-sm text-slate-500">
-          <Link to="/login" className="text-indigo-400 hover:text-indigo-300 font-medium">← Girişə qayıt</Link>
-        </p>
+
+        {message && (
+          <p className={`mt-4 p-3 rounded-xl text-center text-xs font-bold border animate-fade-in ${message.startsWith("✅") ? "bg-emerald-500/20 border-emerald-500/40 text-emerald-200" : "bg-red-500/20 border-red-500/40 text-red-200"}`}>
+            {message}
+          </p>
+        )}
+
+        <div className="mt-8 pt-6 border-t border-white/10 text-center text-xs text-slate-300">
+          <Link to="/login" className="text-slate-400 hover:text-white transition">← Giriş səhifəsinə qayıt</Link>
+        </div>
       </div>
     </div>
   );

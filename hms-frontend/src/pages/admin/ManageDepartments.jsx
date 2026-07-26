@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import api from "../../lib/api";
-
+import Navbar from "../../components/Navbar";
 export default function ManageDepartments() {
   const [departments, setDepartments] = useState([]);
   const [form, setForm] = useState({ name: "", description: "" });
@@ -35,7 +35,7 @@ export default function ManageDepartments() {
   const logout = () => { localStorage.clear(); navigate("/login"); };
 
   return (
-    <div className="min-h-screen bg-[#0f172a]">
+    <div className="min-h-screen bg-[#0f172a]">     <Navbar />
       <nav className="sticky top-0 z-50 px-6 py-4 bg-[#0f172a]/80 backdrop-blur-xl border-b border-white/5">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">

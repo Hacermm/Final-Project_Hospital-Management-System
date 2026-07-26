@@ -5,51 +5,82 @@ export default function PatientDashboard() {
   const logout = () => { localStorage.removeItem("token"); localStorage.removeItem("role"); navigate("/login"); };
 
   const menuItems = [
-    { to: "/patient/book", icon: "📅", title: "Randevu Al", desc: "Həkim seçin, vaxt ayırın", gradient: "from-indigo-500/20 to-blue-500/20" },
-    { to: "/patient/appointments", icon: "📋", title: "Randevularım", desc: "Aktiv randevulara baxın", gradient: "from-purple-500/20 to-pink-500/20" },
-    { to: "/patient/history", icon: "🏥", title: "Tibbi Tarixçəm", desc: "Diaqnoz və reseptlər", gradient: "from-emerald-500/20 to-teal-500/20" },
-    { to: "/patient/lab-tests", icon: "🔬", title: "Lab Nəticələrim", desc: "Analiz nəticələrinə baxın", gradient: "from-amber-500/20 to-orange-500/20" },
-    { to: "/chat", icon: "💬", title: "Mesajlar", desc: "Həkiminizlə söhbət edin", gradient: "from-cyan-500/20 to-sky-500/20" },
+    { to: "/patient/book", icon: "📅", title: "Randevu Al", desc: "Həkim seçin və vaxtınızı təyin edin", badge: "Aktiv" },
+    { to: "/patient/appointments", icon: "📋", title: "Randevularım", desc: "Təsdiqlənmiş və keçmiş randevular", badge: "İzləmə" },
+    { to: "/patient/history", icon: "🩺", title: "Tibbi Tarixçəm", desc: "Diaqnozlar, təyin olunmuş müalicə və reseptlər", badge: "Sənədlər" },
+    { to: "/patient/lab-tests", icon: "🧪", title: "Lab Nəticələrim", desc: "Laboratoriya analiz nəticələriniz", badge: "PDF" },
+    { to: "/chat", icon: "💬", title: "Mesajlar", desc: "Həkiminizlə təhlükəsiz canlı söhbət", badge: "Canlı" },
+    { to: "/ai", icon: "🤖", title: "AI Tibbi Asistent", desc: "Süni intellekt köməkçisi ilə məsləhət", badge: "AI Assistant" },
   ];
 
   return (
-    <div className="min-h-screen bg-[#0f172a]">
-      <nav className="sticky top-0 z-50 px-6 py-4 bg-[#0f172a]/80 backdrop-blur-xl border-b border-white/5">
-        <div className="max-w-5xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v8M12 18v4M4.93 4.93l5.66 5.66M13.41 13.41l5.66 5.66M2 12h8M18 12h4M4.93 19.07l5.66-5.66M13.41 10.59l5.66-5.66"/></svg>
+    <div className="min-h-screen bg-slate-50 flex flex-col">
+      <nav className="sticky top-0 z-50 px-6 py-4 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-3.5 group">
+            <div
+              className="w-10 h-10 rounded-2xl flex items-center justify-center text-white shadow-md transition-transform group-hover:scale-105"
+              style={{ background: "linear-gradient(135deg, #003b6d 0%, #001f3f 100%)", border: "1.5px solid #fdb931" }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fdb931" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M4.93 19.07l14.14-14.14"/>
+              </svg>
             </div>
-            <span className="text-lg font-bold text-white tracking-tight">HMS</span>
+            <div className="flex flex-col">
+              <span className="font-display font-extrabold text-lg text-slate-900 tracking-tight leading-none">
+                Nova<span style={{ color: "#005691" }}>Care</span>
+              </span>
+              <span className="text-[10px] font-black text-slate-400 tracking-widest uppercase mt-0.5">Pasiyent Portalı</span>
+            </div>
+            <span className="apollo-badge apollo-badge-gold ml-2">PASİYENT KABİNETİ</span>
+          </Link>
+          <div className="flex items-center gap-3">
+            <Link to="/" className="btn-apollo-outline !py-2 !px-3.5 text-xs font-bold">
+              ← Səhifəyə Keç
+            </Link>
+            <button onClick={logout} className="btn-apollo-outline !py-2 !px-3.5 text-xs font-bold !text-red-600 !border-red-200 hover:!bg-red-50">
+              🚪 Çıxış
+            </button>
           </div>
-          <button onClick={logout} className="hms-btn hms-btn-danger text-sm !py-2 !px-4">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-            Çıxış
-          </button>
         </div>
       </nav>
 
-      <div className="max-w-5xl mx-auto px-6 py-10">
-        <div className="mb-10 animate-fade-in-up">
-          <h1 className="text-3xl font-bold text-white mb-2">Xoş gəldiniz! 👋</h1>
-          <p className="text-slate-500">Patient panelindən xidmətlərə keçid edin</p>
+      <main className="max-w-7xl mx-auto px-4 lg:px-6 py-12 flex-1 w-full space-y-8">
+        <div className="apollo-card p-8 text-white relative overflow-hidden" style={{ background: "linear-gradient(135deg, #001f3f 0%, #003b6d 100%)" }}>
+          <div className="relative z-10 space-y-2">
+            <span className="apollo-badge apollo-badge-gold">PASİYENT PORTALI</span>
+            <h1 className="font-display text-3xl font-extrabold text-white">NovaCare İdarəetmə Paneli</h1>
+            <p className="text-sm text-slate-200 max-w-xl font-normal">
+              Qəbullarınıza baxın, analiz nəticələrinizi yükləyin və həkimlərinizlə təhlükəsiz əlaqə saxlayın.
+            </p>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 stagger-children">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 stagger-container">
           {menuItems.map((item) => (
-            <Link key={item.to} to={item.to} className="glass-card p-6 hover:border-indigo-500/20 hover:translate-y-[-3px] group block">
-              <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${item.gradient} flex items-center justify-center text-2xl mb-4 group-hover:scale-110`}>
-                {item.icon}
+            <Link
+              key={item.to}
+              to={item.to}
+              className="apollo-card p-7 hover:-translate-y-1.5 transition-all group block flex flex-col justify-between"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-5">
+                  <div className="w-14 h-14 rounded-2xl bg-amber-50 text-slate-900 flex items-center justify-center text-2xl font-bold group-hover:bg-amber-400 transition-colors shadow-sm">
+                    {item.icon}
+                  </div>
+                  <span className="apollo-badge apollo-badge-gold">{item.badge}</span>
+                </div>
+                <h3 className="font-display font-extrabold text-slate-900 text-lg mb-1.5 group-hover:text-amber-600 transition-colors">{item.title}</h3>
+                <p className="text-slate-600 text-xs leading-relaxed mb-6 font-normal">{item.desc}</p>
               </div>
-              <h3 className="font-semibold text-white text-lg mb-1">{item.title}</h3>
-              <p className="text-slate-500 text-sm">{item.desc}</p>
-              <div className="mt-4 text-indigo-400 text-sm font-medium opacity-0 group-hover:opacity-100 flex items-center gap-1">
-                Keçid et <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-sky-700">
+                <span>Daxil ol</span>
+                <span className="transition-transform group-hover:translate-x-1">→</span>
               </div>
             </Link>
           ))}
         </div>
-      </div>
+      </main>
     </div>
   );
 }

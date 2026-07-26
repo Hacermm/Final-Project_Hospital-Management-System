@@ -14,6 +14,8 @@ use App\Http\Controllers\Api\MedicalRecordController;
 use App\Http\Controllers\Api\LabTestController;
 use App\Http\Controllers\Api\ChatController;
 use Illuminate\Support\Facades\Broadcast;
+use App\Http\Controllers\Api\CallController;
+use App\Http\Controllers\Api\AiController;
 
 Broadcast::routes(['middleware' => ['auth:sanctum']]);
 
@@ -119,3 +121,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/conversations/{conversation}/messages', [ChatController::class, 'messages']);
     Route::post('/conversations/{conversation}/messages', [ChatController::class, 'sendMessage']);
 });
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/call/signal', [CallController::class, 'signal']);
+});
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/call/signal', [CallController::class, 'signal']);
+    Route::get('/call/logs', [CallController::class, 'logs']);
+});
+Route::middleware(['auth:sanctum', 'throttle:20,1'])->group(function () {
+    Route::get('/ai/messages', [AiController::class, 'index']);
+    Route::post('/ai/ask', [AiController::class, 'ask']);
+    Route::delete('/ai/messages', [AiController::class, 'clear']);
+});
+Route::post('/ai/public-ask', [AiController::class, 'publicAsk'])
+    ->middleware('throttle:10,1');

@@ -10,7 +10,7 @@ class Doctor extends Model
 {
     protected $fillable = [
         'user_id', 'department_id', 'specialization',
-        'bio', 'experience_years', 'consultation_fee', 'phone',
+        'bio', 'experience_years', 'consultation_fee', 'phone', 'photo',
     ];
 
     protected function casts(): array

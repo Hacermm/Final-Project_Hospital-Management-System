@@ -31,6 +31,7 @@ class DoctorRequest extends FormRequest
             'experience_years' => ['nullable', 'integer', 'min:0', 'max:70'],
             'consultation_fee' => ['nullable', 'numeric', 'min:0', 'max:100000'],
             'phone' => ['nullable', 'string', 'max:255'],
+            'photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ];
     }
 }

@@ -22,7 +22,11 @@ class DoctorController extends Controller
 
     public function store(DoctorRequest $request): JsonResponse
     {
-        $doctor = $this->service->create($request->validated());
+        $doctor = $this->service->create(
+            $request->validated(),
+            $request->file('photo')
+        );
+
         return (new DoctorResource($doctor->load(['user', 'department'])))
             ->response()->setStatusCode(201);
     }
@@ -34,8 +38,13 @@ class DoctorController extends Controller
 
     public function update(DoctorRequest $request, Doctor $doctor): JsonResponse
     {
-        $updated = $this->service->update($doctor, $request->validated());
-        return (new DoctorResource($updated))->response();
+        $updated = $this->service->update(
+            $doctor,
+            $request->validated(),
+            $request->file('photo')
+        );
+
+        return (new DoctorResource($updated->load(['user', 'department'])))->response();
     }
 
     public function destroy(Doctor $doctor): JsonResponse

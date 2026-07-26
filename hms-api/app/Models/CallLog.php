@@ -11,7 +11,10 @@ class CallLog extends Model
 
     protected function casts(): array
     {
-        return ['started_at' => 'datetime', 'ended_at' => 'datetime'];
+        return [
+            'started_at' => 'datetime',
+            'ended_at' => 'datetime',
+        ];
     }
 
     public function caller(): BelongsTo

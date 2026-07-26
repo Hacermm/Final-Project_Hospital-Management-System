@@ -12,6 +12,7 @@ class DoctorResource extends JsonResource
         return [
             'id' => $this->id,
             'user_id' => $this->user_id,
+            'photo_url' => $this->photo ? asset('storage/' . $this->photo) : null,
             'name' => $this->user?->name,
             'email' => $this->user?->email,
             'specialization' => $this->specialization,

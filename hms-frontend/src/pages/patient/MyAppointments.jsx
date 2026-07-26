@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../../lib/api";
-
+import Navbar from "../../components/Navbar";
 const statusStyles = {
   pending: "bg-amber-500/10 text-amber-400 border-amber-500/20",
   confirmed: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
@@ -24,7 +24,7 @@ export default function MyAppointments() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0f172a]">
+    <div className="min-h-screen bg-[#0f172a]">      <Navbar />
       <nav className="sticky top-0 z-50 px-6 py-4 bg-[#0f172a]/80 backdrop-blur-xl border-b border-white/5">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
