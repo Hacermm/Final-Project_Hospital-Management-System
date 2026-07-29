@@ -42,16 +42,16 @@ export default function Register() {
             </div>
             <div className="flex flex-col text-left">
               <span className="font-display font-extrabold text-2xl tracking-tight text-white leading-none">
-                Nova<span style={{ color: "#fdb931" }}>Care</span>
+                NovaCare<span style={{ color: "#EF5350" }}> Hospital</span>
               </span>
               <span className="text-[10px] font-black tracking-[0.24em] uppercase mt-1 text-slate-300">
-                HEALTHCARE & HOSPITALS
+                TİBB MƏRKƏZİ
               </span>
             </div>
           </Link>
 
           <h1 className="font-display text-2xl font-extrabold text-white">Qeydiyyat</h1>
-          <p className="text-xs text-slate-300 mt-1.5 font-normal">NovaCare pasiyent portala qoşulun</p>
+          <p className="text-xs text-slate-300 mt-1.5 font-normal">NovaCare Hospital pasiyent portala qoşulun</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">

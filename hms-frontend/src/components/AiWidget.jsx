@@ -20,8 +20,6 @@ export default function AiWidget() {
 
   const token = localStorage.getItem("token");
   const isAuthenticated = Boolean(token);
-
-  // Hide floating widget if user is already on the dedicated full /ai page
   const isOnAiPage = location.pathname === "/ai";
 
   useEffect(() => {
@@ -74,7 +72,7 @@ export default function AiWidget() {
   };
 
   const clearChat = async () => {
-    if (!confirm("Söhbəti təmizləmək istəyirsiniz?")) return;
+    if (!window.confirm("Söhbəti təmizləmək istəyirsiniz?")) return;
     if (isAuthenticated) {
       try {
         await api.delete("/ai/messages");
@@ -83,173 +81,234 @@ export default function AiWidget() {
     setMessages([]);
   };
 
+  const styles = {
+    container: { position: "fixed", bottom: "24px", right: "24px", zIndex: 9999, display: "flex", flexDirection: "column", alignItems: "flex-end", fontFamily: "'Inter', system-ui, -apple-system, sans-serif" },
+    chatWindow: { width: "380px", height: "620px", maxHeight: "85vh", marginBottom: "20px", backgroundColor: "#FFFFFF", borderRadius: "24px", boxShadow: "0 20px 60px rgba(0, 0, 0, 0.18), 0 4px 20px rgba(227, 30, 36, 0.08)", display: "flex", flexDirection: "column", overflow: "hidden", border: "1px solid rgba(227, 30, 36, 0.1)", animation: "slideUpKontakt 0.35s cubic-bezier(0.16, 1, 0.3, 1)" },
+    header: { background: "linear-gradient(135deg, #E31E24 0%, #B91C1C 100%)", padding: "18px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", color: "#FFFFFF", boxShadow: "0 4px 12px rgba(227, 30, 36, 0.2)" },
+    headerLeft: { display: "flex", alignItems: "center", gap: "12px" },
+    avatar: { width: "44px", height: "44px", backgroundColor: "#FFFFFF", borderRadius: "50%", display: "flex", justifyContent: "center", alignItems: "center", boxShadow: "0 4px 12px rgba(0,0,0,0.15)", border: "2px solid rgba(255,255,255,0.9)", flexShrink: 0 },
+    avatarIcon: { width: "24px", height: "24px", color: "#E31E24" },
+    headerTitleContainer: { display: "flex", flexDirection: "column", gap: "2px" },
+    headerTitle: { margin: 0, fontSize: "16px", fontWeight: "700", display: "flex", alignItems: "center", gap: "8px", letterSpacing: "-0.3px", color: "#FFFFFF" },
+    onlineBadge: { display: "flex", alignItems: "center", gap: "5px", fontSize: "11px", fontWeight: "500", backgroundColor: "rgba(255,255,255,0.18)", padding: "2px 8px", borderRadius: "99px", color: "#FFFFFF" },
+    onlineIndicator: { width: "7px", height: "7px", backgroundColor: "#4ade80", borderRadius: "50%", animation: "fadeInOut 2s infinite" },
+    headerSubtitle: { margin: 0, fontSize: "12px", color: "rgba(255,255,255,0.9)", fontWeight: "400" },
+    headerActions: { display: "flex", gap: "6px" },
+    iconBtn: { background: "rgba(255,255,255,0.15)", border: "none", color: "#FFFFFF", width: "32px", height: "32px", borderRadius: "10px", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "all 0.2s ease" },
+    guestBanner: { backgroundColor: "#FFF1F2", borderBottom: "1px solid #FFE4E6", padding: "10px 18px", display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "12px", color: "#BE123C" },
+    guestLink: { background: "#E31E24", border: "none", color: "#FFFFFF", fontWeight: "600", fontSize: "11px", borderRadius: "8px", cursor: "pointer", padding: "5px 12px", transition: "all 0.2s ease" },
+    messagesArea: { flex: 1, padding: "20px", overflowY: "auto", backgroundColor: "#F8FAFC", display: "flex", flexDirection: "column", gap: "16px" },
+    welcomeContainer: { display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", textAlign: "center", animation: "fadeIn 0.5s ease", padding: "0 10px" },
+    welcomeAvatar: { width: "72px", height: "72px", borderRadius: "50%", background: "linear-gradient(135deg, #FFF1F2 0%, #FFE4E6 100%)", border: "2px solid #FECDD3", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "16px", boxShadow: "0 8px 24px rgba(227, 30, 36, 0.12)" },
+    welcomeTitle: { margin: "0 0 6px 0", fontSize: "18px", fontWeight: "700", color: "#0F172A" },
+    welcomeSubtitle: { margin: "0 0 4px 0", fontSize: "13px", fontWeight: "600", color: "#E31E24" },
+    welcomeText: { margin: "0 0 20px 0", fontSize: "13px", color: "#64748B", lineHeight: "1.5", maxWidth: "280px" },
+    suggestionsGrid: { display: "flex", flexWrap: "wrap", gap: "8px", width: "100%", justifyContent: "center" },
+    suggestionBtn: { backgroundColor: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: "9999px", padding: "9px 15px", fontSize: "12px", color: "#1E293B", fontWeight: "600", cursor: "pointer", textAlign: "center", transition: "all 0.2s ease", boxShadow: "0 2px 6px rgba(0,0,0,0.03)" },
+    messageRow: { display: "flex", width: "100%", animation: "fadeIn 0.3s ease" },
+    msgUser: { maxWidth: "82%", padding: "13px 18px", borderRadius: "20px 20px 4px 20px", background: "linear-gradient(135deg, #E31E24 0%, #B91C1C 100%)", color: "#FFFFFF", fontSize: "14px", lineHeight: "1.5", boxShadow: "0 4px 12px rgba(227, 30, 36, 0.25)" },
+    msgBotRow: { display: "flex", gap: "10px", maxWidth: "88%", alignItems: "flex-end" },
+    botAvatarTiny: { width: "28px", height: "28px", borderRadius: "50%", background: "linear-gradient(135deg, #E31E24 0%, #B91C1C 100%)", color: "#FFFFFF", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "14px", flexShrink: 0, marginBottom: "2px" },
+    msgBot: { padding: "13px 18px", borderRadius: "20px 20px 20px 4px", backgroundColor: "#FFFFFF", color: "#1E293B", fontSize: "14px", lineHeight: "1.5", border: "1px solid #E2E8F0", boxShadow: "0 4px 12px rgba(0,0,0,0.04)" },
+    typingIndicator: { display: "flex", gap: "5px", padding: "14px 18px", backgroundColor: "#FFFFFF", borderRadius: "20px 20px 20px 4px", border: "1px solid #E2E8F0", width: "fit-content", boxShadow: "0 4px 12px rgba(0,0,0,0.04)" },
+    typingDot: { width: "6px", height: "6px", backgroundColor: "#E31E24", borderRadius: "50%" },
+    inputArea: { padding: "14px 18px", backgroundColor: "#FFFFFF", borderTop: "1px solid #F1F5F9", display: "flex", gap: "10px", alignItems: "center" },
+    input: { flex: 1, padding: "12px 18px", backgroundColor: "#F8FAFC", border: "1px solid #E2E8F0", borderRadius: "9999px", fontSize: "13px", color: "#0F172A", outline: "none", transition: "all 0.2s ease" },
+    sendBtn: { width: "42px", height: "42px", borderRadius: "50%", background: "linear-gradient(135deg, #E31E24 0%, #B91C1C 100%)", border: "none", color: "#FFFFFF", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", boxShadow: "0 4px 12px rgba(227, 30, 36, 0.35)", flexShrink: 0 },
+    fabWrapper: { position: "relative", display: "flex", alignItems: "center", justifyContent: "center" },
+    fabGroup: { display: "flex", alignItems: "center", gap: "10px" },
+    fabLabel: { backgroundColor: "#FFFFFF", color: "#0F172A", padding: "8px 14px", borderRadius: "9999px", fontSize: "13px", fontWeight: "600", boxShadow: "0 4px 16px rgba(0,0,0,0.12)", border: "1px solid #F1F5F9", display: "flex", alignItems: "center", gap: "6px", cursor: "pointer" },
+    fabLabelDot: { width: "8px", height: "8px", backgroundColor: "#E31E24", borderRadius: "50%", animation: "fadeInOut 1.5s infinite" },
+    fab: { width: "60px", height: "60px", borderRadius: "50%", background: "linear-gradient(135deg, #E31E24 0%, #B91C1C 100%)", border: "none", color: "#FFFFFF", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", boxShadow: "0 8px 24px rgba(227, 30, 36, 0.45)", zIndex: 2, position: "relative" },
+    ring: { position: "absolute", right: 0, width: "60px", height: "60px", borderRadius: "50%", border: "2px solid #E31E24", animation: "pulseRingKontakt 2s infinite cubic-bezier(0.4, 0, 0.6, 1)" }
+  };
+
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
-      {/* Chat Window Popover */}
-      {isOpen && (
-        <div className="w-[360px] sm:w-[400px] h-[520px] max-h-[80vh] mb-4 bg-slate-900/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl flex flex-col overflow-hidden transition-all duration-300 animate-in fade-in slide-in-from-bottom-5">
-          {/* Header */}
-          <div className="px-4 py-3 bg-gradient-to-r from-emerald-600/30 via-teal-600/30 to-slate-800/80 border-b border-white/10 flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-lg shadow-md shadow-emerald-500/20">
-                🤖
-              </div>
-              <div>
-                <div className="flex items-center gap-1.5">
-                  <h3 className="font-semibold text-sm text-white leading-none">NovaCare Köməkçi</h3>
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                </div>
-                <p className="text-[11px] text-slate-400 mt-0.5">
-                  {isAuthenticated ? "Şəxsi & Ümumi məlumat" : "Ümumi xəstəxana köməkçisi"}
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-1">
-              {isAuthenticated && messages.length > 0 && (
-                <button
-                  onClick={clearChat}
-                  title="Söhbəti təmizlə"
-                  className="p-1.5 text-slate-400 hover:text-red-400 hover:bg-white/5 rounded-lg transition"
-                >
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+    <>
+      <style>{`
+        @keyframes slideUpKontakt {
+          from { opacity: 0; transform: translateY(24px) scale(0.96); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes fadeInOut {
+          0% { opacity: 0.3; }
+          50% { opacity: 1; }
+          100% { opacity: 0.3; }
+        }
+        @keyframes bounceDot {
+          0%, 80%, 100% { transform: scale(0); opacity: 0.5; }
+          40% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes pulseRingKontakt {
+          0% { transform: scale(0.9); opacity: 1; border-width: 2px; }
+          100% { transform: scale(1.65); opacity: 0; border-width: 1px; }
+        }
+        .ai-hover-btn:hover { background-color: #FFF1F2 !important; border-color: #FECDD3 !important; color: #E31E24 !important; transform: translateY(-2px); }
+        .ai-hover-icon:hover { background-color: rgba(255,255,255,0.25) !important; transform: scale(1.06); }
+        .ai-input:focus { border-color: #E31E24 !important; background-color: #FFFFFF !important; box-shadow: 0 0 0 3px rgba(227, 30, 36, 0.1) !important; }
+        .ai-send-btn:hover:not(:disabled) { transform: scale(1.08); }
+        .ai-send-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+        .ai-fab:hover { transform: scale(1.06); }
+        .ai-fab:active { transform: scale(0.95); }
+        .guest-login-btn:hover { background: #B91C1C !important; }
+      `}</style>
+      
+      <div style={styles.container}>
+        {isOpen && (
+          <div style={styles.chatWindow}>
+            <div style={styles.header}>
+              <div style={styles.headerLeft}>
+                <div style={styles.avatar}>
+                  <svg style={styles.avatarIcon} viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.36 5.06L2.2 21.2c-.17.52.28 1.03.8 0.94l4.37-.87C8.84 21.75 10.38 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm1 14.5h-2v-2h2v2zm0-4h-2V7h2v5z"/>
                   </svg>
+                </div>
+                <div style={styles.headerTitleContainer}>
+                  <h3 style={styles.headerTitle}>
+                    NovaCare Köməkçi
+                  </h3>
+                  <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                    <span style={styles.onlineBadge}>
+                      <span style={styles.onlineIndicator} />
+                      Onlayn
+                    </span>
+                    <p style={styles.headerSubtitle}>24/7 Canlı Dəstək</p>
+                  </div>
+                </div>
+              </div>
+              <div style={styles.headerActions}>
+                {messages.length > 0 && (
+                  <button onClick={clearChat} title="Söhbəti təmizlə" style={styles.iconBtn} className="ai-hover-icon">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+                  </button>
+                )}
+                <button onClick={() => navigate("/ai")} title="Böyük ekranda aç" style={styles.iconBtn} className="ai-hover-icon">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
                 </button>
-              )}
-              <button
-                onClick={() => navigate("/ai")}
-                title="Böyük ekranda aç"
-                className="p-1.5 text-slate-400 hover:text-emerald-400 hover:bg-white/5 rounded-lg transition"
-              >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
-                </svg>
-              </button>
-              <button
-                onClick={() => setIsOpen(false)}
-                className="p-1.5 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition"
-              >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
+                <button onClick={() => setIsOpen(false)} title="Bağla" style={styles.iconBtn} className="ai-hover-icon">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+              </div>
             </div>
-          </div>
 
-          {/* Guest Notice */}
-          {!isAuthenticated && (
-            <div className="bg-amber-500/10 border-b border-amber-500/20 px-3 py-1.5 flex items-center justify-between text-[11px] text-amber-300">
-              <span>Şəxsi randevu və analizlərinizi görmək üçün daxil olun.</span>
-              <button
-                onClick={() => { setIsOpen(false); navigate("/login"); }}
-                className="font-semibold underline hover:text-amber-200 ml-2 shrink-0"
-              >
-                Giriş et
-              </button>
-            </div>
-          )}
+            {!isAuthenticated && (
+              <div style={styles.guestBanner}>
+                <span>Randevu və şəxsi analizlər üçün daxil olun.</span>
+                <button onClick={() => { setIsOpen(false); navigate("/login"); }} style={styles.guestLink} className="guest-login-btn">
+                  Giriş et →
+                </button>
+              </div>
+            )}
 
-          {/* Messages Container */}
-          <div className="flex-1 p-3 overflow-y-auto space-y-3 scrollbar-thin scrollbar-thumb-slate-700">
-            {messages.length === 0 && !sending && (
-              <div className="flex flex-col items-center justify-center h-full text-center p-4 space-y-3">
-                <div className="w-12 h-12 rounded-2xl bg-slate-800/80 border border-white/10 flex items-center justify-center text-2xl">
-                  👋
-                </div>
-                <div>
-                  <p className="text-white text-sm font-medium">Salam! Sizə necə kömək edə bilərəm?</p>
-                  <p className="text-slate-400 text-xs mt-1">
-                    {isAuthenticated
-                      ? "Şöbələr, həkimlər, randevularınız və nəticələriniz haqqında soruşa bilərsiniz."
-                      : "Şöbələr, həkimlər və saytdan istifadə haqqında soruşa bilərsiniz."}
+            <div style={styles.messagesArea}>
+              {messages.length === 0 && !sending && (
+                <div style={styles.welcomeContainer}>
+                  <div style={styles.welcomeAvatar}>
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#E31E24" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M12 2a8 8 0 0 0-8 8v3a4 4 0 0 0 4 4h1v-7H5v-1a7 7 0 0 1 14 0v1h-4v7h1a4 4 0 0 0 4-4v-3a8 8 0 0 0-8-8z"/>
+                      <circle cx="12" cy="17" r="1"/>
+                    </svg>
+                  </div>
+                  <h4 style={styles.welcomeTitle}>Salam! Sizə necə kömək edə bilərik?</h4>
+                  <p style={styles.welcomeSubtitle}>NovaCare Canlı Dəstək Mərkəzi</p>
+                  <p style={styles.welcomeText}>
+                    Sualınızı aşağıdakı sahəyə yazın və ya ən çox soruşulan mövzulardan birini seçin.
                   </p>
+                  <div style={styles.suggestionsGrid}>
+                    {SUGGESTIONS.map((s) => (
+                      <button key={s} onClick={() => ask(s)} style={styles.suggestionBtn} className="ai-hover-btn">
+                        {s}
+                      </button>
+                    ))}
+                  </div>
                 </div>
+              )}
 
-                <div className="grid grid-cols-2 gap-1.5 w-full pt-2">
-                  {SUGGESTIONS.map((s) => (
-                    <button
-                      key={s}
-                      onClick={() => ask(s)}
-                      className="text-left text-[12px] text-slate-300 bg-slate-800/60 hover:bg-emerald-600/20 hover:border-emerald-500/30 border border-white/5 rounded-xl px-3 py-2 transition"
-                    >
-                      {s}
-                    </button>
-                  ))}
+              {messages.map((m) => (
+                <div key={m.id} style={{ ...styles.messageRow, justifyContent: m.role === "user" ? "flex-end" : "flex-start" }}>
+                  {m.role === "user" ? (
+                    <div style={styles.msgUser}>
+                      <span style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>{m.content}</span>
+                    </div>
+                  ) : (
+                    <div style={styles.msgBotRow}>
+                      <div style={styles.botAvatarTiny}>
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.36 5.06L2.2 21.2c-.17.52.28 1.03.8 0.94l4.37-.87C8.84 21.75 10.38 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm1 14.5h-2v-2h2v2zm0-4h-2V7h2v5z"/>
+                        </svg>
+                      </div>
+                      <div style={styles.msgBot}>
+                        <span style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>{m.content}</span>
+                      </div>
+                    </div>
+                  )}
                 </div>
-              </div>
-            )}
+              ))}
 
-            {messages.map((m) => (
-              <div key={m.id} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
-                <div
-                  className={`max-w-[85%] px-3.5 py-2 rounded-2xl text-xs leading-relaxed ${
-                    m.role === "user"
-                      ? "bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-br-xs shadow-md shadow-emerald-900/20"
-                      : "bg-slate-800 border border-white/5 text-slate-200 rounded-bl-xs"
-                  }`}
-                >
-                  <p className="whitespace-pre-wrap break-words">{m.content}</p>
+              {sending && (
+                <div style={{ ...styles.messageRow, justifyContent: "flex-start" }}>
+                  <div style={styles.msgBotRow}>
+                    <div style={styles.botAvatarTiny}>
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.36 5.06L2.2 21.2c-.17.52.28 1.03.8 0.94l4.37-.87C8.84 21.75 10.38 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm1 14.5h-2v-2h2v2zm0-4h-2V7h2v5z"/>
+                      </svg>
+                    </div>
+                    <div style={styles.typingIndicator}>
+                      <span style={{ ...styles.typingDot, animation: "bounceDot 1.4s infinite ease-in-out both", animationDelay: "-0.32s" }} />
+                      <span style={{ ...styles.typingDot, animation: "bounceDot 1.4s infinite ease-in-out both", animationDelay: "-0.16s" }} />
+                      <span style={{ ...styles.typingDot, animation: "bounceDot 1.4s infinite ease-in-out both" }} />
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              )}
+              <div ref={bottomRef} />
+            </div>
 
-            {sending && (
-              <div className="flex justify-start">
-                <div className="bg-slate-800 border border-white/5 px-3 py-2 rounded-2xl rounded-bl-xs flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: "0ms" }} />
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: "150ms" }} />
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: "300ms" }} />
-                </div>
-              </div>
-            )}
-
-            <div ref={bottomRef} />
-          </div>
-
-          {/* Input Form */}
-          <form
-            onSubmit={(e) => { e.preventDefault(); ask(text); }}
-            className="p-3 bg-slate-950/80 border-t border-white/10 flex gap-2"
-          >
-            <input
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              placeholder="Sualınızı bura yazın..."
-              disabled={sending}
-              className="flex-1 px-3 py-2 bg-slate-800/80 border border-white/10 rounded-xl text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-emerald-500 disabled:opacity-50"
-            />
-            <button
-              type="submit"
-              disabled={sending || !text.trim()}
-              className="px-3.5 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white text-xs font-medium rounded-xl hover:from-emerald-500 hover:to-teal-500 disabled:opacity-40 disabled:cursor-not-allowed transition flex items-center justify-center shrink-0 shadow-md shadow-emerald-900/30"
-            >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-              </svg>
-            </button>
-          </form>
-        </div>
-      )}
-
-      {/* Floating Action Button (FAB) */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="group relative flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-r from-emerald-500 via-teal-500 to-indigo-600 text-white shadow-xl shadow-emerald-500/30 hover:scale-105 active:scale-95 transition-all duration-300"
-        aria-label="AI Chat Köməkçi"
-      >
-        <span className="absolute -inset-1 rounded-full bg-emerald-500/30 animate-ping opacity-75 group-hover:opacity-100" />
-
-        {isOpen ? (
-          <svg className="w-6 h-6 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        ) : (
-          <div className="relative z-10 flex items-center justify-center text-2xl">
-            🤖
+            <form onSubmit={(e) => { e.preventDefault(); ask(text); }} style={styles.inputArea}>
+              <input
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                placeholder="Sualınızı bura yazın..."
+                disabled={sending}
+                style={styles.input}
+                className="ai-input"
+              />
+              <button type="submit" disabled={sending || !text.trim()} style={styles.sendBtn} className="ai-send-btn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginLeft: "-2px" }}><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              </button>
+            </form>
           </div>
         )}
-      </button>
-    </div>
+
+        <div style={styles.fabWrapper}>
+          {!isOpen && (
+            <div style={styles.fabGroup}>
+              <div onClick={() => setIsOpen(true)} style={styles.fabLabel}>
+                <span style={styles.fabLabelDot} />
+                <span>Canlı Dəstək</span>
+              </div>
+              <div style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <div style={styles.ring} />
+                <button onClick={() => setIsOpen(true)} style={styles.fab} className="ai-fab" aria-label="Canlı Dəstək">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          )}
+          {isOpen && (
+            <button onClick={() => setIsOpen(false)} style={styles.fab} className="ai-fab" aria-label="Bağla">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          )}
+        </div>
+      </div>
+    </>
   );
 }
+

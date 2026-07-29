@@ -150,13 +150,12 @@ TXT;
     // ---------- GİRİŞSİZ sual (tarixçə saxlanmır) ----------
     public function askPublic(string $question): string
     {
-        $contents = [[
-            'role' => 'user',
-            'parts' => [['text' => $question]],
-        ]];
+        $messages = [
+            ['role' => 'user', 'content' => $question],
+        ];
 
-        return $this->callGemini(
-            $contents,
+        return $this->callAi(
+            $messages,
             $this->publicSystemPrompt() . "\n\n" . $this->hospitalContext()
         );
     }
@@ -173,11 +172,11 @@ TXT;
         $history = AiMessage::where('user_id', $user->id)
             ->latest()->limit(10)->get()->reverse()->values();
 
-        $contents = [];
+        $messages = [];
         foreach ($history as $m) {
-            $contents[] = [
-                'role' => $m->role === 'assistant' ? 'model' : 'user',
-                'parts' => [['text' => $m->content]],
+            $messages[] = [
+                'role' => $m->role === 'assistant' ? 'assistant' : 'user',
+                'content' => $m->content,
             ];
         }
 
@@ -185,7 +184,7 @@ TXT;
             . "\n\n" . $this->hospitalContext()
             . $this->patientContext($user);
 
-        $answer = $this->callGemini($contents, $systemText);
+        $answer = $this->callAi($messages, $systemText);
 
         AiMessage::create([
             'user_id' => $user->id,
@@ -196,42 +195,80 @@ TXT;
         return $answer;
     }
 
-    private function callGemini(array $contents, ?string $systemText = null): string
+    private function callAi(array $messages, ?string $systemText = null): string
     {
-        $key = config('services.gemini.key');
-        $model = config('services.gemini.model');
+        $key = config('services.groq.key');
+        $model = config('services.groq.model');
 
         if (! $key) {
             return 'AI köməkçi hazırda əlçatan deyil (API açarı təyin edilməyib).';
         }
 
-        try {
-            $response = Http::timeout(30)
-                ->post("https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent?key={$key}", [
-                    'system_instruction' => [
-                        'parts' => [['text' => $systemText ?? ($this->systemPrompt() . "\n\n" . $this->hospitalContext())]],
-                    ],
-                    'contents' => $contents,
-                    'generationConfig' => [
+        // System mesajını əvvələ əlavə et
+        $allMessages = [
+            ['role' => 'system', 'content' => $systemText ?? ($this->systemPrompt() . "\n\n" . $this->hospitalContext())],
+            ...$messages,
+        ];
+
+        $maxRetries = 3;
+        $lastError = null;
+
+        for ($attempt = 1; $attempt <= $maxRetries; $attempt++) {
+            try {
+                $response = Http::timeout(30)
+                    ->withHeaders([
+                        'Authorization' => 'Bearer ' . $key,
+                        'Content-Type' => 'application/json',
+                    ])
+                    ->post('https://api.groq.com/openai/v1/chat/completions', [
+                        'model' => $model,
+                        'messages' => $allMessages,
                         'temperature' => 0.4,
-                        'maxOutputTokens' => 500,
-                    ],
+                        'max_tokens' => 500,
+                    ]);
+
+                if ($response->successful()) {
+                    return data_get($response->json(), 'choices.0.message.content')
+                        ?? 'Cavab alına bilmədi.';
+                }
+
+                logger()->warning('Groq xətası', [
+                    'attempt' => $attempt,
+                    'status' => $response->status(),
+                    'body' => $response->body(),
                 ]);
 
-            if ($response->failed()) {
-                logger()->error('Gemini xətası', ['status' => $response->status(), 'body' => $response->body()]);
+                // 429 = Rate Limit — retry with exponential backoff
+                if ($response->status() === 429 && $attempt < $maxRetries) {
+                    $delay = pow(2, $attempt);
+                    logger()->info("Groq 429 - {$delay}s gözlənilir (cəhd {$attempt}/{$maxRetries})");
+                    sleep($delay);
+                    continue;
+                }
 
                 if ($response->status() === 429) {
-                    return 'AI köməkçi limitə çatıb (kvota). Bir azdan və ya sabah yenidən cəhd edin.';
+                    $lastError = 'AI köməkçi limitə çatıb (kvota). Bir azdan və ya sabah yenidən cəhd edin.';
+                } else {
+                    $lastError = 'AI xətası (kod: ' . $response->status() . ').';
                 }
-                return 'AI xətası (kod: ' . $response->status() . ').';
-            }
+                break;
 
-            return data_get($response->json(), 'candidates.0.content.parts.0.text')
-                ?? 'Cavab alına bilmədi.';
-        } catch (\Throwable $e) {
-            logger()->error('Gemini istisna', ['msg' => $e->getMessage()]);
-            return 'Bağışlayın, texniki problem yarandı.';
+            } catch (\Throwable $e) {
+                logger()->error('Groq istisna', [
+                    'attempt' => $attempt,
+                    'msg' => $e->getMessage(),
+                ]);
+
+                if ($attempt < $maxRetries) {
+                    sleep(pow(2, $attempt));
+                    continue;
+                }
+
+                $lastError = 'Bağışlayın, texniki problem yarandı.';
+                break;
+            }
         }
+
+        return $lastError ?? 'Bağışlayın, texniki problem yarandı.';
     }
 }

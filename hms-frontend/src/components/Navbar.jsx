@@ -86,8 +86,8 @@ export default function Navbar() {
               <span>📞 TƏCİLİ YARDIM:</span> +994 (12) 345 67 89
             </a>
             <span className="text-white/20">|</span>
-            <a href="mailto:info@hms.az" className="flex items-center gap-2 hover:text-white transition">
-              <span>✉️</span> info@hms.az
+            <a href="mailto:info@novacare.az" className="flex items-center gap-2 hover:text-white transition">
+              <span>✉️</span> info@novacare.az
             </a>
             <span className="text-white/20">|</span>
             <span className="flex items-center gap-1.5 text-slate-200">
@@ -129,12 +129,12 @@ export default function Navbar() {
               <div className="flex flex-col">
                 <div className="flex items-center gap-1">
                   <span className="font-display font-extrabold text-2xl tracking-tight leading-none" style={{ color: "var(--primary)" }}>
-                    HMS<span style={{ color: "var(--secondary)" }}>.az</span>
+                    NovaCare<span style={{ color: "var(--secondary)" }}> Hospital</span>
                   </span>
                   <span className="w-2 h-2 rounded-full" style={{ background: "var(--secondary)" }}></span>
                 </div>
                 <span className="text-[9.5px] font-black tracking-[0.24em] uppercase mt-0.5" style={{ color: "var(--primary)" }}>
-                  HEALTHCARE SYSTEM
+                  TİBB MƏRKƏZİ
                 </span>
               </div>
             </Link>

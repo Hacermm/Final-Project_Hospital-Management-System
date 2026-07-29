@@ -16,6 +16,8 @@ use App\Http\Controllers\Api\ChatController;
 use Illuminate\Support\Facades\Broadcast;
 use App\Http\Controllers\Api\CallController;
 use App\Http\Controllers\Api\AiController;
+use App\Http\Controllers\Api\AnalyticsController;
+use App\Http\Controllers\Api\AdminManagementController;
 
 Broadcast::routes(['middleware' => ['auth:sanctum']]);
 
@@ -48,19 +50,21 @@ Route::post('/reset-password', [PasswordResetController::class, 'resetPassword']
 
 
 Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) {
-    $user = User::findOrFail($id);
+    $frontend = env('FRONTEND_URL', 'http://localhost:5173');
 
-    if (! hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
-        return response()->json(['message' => 'Yanlış təsdiq linki.'], 403);
+    $user = User::find($id);
+
+    if (! $user || ! hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
+        return redirect("{$frontend}/login?verified=invalid");
     }
 
     if ($user->hasVerifiedEmail()) {
-        return response()->json(['message' => 'Email artıq təsdiqlənib.']);
+        return redirect("{$frontend}/login?verified=already");
     }
 
     $user->markEmailAsVerified();
 
-    return response()->json(['message' => 'Email uğurla təsdiqləndi! İndi giriş edə bilərsiniz.']);
+    return redirect("{$frontend}/login?verified=success");
 })->middleware(['signed'])->name('verification.verify');
 
 Route::post('/email/verification-notification', function (Request $request) {
@@ -135,3 +139,14 @@ Route::middleware(['auth:sanctum', 'throttle:20,1'])->group(function () {
 });
 Route::post('/ai/public-ask', [AiController::class, 'publicAsk'])
     ->middleware('throttle:10,1');
+
+
+Route::middleware(['auth:sanctum', 'role:admin|super_admin'])->group(function () {
+    Route::get('/analytics', [AnalyticsController::class, 'index']);
+});
+Route::middleware(['auth:sanctum', 'role:super_admin'])->group(function () {
+    Route::get('/admins', [AdminManagementController::class, 'index']);
+    Route::post('/admins', [AdminManagementController::class, 'store']);
+    Route::put('/admins/{user}', [AdminManagementController::class, 'update']);
+    Route::delete('/admins/{user}', [AdminManagementController::class, 'destroy']);
+});

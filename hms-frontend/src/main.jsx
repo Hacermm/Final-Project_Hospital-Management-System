@@ -33,6 +33,8 @@ import MyLabTests from './pages/patient/MyLabTests.jsx'
 import Chat from './pages/Chat.jsx'
 import AiAssistant from './pages/AiAssistant.jsx'
 import AiWidget from './components/AiWidget.jsx'
+import Analytics from './pages/admin/Analytics.jsx'
+import ManageAdmins from './pages/admin/ManageAdmins.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -100,7 +102,14 @@ createRoot(document.getElementById('root')).render(
           <Route path="/chat" element={
             <ProtectedRoute><Chat /></ProtectedRoute>
           } />
-          <Route path="/ai" element={<AiAssistant />} />
+          <Route path="/admin/analytics" element={
+            <ProtectedRoute allowedRole="admin"><Analytics /></ProtectedRoute>
+          } />
+          <Route path="/ai" element={<AiAssistant />
+          } />
+          <Route path="/admin/admins" element={
+         <ProtectedRoute allowedRole="super_admin"><ManageAdmins /></ProtectedRoute>
+          } />
         </Routes>
         <AiWidget />
       </BrowserRouter>

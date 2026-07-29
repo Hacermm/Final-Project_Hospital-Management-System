@@ -71,7 +71,7 @@ export default function Departments() {
                 <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
                 <polyline points="22,6 12,13 2,6" />
               </svg>
-              info@hms.az
+              info@novacare.az
             </a>
           </div>
 
@@ -96,8 +96,8 @@ export default function Departments() {
               </svg>
             </div>
             <div>
-              <span style={{ fontSize: "1.35rem", fontWeight: 800, color: "var(--primary)", letterSpacing: "-0.5px", display: "block", lineHeight: 1 }}>HMS</span>
-              <span style={{ fontSize: "0.66rem", fontWeight: 700, color: "var(--text-light)", letterSpacing: "0.8px", textTransform: "uppercase", display: "block", marginTop: 2 }}>Sağlamlıq Sistemi</span>
+              <span style={{ fontSize: "1.35rem", fontWeight: 800, color: "var(--primary)", letterSpacing: "-0.5px", display: "block", lineHeight: 1 }}>NovaCare</span>
+              <span style={{ fontSize: "0.66rem", fontWeight: 700, color: "var(--text-light)", letterSpacing: "0.8px", textTransform: "uppercase", display: "block", marginTop: 2 }}>Hospital</span>
             </div>
           </Link>
 
@@ -494,7 +494,7 @@ export default function Departments() {
                     <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
                   </svg>
                 </div>
-                <span style={{ fontWeight: 900, color: "#FFFFFF", fontSize: "1.2rem" }}>HMS</span>
+                <span style={{ fontWeight: 900, color: "#FFFFFF", fontSize: "1.2rem" }}>NovaCare</span>
               </div>
               <p style={{ fontSize: "0.88rem", color: "rgba(255,255,255,0.65)", lineHeight: 1.7, maxWidth: 300 }}>
                 Müasir xəstəxana idarəetmə sistemi — peşəkar həkimlər, onlayn randevu və rəqəmsal səhiyyə xidmətləri.
@@ -520,13 +520,13 @@ export default function Departments() {
             <div>
               <div className="ac-footer-title">Əlaqə</div>
               <a href="tel:+994123456789" className="ac-footer-link">+994 (12) 345 67 89</a>
-              <a href="mailto:info@hms.az" className="ac-footer-link">info@hms.az</a>
+              <a href="mailto:info@novacare.az" className="ac-footer-link">info@novacare.az</a>
               <span className="ac-footer-link" style={{ cursor: "default" }}>Bakı ş., Azərbaycan</span>
             </div>
           </div>
 
           <div className="ac-footer-bottom">
-            © 2026 HMS Xəstəxana İdarəetmə Sistemi. Bütün hüquqlar qorunur.
+            © 2026 NovaCare Hospital. Bütün hüquqlar qorunur.
           </div>
         </div>
       </footer>
