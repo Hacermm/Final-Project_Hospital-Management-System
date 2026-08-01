@@ -5,39 +5,38 @@ import { useTheme } from "../context/ThemeContext";
 
 const menus = {
   patient: [
-    { to: "/patient", label: "PANEL", icon: "📊" },
-    { to: "/patient/book", label: "RANDEVU AL", icon: "📅" },
-    { to: "/patient/appointments", label: "RANDEVULARIM", icon: "📋" },
-    { to: "/patient/history", label: "TİBBİ TARİXÇƏ", icon: "🩺" },
-    { to: "/patient/lab-tests", label: "LAB NƏTİCƏLƏRİ", icon: "🧪" },
-    { to: "/chat", label: "MESAJLAR", icon: "💬", badge: true },
+    { to: "/patient", label: "Panel", icon: "📊" },
+    { to: "/patient/book", label: "Randevu Al", icon: "📅" },
+    { to: "/patient/appointments", label: "Randevularım", icon: "📋" },
+    { to: "/patient/history", label: "Tibbi Tarixçə", icon: "🩺" },
+    { to: "/patient/lab-tests", label: "Lab Nəticələri", icon: "🧪" },
+    { to: "/chat", label: "Mesajlar", icon: "💬", badge: true },
   ],
   doctor: [
-    { to: "/doctor", label: "PANEL", icon: "📊" },
-    { to: "/doctor/appointments", label: "RANDEVULARIM", icon: "📋" },
-    { to: "/doctor/schedule", label: "İŞ QRAFİKİ", icon: "🕒" },
-    { to: "/doctor/records/new", label: "TİBBİ QEYD YAZ", icon: "📝" },
-    { to: "/doctor/lab-tests", label: "LAB NƏTİCƏLƏRİ", icon: "🧪" },
-    { to: "/chat", label: "MESAJLAR", icon: "💬", badge: true },
+    { to: "/doctor", label: "Panel", icon: "📊" },
+    { to: "/doctor/appointments", label: "Randevularım", icon: "📋" },
+    { to: "/doctor/schedule", label: "İş Qrafiki", icon: "🕒" },
+    { to: "/doctor/records/new", label: "Tibbi Qeyd Yaz", icon: "📝" },
+    { to: "/doctor/lab-tests", label: "Lab Nəticələri", icon: "🧪" },
+    { to: "/chat", label: "Mesajlar", icon: "💬", badge: true },
   ],
   admin: [
-    { to: "/admin", label: "PANEL", icon: "📊" },
-    { to: "/admin/doctors", label: "HƏKİMLƏR", icon: "👨‍⚕️" },
-    { to: "/admin/patients", label: "XƏSTƏLƏR", icon: "🏥" },
-    { to: "/admin/departments", label: "ŞÖBƏLƏR", icon: "🏢" },
+    { to: "/admin", label: "Panel", icon: "📊" },
+    { to: "/admin/doctors", label: "Həkimlər", icon: "👨‍⚕️" },
+    { to: "/admin/patients", label: "Xəstələr", icon: "🏥" },
+    { to: "/admin/departments", label: "Şöbələr", icon: "🏢" },
   ],
   super_admin: [
-    { to: "/admin/super", label: "SUPER PANEL", icon: "⚡" },
-    { to: "/admin/doctors", label: "HƏKİMLƏR", icon: "👨‍⚕️" },
-    { to: "/admin/patients", label: "XƏSTƏLƏR", icon: "🏥" },
-    { to: "/admin/departments", label: "ŞÖBƏLƏR", icon: "🏢" },
+    { to: "/admin/super", label: "Super Panel", icon: "⚡" },
+    { to: "/admin/doctors", label: "Həkimlər", icon: "👨‍⚕️" },
+    { to: "/admin/patients", label: "Xəstələr", icon: "🏥" },
+    { to: "/admin/departments", label: "Şöbələr", icon: "🏢" },
   ],
   guest: [
-    { to: "/", label: "ANA SƏHİFƏ" },
-    { to: "/about", label: "HAQQIMIZDA" },
-    { to: "/doctors", label: "HƏKİMLƏR" },
-    { to: "/departments", label: "MÜALİCƏ VƏ ŞÖBƏLƏR" },
-    { to: "/contact", label: "ƏLAQƏ" },
+    { to: "/departments", label: "Şöbələr" },
+    { to: "/doctors", label: "Həkimlər" },
+    { to: "/about", label: "Haqqımızda" },
+    { to: "/contact", label: "Əlaqə" },
   ],
 };
 
@@ -79,26 +78,26 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-50 transition-all duration-300 w-full">
       {/* Top Ribbon */}
-      <div style={{ background: "linear-gradient(90deg, #180303 0%, #C62828 100%)" }} className="hidden lg:block text-white text-xs py-2.5 border-b border-white/10 w-full">
-        <div className="site-container flex items-center justify-between font-medium">
-          <div className="flex items-center gap-6 text-slate-200">
-            <a href="tel:+994123456789" className="flex items-center gap-2 transition font-bold" style={{ color: "#EF5350" }}>
-              <span>📞 TƏCİLİ YARDIM:</span> +994 (12) 345 67 89
+      <div style={{ background: "var(--surface)", borderBottom: "1px solid var(--border)", transition: "all 0.3s ease" }} className="hidden lg:block text-xs py-2 w-full">
+        <div style={{ maxWidth: 1240, margin: "0 auto", padding: "0 24px" }} className="flex items-center justify-between font-medium">
+          <div className="flex items-center gap-6">
+            <a href="tel:+994123456789" style={{ color: "var(--secondary)", fontWeight: 700 }} className="flex items-center gap-2 transition">
+              <span>📞 TƏCİLİ:</span> +994 (12) 345 67 89
             </a>
-            <span className="text-white/20">|</span>
-            <a href="mailto:info@novacare.az" className="flex items-center gap-2 hover:text-white transition">
+            <span style={{ color: "var(--border)" }}>|</span>
+            <a href="mailto:info@novacare.az" style={{ color: "var(--text-mid)" }} className="flex items-center gap-2 transition hover:opacity-80">
               <span>✉️</span> info@novacare.az
             </a>
-            <span className="text-white/20">|</span>
-            <span className="flex items-center gap-1.5 text-slate-200">
+            <span style={{ color: "var(--border)" }}>|</span>
+            <span style={{ color: "var(--text-mid)" }} className="flex items-center gap-1.5">
               <span>📍</span> Bakı ş., Azərbaycan
             </span>
           </div>
 
           <div className="flex items-center gap-5">
-            <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-[10.5px] font-extrabold uppercase tracking-wider text-red-200 bg-red-500/20 border border-red-400/30">
-              <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-ping"></span>
-              24/7 ONLINE RANDEVU XİDMƏTİ
+            <span style={{ background: "var(--primary-light)", color: "var(--primary)", border: "1px solid var(--secondary-light)" }} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider">
+              <span style={{ background: "var(--secondary)" }} className="w-1.5 h-1.5 rounded-full animate-ping"></span>
+              24/7 ONLAYN TİBBİ XİDMƏT
             </span>
           </div>
         </div>
@@ -106,18 +105,18 @@ export default function Navbar() {
 
       {/* Main Navbar */}
       <nav
-        className="ac-nav"
         style={{
           background: "var(--surface)",
-          borderColor: "var(--border)",
+          borderBottom: "1px solid var(--border)",
           boxShadow: scrolled ? "var(--shadow-md)" : "var(--shadow-xs)",
+          transition: "all 0.3s ease",
         }}
       >
-        <div className="site-container">
-          <div className="flex items-center justify-between h-20">
+        <div style={{ maxWidth: 1240, margin: "0 auto", padding: "0 24px" }}>
+          <div className="flex items-center justify-between h-18 py-3">
             
             {/* Logo */}
-            <Link to={token ? links[0].to : "/"} className="flex items-center gap-3 shrink-0 group">
+            <Link to={token ? links[0].to : "/"} className="flex items-center gap-3 shrink-0 group text-decoration-none">
               <div
                 className="w-11 h-11 rounded-2xl flex items-center justify-center text-white shadow-md transition-transform group-hover:scale-105"
                 style={{ background: "linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%)", border: "2px solid var(--secondary)" }}
@@ -129,25 +128,24 @@ export default function Navbar() {
               <div className="flex flex-col">
                 <div className="flex items-center gap-1">
                   <span className="font-display font-extrabold text-2xl tracking-tight leading-none" style={{ color: "var(--primary)" }}>
-                    NovaCare<span style={{ color: "var(--secondary)" }}> Hospital</span>
+                    NovaCare
                   </span>
-                  <span className="w-2 h-2 rounded-full" style={{ background: "var(--secondary)" }}></span>
                 </div>
-                <span className="text-[9.5px] font-black tracking-[0.24em] uppercase mt-0.5" style={{ color: "var(--primary)" }}>
-                  TİBB MƏRKƏZİ
+                <span className="text-[9.5px] font-black tracking-[0.24em] uppercase mt-0.5" style={{ color: "var(--text-light)" }}>
+                  Hospital
                 </span>
               </div>
             </Link>
 
             {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center gap-1">
+            <div className="hidden lg:flex items-center gap-2">
               {links.map((l) => {
                 const isActive = location.pathname === l.to;
                 return (
                   <Link
                     key={l.to}
                     to={l.to}
-                    className="relative px-3.5 py-2 rounded-xl text-[13px] font-extrabold tracking-wide transition-all duration-200 flex items-center gap-1.5"
+                    className="relative px-4 py-2 rounded-xl text-[14px] font-semibold tracking-wide transition-all duration-200 flex items-center gap-1.5 text-decoration-none"
                     style={{
                       color: isActive ? "var(--primary)" : "var(--text-mid)",
                       background: isActive ? "var(--primary-light)" : "transparent",
@@ -156,7 +154,7 @@ export default function Navbar() {
                     {l.icon && <span className="text-sm">{l.icon}</span>}
                     <span>{l.label}</span>
                     {isActive && (
-                      <span className="absolute bottom-0 left-3.5 right-3.5 h-0.5 rounded-full" style={{ background: "var(--secondary)" }}></span>
+                      <span className="absolute bottom-0 left-4 right-4 h-0.5 rounded-full" style={{ background: "var(--primary)" }}></span>
                     )}
                     {l.badge && unread > 0 && (
                       <span className="min-w-[18px] h-[18px] px-1.5 rounded-full text-white text-[10px] font-bold flex items-center justify-center shadow-sm animate-bounce" style={{ background: "var(--primary)" }}>
@@ -209,13 +207,22 @@ export default function Navbar() {
                 <div className="hidden lg:flex items-center gap-3">
                   <Link
                     to="/login"
-                    className="px-4 py-2.5 text-xs font-extrabold tracking-wider uppercase rounded-xl transition-all hover:bg-red-500/10"
-                    style={{ color: "var(--text-dark)" }}
+                    style={{
+                      color: "var(--text-dark)",
+                      fontWeight: 700,
+                      fontSize: "0.88rem",
+                      textDecoration: "none",
+                      padding: "9px 18px",
+                      border: "1.5px solid var(--border)",
+                      borderRadius: 10,
+                      background: "var(--surface)",
+                    }}
+                    className="transition-all hover:border-[var(--primary)] hover:text-[var(--primary)]"
                   >
-                    GİRİŞ
+                    Giriş
                   </Link>
-                  <Link to="/register" style={{ background: "var(--primary)", color: "#FFFFFF", padding: "10px 20px", borderRadius: 10, fontSize: "0.8rem", fontWeight: 800, textDecoration: "none" }} className="hover:opacity-90 transition-opacity">
-                    RANDEVU ALIN
+                  <Link to="/register" className="ac-btn" style={{ padding: "10px 22px", fontSize: "0.88rem" }}>
+                    Qeydiyyat
                   </Link>
                 </div>
               )}
@@ -223,7 +230,7 @@ export default function Navbar() {
               {/* Mobile Drawer Trigger Toggle */}
               <button
                 onClick={() => setOpen(!open)}
-                className="lg:hidden w-11 h-11 rounded-xl flex items-center justify-center border border-slate-200 text-slate-800 bg-white shadow-sm"
+                className="lg:hidden w-11 h-11 rounded-xl flex items-center justify-center ac-theme-toggle"
                 aria-label="Menyu"
               >
                 {open ? (
@@ -238,13 +245,13 @@ export default function Navbar() {
 
           {/* Mobile Menu */}
           {open && (
-            <div className="lg:hidden pb-6 space-y-2 border-t border-slate-200 pt-4 animate-scale-in">
+            <div className="lg:hidden pb-6 space-y-2 pt-4 animate-scale-in" style={{ borderTop: "1px solid var(--border)" }}>
               {links.map((l) => (
                 <Link
                   key={l.to}
                   to={l.to}
                   onClick={() => setOpen(false)}
-                  className="flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold transition-all"
+                  className="flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold transition-all text-decoration-none"
                   style={{
                     color: location.pathname === l.to ? "var(--primary)" : "var(--text-dark)",
                     background: location.pathname === l.to ? "var(--primary-light)" : "var(--bg)",
@@ -262,11 +269,12 @@ export default function Navbar() {
                 </Link>
               ))}
 
-              <div className="pt-4 space-y-2 border-t border-slate-200">
+              <div className="pt-4 space-y-2" style={{ borderTop: "1px solid var(--border)" }}>
                 {token ? (
                   <button
                     onClick={() => { setOpen(false); logout(); }}
-                    className="w-full text-left px-4 py-3 rounded-xl text-sm font-extrabold flex items-center gap-2 text-red-600 bg-red-50"
+                    className="w-full text-left px-4 py-3 rounded-xl text-sm font-extrabold flex items-center gap-2"
+                    style={{ color: "#ef4444", background: "rgba(239,68,68,0.08)" }}
                   >
                     <span>🚪</span> ÇIXIŞ ET
                   </button>
@@ -275,17 +283,18 @@ export default function Navbar() {
                     <Link
                       to="/login"
                       onClick={() => setOpen(false)}
-                      className="block text-center px-4 py-3 rounded-xl text-sm font-extrabold bg-slate-100 text-slate-700"
+                      className="block text-center px-4 py-3 rounded-xl text-sm font-bold transition-all text-decoration-none"
+                      style={{ background: "var(--bg)", color: "var(--text-dark)", border: "1px solid var(--border)" }}
                     >
-                      GİRİŞ
+                      Giriş
                     </Link>
                     <Link
                       to="/register"
                       onClick={() => setOpen(false)}
-                      className="block text-center text-white font-bold !py-3.5 !rounded-xl w-full"
+                      className="block text-center text-white font-bold !py-3 !rounded-xl w-full text-decoration-none"
                       style={{ background: "var(--primary)" }}
                     >
-                      RANDEVU ALIN
+                      Qeydiyyat
                     </Link>
                   </>
                 )}

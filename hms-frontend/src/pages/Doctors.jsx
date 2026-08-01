@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../lib/api";
 import { useTheme } from "../context/ThemeContext.jsx";
+import Navbar from "../components/Navbar";
 
 const NAV_LINKS = [
   { to: "/departments", label: "Şöbələr" },
@@ -56,258 +57,172 @@ export default function Doctors() {
 
   return (
     <div style={{ background: "var(--bg)", color: "var(--text-dark)", minHeight: "100vh", fontFamily: "'Plus Jakarta Sans', sans-serif", transition: "background-color 0.3s ease, color 0.3s ease", display: "flex", flexDirection: "column" }}>
-
-   
-      <div style={{ background: "var(--surface)", color: "var(--text-dark)", padding: "8px 0", fontSize: "0.8rem", borderBottom: "1px solid var(--border)", transition: "all 0.3s ease" }}>
-        <div style={{ maxWidth: 1240, margin: "0 auto", padding: "0 24px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
-          <div style={{ display: "flex", gap: 24, alignItems: "center" }}>
-            <a href="tel:+994123456789" style={{ color: "var(--secondary)", fontWeight: 700, display: "flex", alignItems: "center", gap: 6, textDecoration: "none" }}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.77a16 16 0 0 0 6.29 6.29l.97-.97a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
-              </svg>
-              TƏCİLİ: +994 (12) 345 67 89
-            </a>
-            <a href="mailto:info@hms.az" style={{ color: "var(--text-mid)", display: "flex", alignItems: "center", gap: 6, textDecoration: "none" }}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                <polyline points="22,6 12,13 2,6" />
-              </svg>
-              info@novacare.az
-            </a>
-          </div>
-
-          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-            <span style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "var(--primary-light)", color: "var(--primary)", border: "1px solid var(--secondary-light)", padding: "3px 12px", borderRadius: 20, fontWeight: 700, fontSize: "0.72rem" }}>
-              <span style={{ width: 6, height: 6, background: "var(--secondary)", borderRadius: "50%", display: "inline-block" }} className="animate-pulse" />
-              24/7 ONLAYN TİBBİ XİDMƏT
-            </span>
-          </div>
-        </div>
-      </div>
-
-      <nav style={{ background: "var(--surface)", borderBottom: "1px solid var(--border)", position: "sticky", top: 0, zIndex: 100, boxShadow: "var(--shadow-xs)", transition: "all 0.3s ease" }}>
-        <div style={{ maxWidth: 1240, margin: "0 auto", padding: "0 24px", height: 74, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          
-          <Link to="/" style={{ display: "flex", alignItems: "center", gap: 12, textDecoration: "none" }}>
-            <div style={{ width: 44, height: 44, background: "linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%)", borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 14px rgba(198,40,40,0.3)" }}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-              </svg>
-            </div>
-            <div>
-              <span style={{ fontSize: "1.35rem", fontWeight: 800, color: "var(--primary)", letterSpacing: "-0.5px", display: "block", lineHeight: 1 }}>NovaCare</span>
-              <span style={{ fontSize: "0.66rem", fontWeight: 700, color: "var(--text-light)", letterSpacing: "0.8px", textTransform: "uppercase", display: "block", marginTop: 2 }}>Hospital</span>
-            </div>
-          </Link>
-
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            {NAV_LINKS.map((l) => (
-              <Link
-                key={l.to}
-                to={l.to}
-                style={{
-                  color: l.to === "/doctors" ? "var(--primary)" : "var(--text-mid)",
-                  background: l.to === "/doctors" ? "var(--primary-light)" : "transparent",
-                  fontWeight: 600,
-                  fontSize: "0.88rem",
-                  textDecoration: "none",
-                  padding: "8px 16px",
-                  borderRadius: 8,
-                  transition: "all 0.2s",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = "var(--primary)";
-                  e.currentTarget.style.background = "var(--primary-light)";
-                }}
-                onMouseLeave={(e) => {
-                  if (l.to !== "/doctors") {
-                    e.currentTarget.style.color = "var(--text-mid)";
-                    e.currentTarget.style.background = "transparent";
-                  }
-                }}
-              >
-                {l.label}
-              </Link>
-            ))}
-          </div>
-
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <button
-              onClick={toggleTheme}
-              className="ac-theme-toggle"
-              title={theme === "dark" ? "İşıqlı rejimə keç" : "Qaranlıq rejimə keç"}
-              aria-label="Theme Toggle"
-            >
-              {theme === "dark" ? (
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="12" r="5" />
-                  <line x1="12" y1="1" x2="12" y2="3" />
-                  <line x1="12" y1="21" x2="12" y2="23" />
-                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-                  <line x1="1" y1="12" x2="3" y2="12" />
-                  <line x1="21" y1="12" x2="23" y2="12" />
-                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-                </svg>
-              ) : (
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-                </svg>
-              )}
-            </button>
-
-            <Link
-              to="/login"
-              style={{
-                color: "var(--text-dark)",
-                fontWeight: 700,
-                fontSize: "0.88rem",
-                textDecoration: "none",
-                padding: "10px 20px",
-                border: "1.5px solid var(--border)",
-                borderRadius: 10,
-                transition: "all 0.2s",
-                background: "var(--surface)",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = "var(--primary)";
-                e.currentTarget.style.color = "var(--primary)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = "var(--border)";
-                e.currentTarget.style.color = "var(--text-dark)";
-              }}
-            >
-              Giriş
-            </Link>
-            <Link to="/register" className="ac-btn" style={{ padding: "10px 22px", fontSize: "0.88rem" }}>
-              Qeydiyyat
-            </Link>
-          </div>
-        </div>
-      </nav>
+      <Navbar />
 
 
-      <section
-        style={{
-          position: "relative",
-          overflow: "hidden",
-          background: "linear-gradient(135deg, #160202 0%, #2e0505 40%, #B71C1C 100%)",
-          color: "#FFFFFF",
-          padding: "64px 0 72px",
-          borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
-        }}
-      >
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            backgroundImage: "url('/hero-bg.png')",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            opacity: 0.18,
-            mixBlendMode: "luminosity",
-            pointerEvents: "none",
-          }}
-        />
+      {/* ═══════ PREMIUM HERO ═══════ */}
+      <section style={{ position: "relative", overflow: "hidden", background: "linear-gradient(135deg, #1a0303 0%, #2d0606 35%, #8B1A1A 75%, #C62828 100%)", color: "#FFFFFF", padding: "64px 0 64px" }}>
 
-        <div style={{ maxWidth: 1240, margin: "0 auto", padding: "0 24px", position: "relative", zIndex: 2 }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(255, 255, 255, 0.12)", border: "1px solid rgba(255, 255, 255, 0.2)", borderRadius: 30, padding: "6px 18px", marginBottom: 20 }}>
-            <span style={{ fontSize: "0.9rem" }}>👨‍⚕️</span>
-            <span style={{ fontSize: "0.78rem", fontWeight: 800, letterSpacing: "0.8px", color: "#FFCDD2", textTransform: "uppercase" }}>
-              PEŞƏKAR MÜTƏXƏSSİS HEYƏTİ
-            </span>
-          </div>
+        {/* Dot grid pattern */}
+        <div style={{
+          position: "absolute", inset: 0, pointerEvents: "none", zIndex: 0,
+          backgroundImage: "radial-gradient(rgba(255,255,255,0.07) 1px, transparent 1px)",
+          backgroundSize: "28px 28px"
+        }} />
 
-          <h1 style={{ fontSize: "clamp(2.2rem, 4.2vw, 3.4rem)", fontWeight: 900, lineHeight: 1.15, marginBottom: 18, letterSpacing: "-1px", color: "#FFFFFF" }}>
-            Həkimlərimiz Və <br />
-            <span style={{ color: "#FFCDD2" }}>Təcrübəli Mütəxəssislər</span>
-          </h1>
+        {/* Glowing orbs */}
+        <div style={{ position: "absolute", top: "-80px", right: "20%", width: 380, height: 380, borderRadius: "50%", background: "radial-gradient(circle, rgba(239,68,68,0.28) 0%, transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
+        <div style={{ position: "absolute", bottom: "0", left: "-60px", width: 280, height: 280, borderRadius: "50%", background: "radial-gradient(circle, rgba(198,40,40,0.22) 0%, transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
 
-          <p style={{ fontSize: "1.05rem", lineHeight: 1.7, color: "rgba(255,255,255,0.9)", maxWidth: 640 }}>
-            NovaCare hospitalında fəaliyyət göstərən yüksək ixtisaslı həkimlərimizi axtarın, təcrübələri ilə tanış olun və birbaşa onlayn randevu alın.
-          </p>
+        <div className="responsive-hero-grid" style={{ maxWidth: 1240, margin: "0 auto", padding: "0 24px", position: "relative", zIndex: 2, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "center" }}>
 
-       
-          <div style={{ marginTop: 32, display: "grid", gridTemplateColumns: "1.5fr 1fr auto", gap: 14, maxWidth: 800, background: "rgba(0,0,0,0.35)", padding: 12, borderRadius: 20, border: "1px solid rgba(255,255,255,0.18)", backdropFilter: "blur(12px)" }}>
-            <div style={{ position: "relative" }}>
-              <svg
-                style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", opacity: 0.7 }}
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#FFFFFF"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <circle cx="11" cy="11" r="8" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-              </svg>
-              <input
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Həkim adı və ya ixtisas sahəsi..."
-                style={{
-                  width: "100%",
-                  padding: "12px 16px 12px 42px",
-                  borderRadius: 12,
-                  border: "1px solid rgba(255,255,255,0.15)",
-                  background: "rgba(255,255,255,0.08)",
-                  color: "#FFFFFF",
-                  fontSize: "0.88rem",
-                  outline: "none",
-                }}
-              />
+          {/* LEFT — text */}
+          <div style={{ paddingBottom: 64 }}>
+            {/* Badge */}
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 40, padding: "6px 18px", marginBottom: 24, backdropFilter: "blur(8px)" }}>
+              <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#4ade80", display: "inline-block", boxShadow: "0 0 8px #4ade80" }} />
+              <span style={{ fontSize: "0.75rem", fontWeight: 800, letterSpacing: "1px", color: "#FFCDD2", textTransform: "uppercase" }}>PEŞƏKAR MÜTƏXƏSSİS HEYƏTİ</span>
             </div>
 
-            <select
-              value={selectedDept}
-              onChange={(e) => setSelectedDept(e.target.value)}
-              style={{
-                width: "100%",
-                padding: "12px 16px",
-                borderRadius: 12,
-                border: "1px solid rgba(255,255,255,0.15)",
-                background: "rgba(30, 6, 6, 0.85)",
-                color: "#FFFFFF",
-                fontSize: "0.88rem",
-                outline: "none",
-                cursor: "pointer",
-              }}
-            >
-              <option value="" style={{ background: "#2e0505" }}>Bütün Şöbələr</option>
-              {departments.map((d) => (
-                <option key={d.id} value={d.id} style={{ background: "#2e0505" }}>{d.name}</option>
+            <h1 style={{ fontSize: "clamp(2.2rem, 4vw, 3.2rem)", fontWeight: 900, lineHeight: 1.12, marginBottom: 20, letterSpacing: "-1.5px" }}>
+              Həkimlərimizi
+              <span style={{ display: "block", background: "linear-gradient(90deg, #FFCDD2, #FF8A80)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Tanıyın &amp; Randevu</span>
+              Alın
+            </h1>
+
+            <p style={{ fontSize: "1rem", lineHeight: 1.7, color: "rgba(255,255,255,0.8)", maxWidth: 460, marginBottom: 32 }}>
+              NovaCare-də fəaliyyət göstərən 50+ ixtisaslı həkimləri axtarın, təcrübələri ilə tanış olun və birbaşa onlayn randevu Alın.
+            </p>
+
+            {/* Mini stats row */}
+            <div className="responsive-stats-row" style={{ display: "flex", gap: 0, marginBottom: 0 }}>
+              {[
+                { val: "50+", label: "Həkim" },
+                { val: "15+", label: "Şöbə" },
+                { val: "24/7", label: "Xidmət" },
+                { val: "98%", label: "Məmnuniyyət" },
+              ].map((s, i) => (
+                <div key={i} style={{ paddingRight: 28, borderRight: i < 3 ? "1px solid rgba(255,255,255,0.15)" : "none", paddingLeft: i > 0 ? 28 : 0 }}>
+                  <div style={{ fontSize: "1.8rem", fontWeight: 900, color: "#FFFFFF", lineHeight: 1 }}>{s.val}</div>
+                  <div style={{ fontSize: "0.72rem", fontWeight: 700, color: "rgba(255,255,255,0.6)", marginTop: 4, textTransform: "uppercase", letterSpacing: "0.5px" }}>{s.label}</div>
+                </div>
               ))}
-            </select>
+            </div>
+          </div>
 
-            {(search || selectedDept) && (
-              <button
-                onClick={() => { setSearch(""); setSelectedDept(""); }}
-                style={{
-                  padding: "12px 18px",
-                  borderRadius: 12,
-                  background: "rgba(255,255,255,0.18)",
-                  border: "1px solid rgba(255,255,255,0.25)",
-                  color: "#FFFFFF",
-                  fontWeight: 700,
-                  fontSize: "0.85rem",
-                  cursor: "pointer",
-                }}
-              >
-                Sıfırla
-              </button>
-            )}
+          {/* RIGHT — decorative visual */}
+          <div style={{ position: "relative", display: "flex", alignItems: "flex-end", justifyContent: "center", paddingBottom: 0, height: 340 }}>
+
+            {/* Main card — doctor illustration */}
+            <div style={{
+              position: "absolute",
+              bottom: 0,
+              left: "50%",
+              transform: "translateX(-50%)",
+              width: 220,
+              height: 300,
+              borderRadius: "24px 24px 0 0",
+              background: "linear-gradient(180deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.06) 100%)",
+              border: "1px solid rgba(255,255,255,0.2)",
+              backdropFilter: "blur(12px)",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 12,
+            }}>
+              <svg width="72" height="72" viewBox="0 0 80 80" fill="none">
+                <circle cx="40" cy="28" r="20" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.35)" strokeWidth="1.5" />
+                <circle cx="40" cy="24" r="10" fill="rgba(255,255,255,0.3)" />
+                <path d="M14 72c0-14.36 11.64-26 26-26s26 11.64 26 26" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5" />
+                <path d="M40 52v14M34 58h12" stroke="rgba(255,200,200,0.9)" strokeWidth="2.5" strokeLinecap="round" />
+              </svg>
+              <div style={{ textAlign: "center" }}>
+                <div style={{ fontSize: "0.9rem", fontWeight: 800, color: "#FFFFFF" }}>Dr. Mütəxəssis</div>
+                <div style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.65)", marginTop: 4 }}>Kardiologiya</div>
+              </div>
+              <div style={{ display: "flex", gap: 4 }}>
+                {[1,2,3,4,5].map(s => <span key={s} style={{ color: "#FDB931", fontSize: "0.8rem" }}>★</span>)}
+              </div>
+            </div>
+
+            {/* Floating card — top left */}
+            <div style={{
+              position: "absolute",
+              top: 24,
+              left: 0,
+              background: "rgba(255,255,255,0.12)",
+              backdropFilter: "blur(16px)",
+              border: "1px solid rgba(255,255,255,0.2)",
+              borderRadius: 16,
+              padding: "14px 18px",
+              minWidth: 150,
+              animation: "floatSlow 3s ease-in-out infinite"
+            }}>
+              <div style={{ fontSize: "0.7rem", color: "rgba(255,255,255,0.7)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.5px" }}>Bu Həftə</div>
+              <div style={{ fontSize: "1.4rem", fontWeight: 900, color: "#FFFFFF", marginTop: 4 }}>142</div>
+              <div style={{ fontSize: "0.72rem", color: "#FFCDD2", fontWeight: 600 }}>Randevu Alındı</div>
+            </div>
+
+            {/* Floating card — top right */}
+            <div style={{
+              position: "absolute",
+              top: 80,
+              right: 0,
+              background: "rgba(255,255,255,0.12)",
+              backdropFilter: "blur(16px)",
+              border: "1px solid rgba(255,255,255,0.2)",
+              borderRadius: 16,
+              padding: "12px 16px",
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              animation: "floatSlow 3.5s ease-in-out infinite"
+            }}>
+              <div style={{ width: 38, height: 38, borderRadius: 12, background: "rgba(74,222,128,0.2)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.1rem" }}>✓</div>
+              <div>
+                <div style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.7)", fontWeight: 700 }}>ONLINE</div>
+                <div style={{ fontSize: "0.8rem", fontWeight: 800, color: "#FFFFFF" }}>18 Həkim</div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
+      {/* SEARCH PANEL — clean floating card overlapping hero */}
+      <section style={{ maxWidth: 1240, margin: "-36px auto 0", padding: "0 24px", position: "relative", zIndex: 10 }}>
+        <div className="responsive-search-panel" style={{
+          background: "var(--surface)",
+          borderRadius: 20,
+          padding: "24px 28px",
+          boxShadow: "0 12px 40px rgba(0,0,0,0.12)",
+          border: "1px solid var(--border)",
+          display: "grid",
+          gridTemplateColumns: "1.5fr 1fr auto",
+          gap: 14,
+          alignItems: "center",
+          transition: "background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease"
+        }}>
+          <div style={{ position: "relative" }}>
+            <svg style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", opacity: 0.45 }} width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--text-dark)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Həkim adı və ya ixtisas sahəsi..." className="ac-input" style={{ paddingLeft: 42 }} />
+          </div>
+          <select value={selectedDept} onChange={(e) => setSelectedDept(e.target.value)} className="ac-input" style={{ cursor: "pointer" }}>
+            <option value="">Bütün Şöbələr</option>
+            {departments.map((d) => (<option key={d.id} value={d.id}>{d.name}</option>))}
+          </select>
+          {(search || selectedDept) ? (
+            <button onClick={() => { setSearch(""); setSelectedDept(""); }} style={{ padding: "12px 20px", borderRadius: 10, background: "var(--primary-light)", border: "1px solid var(--secondary-light)", color: "var(--primary)", fontWeight: 700, fontSize: "0.85rem", cursor: "pointer", whiteSpace: "nowrap" }}>✕ Sıfırla</button>
+          ) : (
+            <button className="ac-btn" style={{ padding: "12px 22px", fontSize: "0.85rem", whiteSpace: "nowrap" }}>Axtar</button>
+          )}
+        </div>
+      </section>
 
-      <main style={{ maxWidth: 1240, margin: "0 auto", padding: "60px 24px 80px", width: "100%", flex: 1 }}>
+
+      <main style={{ maxWidth: 1240, margin: "0 auto", padding: "36px 24px 80px", width: "100%", flex: 1 }}>
         {loading && (
           <div style={{ padding: "80px 0", textAlign: "center", color: "var(--text-light)", fontWeight: 700, fontSize: "0.95rem" }} className="animate-pulse">
             Həkimlər yüklənir...
@@ -544,7 +459,7 @@ export default function Doctors() {
  
       <footer className="ac-footer">
         <div style={{ maxWidth: 1240, margin: "0 auto", padding: "0 24px" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr", gap: 40, marginBottom: 16 }}>
+          <div className="ac-footer-grid" style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr", gap: 40, marginBottom: 16 }}>
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
                 <div style={{ width: 38, height: 38, background: "var(--primary)", borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -592,3 +507,4 @@ export default function Doctors() {
     </div>
   );
 }
+

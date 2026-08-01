@@ -39,7 +39,7 @@ export default function Analytics() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0f172a]">
+    <div className="min-h-screen" style={{ background: "var(--bg)", transition: "background-color 0.3s ease" }}>
       <Navbar />
 
       <div className="max-w-6xl mx-auto px-4 md:px-6 py-6 md:py-8">

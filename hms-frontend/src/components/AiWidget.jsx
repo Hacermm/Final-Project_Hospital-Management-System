@@ -83,11 +83,11 @@ export default function AiWidget() {
 
   const styles = {
     container: { position: "fixed", bottom: "24px", right: "24px", zIndex: 9999, display: "flex", flexDirection: "column", alignItems: "flex-end", fontFamily: "'Inter', system-ui, -apple-system, sans-serif" },
-    chatWindow: { width: "380px", height: "620px", maxHeight: "85vh", marginBottom: "20px", backgroundColor: "#FFFFFF", borderRadius: "24px", boxShadow: "0 20px 60px rgba(0, 0, 0, 0.18), 0 4px 20px rgba(227, 30, 36, 0.08)", display: "flex", flexDirection: "column", overflow: "hidden", border: "1px solid rgba(227, 30, 36, 0.1)", animation: "slideUpKontakt 0.35s cubic-bezier(0.16, 1, 0.3, 1)" },
-    header: { background: "linear-gradient(135deg, #E31E24 0%, #B91C1C 100%)", padding: "18px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", color: "#FFFFFF", boxShadow: "0 4px 12px rgba(227, 30, 36, 0.2)" },
+    chatWindow: { width: "380px", height: "620px", maxHeight: "85vh", marginBottom: "20px", backgroundColor: "var(--surface)", borderRadius: "24px", boxShadow: "0 20px 60px rgba(0, 0, 0, 0.28)", display: "flex", flexDirection: "column", overflow: "hidden", border: "1px solid var(--border)", animation: "slideUpKontakt 0.35s cubic-bezier(0.16, 1, 0.3, 1)", transition: "background-color 0.3s ease" },
+    header: { background: "linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%)", padding: "18px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", color: "#FFFFFF", boxShadow: "0 4px 12px rgba(198, 40, 40, 0.2)" },
     headerLeft: { display: "flex", alignItems: "center", gap: "12px" },
     avatar: { width: "44px", height: "44px", backgroundColor: "#FFFFFF", borderRadius: "50%", display: "flex", justifyContent: "center", alignItems: "center", boxShadow: "0 4px 12px rgba(0,0,0,0.15)", border: "2px solid rgba(255,255,255,0.9)", flexShrink: 0 },
-    avatarIcon: { width: "24px", height: "24px", color: "#E31E24" },
+    avatarIcon: { width: "24px", height: "24px", color: "var(--primary)" },
     headerTitleContainer: { display: "flex", flexDirection: "column", gap: "2px" },
     headerTitle: { margin: 0, fontSize: "16px", fontWeight: "700", display: "flex", alignItems: "center", gap: "8px", letterSpacing: "-0.3px", color: "#FFFFFF" },
     onlineBadge: { display: "flex", alignItems: "center", gap: "5px", fontSize: "11px", fontWeight: "500", backgroundColor: "rgba(255,255,255,0.18)", padding: "2px 8px", borderRadius: "99px", color: "#FFFFFF" },
@@ -95,32 +95,32 @@ export default function AiWidget() {
     headerSubtitle: { margin: 0, fontSize: "12px", color: "rgba(255,255,255,0.9)", fontWeight: "400" },
     headerActions: { display: "flex", gap: "6px" },
     iconBtn: { background: "rgba(255,255,255,0.15)", border: "none", color: "#FFFFFF", width: "32px", height: "32px", borderRadius: "10px", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "all 0.2s ease" },
-    guestBanner: { backgroundColor: "#FFF1F2", borderBottom: "1px solid #FFE4E6", padding: "10px 18px", display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "12px", color: "#BE123C" },
-    guestLink: { background: "#E31E24", border: "none", color: "#FFFFFF", fontWeight: "600", fontSize: "11px", borderRadius: "8px", cursor: "pointer", padding: "5px 12px", transition: "all 0.2s ease" },
-    messagesArea: { flex: 1, padding: "20px", overflowY: "auto", backgroundColor: "#F8FAFC", display: "flex", flexDirection: "column", gap: "16px" },
+    guestBanner: { backgroundColor: "var(--primary-light)", borderBottom: "1px solid var(--secondary-light)", padding: "10px 18px", display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "12px", color: "var(--primary)" },
+    guestLink: { background: "var(--primary)", border: "none", color: "#FFFFFF", fontWeight: "600", fontSize: "11px", borderRadius: "8px", cursor: "pointer", padding: "5px 12px", transition: "all 0.2s ease" },
+    messagesArea: { flex: 1, padding: "20px", overflowY: "auto", backgroundColor: "var(--bg)", display: "flex", flexDirection: "column", gap: "16px", transition: "background-color 0.3s ease" },
     welcomeContainer: { display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", textAlign: "center", animation: "fadeIn 0.5s ease", padding: "0 10px" },
-    welcomeAvatar: { width: "72px", height: "72px", borderRadius: "50%", background: "linear-gradient(135deg, #FFF1F2 0%, #FFE4E6 100%)", border: "2px solid #FECDD3", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "16px", boxShadow: "0 8px 24px rgba(227, 30, 36, 0.12)" },
-    welcomeTitle: { margin: "0 0 6px 0", fontSize: "18px", fontWeight: "700", color: "#0F172A" },
-    welcomeSubtitle: { margin: "0 0 4px 0", fontSize: "13px", fontWeight: "600", color: "#E31E24" },
-    welcomeText: { margin: "0 0 20px 0", fontSize: "13px", color: "#64748B", lineHeight: "1.5", maxWidth: "280px" },
+    welcomeAvatar: { width: "72px", height: "72px", borderRadius: "50%", background: "var(--primary-light)", border: "2px solid var(--secondary-light)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "16px", boxShadow: "0 8px 24px rgba(198, 40, 40, 0.12)" },
+    welcomeTitle: { margin: "0 0 6px 0", fontSize: "18px", fontWeight: "700", color: "var(--text-dark)" },
+    welcomeSubtitle: { margin: "0 0 4px 0", fontSize: "13px", fontWeight: "600", color: "var(--primary)" },
+    welcomeText: { margin: "0 0 20px 0", fontSize: "13px", color: "var(--text-mid)", lineHeight: "1.5", maxWidth: "280px" },
     suggestionsGrid: { display: "flex", flexWrap: "wrap", gap: "8px", width: "100%", justifyContent: "center" },
-    suggestionBtn: { backgroundColor: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: "9999px", padding: "9px 15px", fontSize: "12px", color: "#1E293B", fontWeight: "600", cursor: "pointer", textAlign: "center", transition: "all 0.2s ease", boxShadow: "0 2px 6px rgba(0,0,0,0.03)" },
+    suggestionBtn: { backgroundColor: "var(--surface)", border: "1px solid var(--border)", borderRadius: "9999px", padding: "9px 15px", fontSize: "12px", color: "var(--text-dark)", fontWeight: "600", cursor: "pointer", textAlign: "center", transition: "all 0.2s ease", boxShadow: "var(--shadow-xs)" },
     messageRow: { display: "flex", width: "100%", animation: "fadeIn 0.3s ease" },
-    msgUser: { maxWidth: "82%", padding: "13px 18px", borderRadius: "20px 20px 4px 20px", background: "linear-gradient(135deg, #E31E24 0%, #B91C1C 100%)", color: "#FFFFFF", fontSize: "14px", lineHeight: "1.5", boxShadow: "0 4px 12px rgba(227, 30, 36, 0.25)" },
+    msgUser: { maxWidth: "82%", padding: "13px 18px", borderRadius: "20px 20px 4px 20px", background: "linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%)", color: "#FFFFFF", fontSize: "14px", lineHeight: "1.5", boxShadow: "0 4px 12px rgba(198, 40, 40, 0.25)" },
     msgBotRow: { display: "flex", gap: "10px", maxWidth: "88%", alignItems: "flex-end" },
-    botAvatarTiny: { width: "28px", height: "28px", borderRadius: "50%", background: "linear-gradient(135deg, #E31E24 0%, #B91C1C 100%)", color: "#FFFFFF", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "14px", flexShrink: 0, marginBottom: "2px" },
-    msgBot: { padding: "13px 18px", borderRadius: "20px 20px 20px 4px", backgroundColor: "#FFFFFF", color: "#1E293B", fontSize: "14px", lineHeight: "1.5", border: "1px solid #E2E8F0", boxShadow: "0 4px 12px rgba(0,0,0,0.04)" },
-    typingIndicator: { display: "flex", gap: "5px", padding: "14px 18px", backgroundColor: "#FFFFFF", borderRadius: "20px 20px 20px 4px", border: "1px solid #E2E8F0", width: "fit-content", boxShadow: "0 4px 12px rgba(0,0,0,0.04)" },
-    typingDot: { width: "6px", height: "6px", backgroundColor: "#E31E24", borderRadius: "50%" },
-    inputArea: { padding: "14px 18px", backgroundColor: "#FFFFFF", borderTop: "1px solid #F1F5F9", display: "flex", gap: "10px", alignItems: "center" },
-    input: { flex: 1, padding: "12px 18px", backgroundColor: "#F8FAFC", border: "1px solid #E2E8F0", borderRadius: "9999px", fontSize: "13px", color: "#0F172A", outline: "none", transition: "all 0.2s ease" },
-    sendBtn: { width: "42px", height: "42px", borderRadius: "50%", background: "linear-gradient(135deg, #E31E24 0%, #B91C1C 100%)", border: "none", color: "#FFFFFF", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", boxShadow: "0 4px 12px rgba(227, 30, 36, 0.35)", flexShrink: 0 },
+    botAvatarTiny: { width: "28px", height: "28px", borderRadius: "50%", background: "linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%)", color: "#FFFFFF", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "14px", flexShrink: 0, marginBottom: "2px" },
+    msgBot: { padding: "13px 18px", borderRadius: "20px 20px 20px 4px", backgroundColor: "var(--surface)", color: "var(--text-dark)", fontSize: "14px", lineHeight: "1.5", border: "1px solid var(--border)", boxShadow: "var(--shadow-xs)" },
+    typingIndicator: { display: "flex", gap: "5px", padding: "14px 18px", backgroundColor: "var(--surface)", borderRadius: "20px 20px 20px 4px", border: "1px solid var(--border)", width: "fit-content", boxShadow: "var(--shadow-xs)" },
+    typingDot: { width: "6px", height: "6px", backgroundColor: "var(--primary)", borderRadius: "50%" },
+    inputArea: { padding: "14px 18px", backgroundColor: "var(--surface)", borderTop: "1px solid var(--border)", display: "flex", gap: "10px", alignItems: "center" },
+    input: { flex: 1, padding: "12px 18px", backgroundColor: "var(--bg)", border: "1px solid var(--border)", borderRadius: "9999px", fontSize: "13px", color: "var(--text-dark)", outline: "none", transition: "all 0.2s ease" },
+    sendBtn: { width: "42px", height: "42px", borderRadius: "50%", background: "linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%)", border: "none", color: "#FFFFFF", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", boxShadow: "0 4px 12px rgba(198, 40, 40, 0.35)", flexShrink: 0 },
     fabWrapper: { position: "relative", display: "flex", alignItems: "center", justifyContent: "center" },
     fabGroup: { display: "flex", alignItems: "center", gap: "10px" },
-    fabLabel: { backgroundColor: "#FFFFFF", color: "#0F172A", padding: "8px 14px", borderRadius: "9999px", fontSize: "13px", fontWeight: "600", boxShadow: "0 4px 16px rgba(0,0,0,0.12)", border: "1px solid #F1F5F9", display: "flex", alignItems: "center", gap: "6px", cursor: "pointer" },
-    fabLabelDot: { width: "8px", height: "8px", backgroundColor: "#E31E24", borderRadius: "50%", animation: "fadeInOut 1.5s infinite" },
-    fab: { width: "60px", height: "60px", borderRadius: "50%", background: "linear-gradient(135deg, #E31E24 0%, #B91C1C 100%)", border: "none", color: "#FFFFFF", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", boxShadow: "0 8px 24px rgba(227, 30, 36, 0.45)", zIndex: 2, position: "relative" },
-    ring: { position: "absolute", right: 0, width: "60px", height: "60px", borderRadius: "50%", border: "2px solid #E31E24", animation: "pulseRingKontakt 2s infinite cubic-bezier(0.4, 0, 0.6, 1)" }
+    fabLabel: { backgroundColor: "var(--surface)", color: "var(--text-dark)", padding: "8px 14px", borderRadius: "9999px", fontSize: "13px", fontWeight: "600", boxShadow: "var(--shadow-md)", border: "1px solid var(--border)", display: "flex", alignItems: "center", gap: "6px", cursor: "pointer" },
+    fabLabelDot: { width: "8px", height: "8px", backgroundColor: "var(--primary)", borderRadius: "50%", animation: "fadeInOut 1.5s infinite" },
+    fab: { width: "60px", height: "60px", borderRadius: "50%", background: "linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%)", border: "none", color: "#FFFFFF", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", boxShadow: "0 8px 24px rgba(198, 40, 40, 0.45)", zIndex: 2, position: "relative" },
+    ring: { position: "absolute", right: 0, width: "60px", height: "60px", borderRadius: "50%", border: "2px solid var(--primary)", animation: "pulseRingKontakt 2s infinite cubic-bezier(0.4, 0, 0.6, 1)" }
   };
 
   return (
@@ -147,14 +147,14 @@ export default function AiWidget() {
           0% { transform: scale(0.9); opacity: 1; border-width: 2px; }
           100% { transform: scale(1.65); opacity: 0; border-width: 1px; }
         }
-        .ai-hover-btn:hover { background-color: #FFF1F2 !important; border-color: #FECDD3 !important; color: #E31E24 !important; transform: translateY(-2px); }
+        .ai-hover-btn:hover { background-color: var(--primary-light) !important; border-color: var(--secondary-light) !important; color: var(--primary) !important; transform: translateY(-2px); }
         .ai-hover-icon:hover { background-color: rgba(255,255,255,0.25) !important; transform: scale(1.06); }
-        .ai-input:focus { border-color: #E31E24 !important; background-color: #FFFFFF !important; box-shadow: 0 0 0 3px rgba(227, 30, 36, 0.1) !important; }
+        .ai-input:focus { border-color: var(--primary) !important; background-color: var(--surface) !important; box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.1) !important; }
         .ai-send-btn:hover:not(:disabled) { transform: scale(1.08); }
         .ai-send-btn:disabled { opacity: 0.55; cursor: not-allowed; }
         .ai-fab:hover { transform: scale(1.06); }
         .ai-fab:active { transform: scale(0.95); }
-        .guest-login-btn:hover { background: #B91C1C !important; }
+        .guest-login-btn:hover { background: var(--primary-hover) !important; }
       `}</style>
       
       <div style={styles.container}>
@@ -208,7 +208,7 @@ export default function AiWidget() {
               {messages.length === 0 && !sending && (
                 <div style={styles.welcomeContainer}>
                   <div style={styles.welcomeAvatar}>
-                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#E31E24" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M12 2a8 8 0 0 0-8 8v3a4 4 0 0 0 4 4h1v-7H5v-1a7 7 0 0 1 14 0v1h-4v7h1a4 4 0 0 0 4-4v-3a8 8 0 0 0-8-8z"/>
                       <circle cx="12" cy="17" r="1"/>
                     </svg>
@@ -272,7 +272,7 @@ export default function AiWidget() {
               <input
                 value={text}
                 onChange={(e) => setText(e.target.value)}
-                placeholder="Sualınızı bura yazın..."
+                placeholder="Mesajınızı bura yazın..."
                 disabled={sending}
                 style={styles.input}
                 className="ai-input"
@@ -285,30 +285,24 @@ export default function AiWidget() {
         )}
 
         <div style={styles.fabWrapper}>
-          {!isOpen && (
-            <div style={styles.fabGroup}>
-              <div onClick={() => setIsOpen(true)} style={styles.fabLabel}>
+          <div style={styles.fabGroup}>
+            {!isOpen && (
+              <div style={styles.fabLabel} onClick={() => setIsOpen(true)}>
                 <span style={styles.fabLabelDot} />
-                <span>Canlı Dəstək</span>
+                Canlı Dəstək
               </div>
-              <div style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <div style={styles.ring} />
-                <button onClick={() => setIsOpen(true)} style={styles.fab} className="ai-fab" aria-label="Canlı Dəstək">
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/>
-                  </svg>
-                </button>
-              </div>
-            </div>
-          )}
-          {isOpen && (
-            <button onClick={() => setIsOpen(false)} style={styles.fab} className="ai-fab" aria-label="Bağla">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            )}
+            <button onClick={() => setIsOpen(!isOpen)} style={styles.fab} className="ai-fab" aria-label="Ai Assistent Çat">
+              {isOpen ? (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              ) : (
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              )}
             </button>
-          )}
+          </div>
+          {!isOpen && <div style={styles.ring} />}
         </div>
       </div>
     </>
   );
 }
-

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import api from "../../lib/api";
 import Navbar from "../../components/Navbar";
 
@@ -31,68 +32,133 @@ export default function MedicalHistory() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0f172a]">
+    <div style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-dark)", fontFamily: "'Plus Jakarta Sans', sans-serif", display: "flex", flexDirection: "column" }}>
       <Navbar />
 
-      <div className="max-w-5xl mx-auto px-4 md:px-6 py-6 md:py-8">
-        <h1 className="text-2xl font-bold text-white mb-6">Tibbi Tarixçəm</h1>
+      <main style={{ maxWidth: 920, margin: "0 auto", padding: "40px 24px 80px", width: "100%", flex: 1, boxSizing: "border-box" }}>
+        
+        {/* Navigation Breadcrumb */}
+        <div style={{ display: "flex", alignItems: "center", justify: "space-between", marginBottom: 24 }}>
+          <Link to="/patient" style={{ display: "inline-flex", alignItems: "center", gap: 6, color: "var(--primary)", fontWeight: 700, fontSize: "0.88rem", textDecoration: "none" }}>
+            ← Pasiyent Kabinetinə Qayıt
+          </Link>
+        </div>
 
-        {message && <p className="mb-4 text-sm font-medium hms-message-error">{message}</p>}
-
-        {loading ? (
-          <div className="flex items-center gap-3 text-slate-400 justify-center py-16">
-            <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeDasharray="60" strokeDashoffset="20" strokeLinecap="round" />
-            </svg>
-            Yüklənir...
-          </div>
-        ) : (
-          <>
-            <div className="space-y-5 stagger-children">
-              {records.map((r) => (
-                <div key={r.id} className="glass-card p-4 md:p-6">
-                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-3">
-                    <div className="min-w-0">
-                      <h3 className="font-semibold text-white text-lg">{r.diagnosis}</h3>
-                      <p className="text-sm text-indigo-400">
-                        {r.doctor?.name} — {r.doctor?.specialization}
-                      </p>
-                      <p className="text-sm text-slate-500">📅 {r.date}</p>
-                    </div>
-                    <button
-                      onClick={() => downloadPdf(r.id)}
-                      className="hms-btn text-sm !py-2 !px-4 shrink-0 self-start"
-                    >
-                      📄 PDF yüklə
-                    </button>
-                  </div>
-
-                  {r.notes && <p className="text-sm text-slate-500 italic mb-3">Qeyd: {r.notes}</p>}
-
-                  {r.prescriptions?.length > 0 && (
-                    <div className="border-t border-white/5 pt-3">
-                      <p className="text-sm font-medium text-slate-400 mb-2">Reseptlər:</p>
-                      <div className="space-y-1.5">
-                        {r.prescriptions.map((p) => (
-                          <div key={p.id} className="text-sm text-slate-500 flex flex-wrap gap-2 items-center">
-                            <span className="font-medium text-emerald-400">💊 {p.medicine}</span>
-                            {p.dosage && <span>— {p.dosage}</span>}
-                            {p.duration && <span className="text-slate-600">({p.duration})</span>}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
+        {/* Title Header Card */}
+        <div className="ac-card" style={{ padding: "28px 32px", marginBottom: 28 }}>
+          <div style={{ display: "flex", justify: "space-between", alignItems: "center" }}>
+            <div>
+              <h1 style={{ fontSize: "1.6rem", fontWeight: 900, color: "var(--text-dark)", margin: "0 0 4px 0" }}>
+                Tibbi Tarixçəm Və Reseptlər
+              </h1>
+              <p style={{ fontSize: "0.88rem", color: "var(--text-light)", margin: 0 }}>
+                Diaqnozlarınız, həkimləriniz tərəfindən yazılmış reseptlər və müalicə planları
+              </p>
             </div>
+            <span style={{ padding: "6px 16px", borderRadius: 20, fontSize: "0.82rem", fontWeight: 900, background: "var(--primary-light)", color: "var(--primary)" }}>
+              {records.length} Tibbi Qeyd
+            </span>
+          </div>
+        </div>
 
-            {records.length === 0 && (
-              <p className="text-slate-500 text-center mt-16">Hələ tibbi qeydiniz yoxdur.</p>
-            )}
-          </>
+        {message && (
+          <p
+            style={{
+              padding: "14px 16px",
+              borderRadius: 12,
+              fontSize: "0.88rem",
+              fontWeight: 800,
+              textAlign: "center",
+              marginBottom: 20,
+              background: "rgba(239,68,68,0.1)",
+              color: "#dc2626",
+              border: "1px solid rgba(239,68,68,0.3)",
+            }}
+          >
+            {message}
+          </p>
         )}
-      </div>
+
+        {/* Medical Records List */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+          {loading && (
+            <div style={{ textAlign: "center", padding: "60px 0", color: "var(--text-light)", fontWeight: 700, fontSize: "0.95rem" }} className="animate-pulse">
+              Tibbi tarixçə yüklənir...
+            </div>
+          )}
+
+          {!loading && records.length === 0 && (
+            <div className="ac-card" style={{ padding: "60px 32px", textAlign: "center" }}>
+              <div style={{ fontSize: "3rem", marginBottom: 12 }}>🩺</div>
+              <h3 style={{ fontSize: "1.2rem", fontWeight: 900, color: "var(--text-dark)", marginBottom: 8 }}>
+                Hələ Tibbi Tarixçə Qeydiniz Yoxdur
+              </h3>
+              <p style={{ fontSize: "0.88rem", color: "var(--text-light)" }}>
+                Həkim müayinəsindən keçdikdən sonra diaqnozlarınız və reseptləriniz burada əks olunacaq.
+              </p>
+            </div>
+          )}
+
+          {!loading && records.map((r) => (
+            <div key={r.id} className="ac-card" style={{ padding: "28px 32px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 20, marginBottom: 16, flexWrap: "wrap" }}>
+                <div>
+                  <h3 style={{ fontSize: "1.25rem", fontWeight: 900, color: "var(--text-dark)", margin: "0 0 4px 0" }}>
+                    Diaqnoz: {r.diagnosis}
+                  </h3>
+                  <p style={{ fontSize: "0.88rem", fontWeight: 800, color: "var(--primary)", margin: "0 0 4px 0" }}>
+                    {r.doctor?.name} — {r.doctor?.specialization}
+                  </p>
+                  <p style={{ fontSize: "0.8rem", color: "var(--text-light)", margin: 0 }}>
+                    📅 Tarix: {r.date}
+                  </p>
+                </div>
+
+                <button
+                  onClick={() => downloadPdf(r.id)}
+                  className="ac-btn"
+                  style={{
+                    padding: "10px 20px",
+                    fontSize: "0.84rem",
+                    fontWeight: 800,
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 8,
+                  }}
+                >
+                  📄 RESEPTİ PDF YÜKLƏ
+                </button>
+              </div>
+
+              {r.notes && (
+                <div style={{ padding: "14px 18px", borderRadius: 12, background: "var(--bg)", border: "1px solid var(--border)", fontSize: "0.85rem", color: "var(--text-mid)", fontStyle: "italic", marginBottom: 16 }}>
+                  Həkim Qeydi: {r.notes}
+                </div>
+              )}
+
+              {r.prescriptions?.length > 0 && (
+                <div style={{ paddingTop: 16, borderTop: "1px solid var(--border)" }}>
+                  <h4 style={{ fontSize: "0.85rem", fontWeight: 900, color: "var(--text-dark)", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 12 }}>
+                    Təyin Olunmuş Dərmanlar & Resept
+                  </h4>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                    {r.prescriptions.map((p) => (
+                      <div key={p.id} style={{ display: "flex", alignItems: "center", gap: 10, fontSize: "0.85rem", background: "var(--bg)", padding: "10px 14px", borderRadius: 10, border: "1px solid var(--border)" }}>
+                        <span style={{ fontSize: "1.1rem" }}>💊</span>
+                        <span style={{ fontWeight: 800, color: "var(--primary)" }}>{p.medicine}</span>
+                        {p.dosage && <span style={{ color: "var(--text-mid)", fontWeight: 600 }}>— {p.dosage}</span>}
+                        {p.duration && <span style={{ color: "var(--text-light)", fontSize: "0.78rem" }}>({p.duration})</span>}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+            </div>
+          ))}
+        </div>
+
+      </main>
     </div>
   );
 }

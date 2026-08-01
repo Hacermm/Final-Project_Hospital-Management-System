@@ -124,19 +124,21 @@ export default function Chat() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0f172a] flex flex-col">
+    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", background: "var(--bg)", color: "var(--text-dark)", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
       <Navbar />
 
       <div
-        className="flex-1 max-w-7xl w-full mx-auto p-3 md:p-6 flex flex-col md:flex-row gap-3 md:gap-4"
-        style={{ height: "calc(100vh - 64px)" }}
+        className="max-w-7xl w-full mx-auto p-3 md:p-6 flex flex-col md:flex-row gap-4"
+        style={{ flex: 1, minHeight: "calc(100vh - 80px)", boxSizing: "border-box" }}
       >
+        {/* Left Conversations Sidebar */}
         <div
-          className={`w-full md:w-80 shrink-0 glass-card flex-col animate-slide-in-left ${
+          className={`w-full md:w-80 shrink-0 ac-card flex-col ${
             activeConv ? "hidden md:flex" : "flex"
           }`}
+          style={{ padding: 0, overflow: "hidden", display: "flex" }}
         >
-          <div className="p-4 border-b border-white/5">
+          <div style={{ padding: 16, borderBottom: "1px solid var(--border)" }}>
             <select
               onChange={(e) => {
                 if (e.target.value) {
@@ -144,10 +146,11 @@ export default function Chat() {
                   e.target.value = "";
                 }
               }}
-              className="hms-select text-sm"
+              className="ac-input"
+              style={{ width: "100%", padding: "10px 14px", fontSize: "0.85rem", fontWeight: 700 }}
               defaultValue=""
             >
-              <option value="">+ Yeni söhbət başlat</option>
+              <option value="">+ Yeni Söhbət Başlat</option>
               {users.map((u) => (
                 <option key={u.id} value={u.id}>
                   {u.name}
@@ -156,124 +159,145 @@ export default function Chat() {
             </select>
           </div>
 
-          <div className="flex-1 overflow-y-auto">
-            {conversations.map((c) => (
-              <button
-                key={c.id}
-                onClick={() => setActiveConv(c)}
-                className={`w-full text-left px-4 py-3.5 border-b border-white/5 hover:bg-white/5 flex items-center gap-3 group ${
-                  activeConv?.id === c.id ? "bg-indigo-500/10 border-l-2 border-l-indigo-500" : ""
-                }`}
-              >
-                <div
-                  className={`w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${
-                    activeConv?.id === c.id
-                      ? "bg-gradient-to-br from-indigo-500 to-purple-600 text-white"
-                      : "bg-slate-700/50 text-slate-300"
-                  }`}
+          <div style={{ flex: 1, overflowY: "auto" }}>
+            {conversations.map((c) => {
+              const isSelected = activeConv?.id === c.id;
+              return (
+                <button
+                  key={c.id}
+                  onClick={() => setActiveConv(c)}
+                  style={{
+                    width: "100%",
+                    textAlign: "left",
+                    padding: "14px 18px",
+                    borderBottom: "1px solid var(--border)",
+                    background: isSelected ? "var(--primary-light)" : "transparent",
+                    borderLeft: isSelected ? "4px solid var(--primary)" : "4px solid transparent",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 12,
+                    cursor: "pointer",
+                    transition: "all 0.2s",
+                  }}
                 >
-                  {getInitials(c.other_user?.name)}
-                </div>
-
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center justify-between gap-2">
-                    <p
-                      className={`font-semibold text-sm truncate ${
-                        activeConv?.id === c.id
-                          ? "text-indigo-300"
-                          : "text-slate-200 group-hover:text-white"
-                      }`}
-                    >
-                      {c.other_user?.name}
-                    </p>
-                    {unread[c.id] > 0 && activeConv?.id !== c.id && (
-                      <span className="shrink-0 min-w-[20px] h-5 px-1.5 rounded-full bg-red-500 text-white text-[11px] font-bold flex items-center justify-center">
-                        {unread[c.id]}
-                      </span>
-                    )}
+                  <div
+                    style={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: "50%",
+                      background: isSelected ? "linear-gradient(135deg, #7F1D1D 0%, #B71C1C 100%)" : "var(--bg)",
+                      color: isSelected ? "#FFFFFF" : "var(--text-dark)",
+                      border: "1px solid var(--border)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: "0.82rem",
+                      fontWeight: 900,
+                      shrink: 0,
+                    }}
+                  >
+                    {getInitials(c.other_user?.name)}
                   </div>
-                  <p className="text-xs text-slate-500 truncate">{c.last_message || "—"}</p>
-                </div>
-              </button>
-            ))}
+
+                  <div style={{ minWidth: 0, flex: 1 }}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
+                      <p style={{ fontWeight: 800, fontSize: "0.88rem", color: isSelected ? "var(--primary)" : "var(--text-dark)", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        {c.other_user?.name}
+                      </p>
+                      {unread[c.id] > 0 && !isSelected && (
+                        <span style={{ minWidth: 18, height: 18, padding: "0 6px", borderRadius: 10, background: "var(--primary)", color: "#FFFFFF", fontSize: "0.7rem", fontWeight: 900, display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
+                          {unread[c.id]}
+                        </span>
+                      )}
+                    </div>
+                    <p style={{ fontSize: "0.78rem", color: "var(--text-light)", margin: "3px 0 0 0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                      {c.last_message || "—"}
+                    </p>
+                  </div>
+                </button>
+              );
+            })}
 
             {conversations.length === 0 && (
-              <div className="flex flex-col items-center justify-center py-12 px-4">
-                <div className="w-16 h-16 rounded-2xl bg-slate-800/50 flex items-center justify-center mb-4">
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#475569" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                  </svg>
-                </div>
-                <p className="text-slate-500 text-sm text-center">Hələ söhbət yoxdur</p>
-                <p className="text-slate-600 text-xs text-center mt-1">
-                  Yuxarıdakı seçimdən yeni söhbət başladın
-                </p>
+              <div style={{ padding: "48px 20px", textAlign: "center" }}>
+                <div style={{ fontSize: "2.4rem", marginBottom: 8 }}>💬</div>
+                <p style={{ fontSize: "0.88rem", fontWeight: 800, color: "var(--text-dark)", margin: "0 0 4px 0" }}>Hələ söhbətiniz yoxdur</p>
+                <p style={{ fontSize: "0.78rem", color: "var(--text-light)", margin: 0 }}>Yuxarıdakı seçimdən yeni söhbət başladın</p>
               </div>
             )}
           </div>
         </div>
 
+        {/* Right Active Message Window */}
         <div
-          className={`flex-1 glass-card flex-col animate-fade-in-up ${
+          className={`flex-1 ac-card flex-col ${
             activeConv ? "flex" : "hidden md:flex"
           }`}
+          style={{ padding: 0, overflow: "hidden", display: "flex" }}
         >
           {activeConv ? (
             <>
-              <div className="px-5 py-4 border-b border-white/5 flex items-center gap-3">
+              {/* Active Conversation Header */}
+              <div style={{ padding: "16px 24px", borderBottom: "1px solid var(--border)", display: "flex", alignItems: "center", gap: 14, background: "var(--surface)" }}>
                 <button
                   onClick={() => setActiveConv(null)}
-                  className="md:hidden text-slate-400 hover:text-white shrink-0"
-                  aria-label="Geri"
+                  className="md:hidden"
+                  style={{ background: "none", border: "none", color: "var(--text-dark)", cursor: "pointer", padding: 4 }}
                 >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M19 12H5M12 19l-7-7 7-7" />
-                  </svg>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
                 </button>
 
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-xs font-bold text-white shrink-0">
+                <div style={{ width: 42, height: 42, borderRadius: "50%", background: "linear-gradient(135deg, #7F1D1D 0%, #B71C1C 100%)", color: "#FFFFFF", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.85rem", fontWeight: 900, shrink: 0 }}>
                   {getInitials(activeConv.other_user?.name)}
                 </div>
-                <div className="min-w-0">
-                  <p className="font-semibold text-white truncate">{activeConv.other_user?.name}</p>
-                  <p className="text-xs text-slate-400">Aktiv söhbət</p>
+                <div style={{ minWidth: 0 }}>
+                  <p style={{ fontSize: "1rem", fontWeight: 900, color: "var(--text-dark)", margin: 0 }}>{activeConv.other_user?.name}</p>
+                  <span style={{ fontSize: "0.75rem", color: "#059669", fontWeight: 800 }}>● Canlı Söhbət</span>
                 </div>
 
                 <button
                   onClick={() => startCall(activeConv.other_user.id, activeConv.other_user.name)}
-                  className="ml-auto w-10 h-10 rounded-full bg-emerald-500/15 text-emerald-400 hover:bg-emerald-500/25 flex items-center justify-center shrink-0 transition"
+                  style={{
+                    marginLeft: "auto",
+                    width: 42,
+                    height: 42,
+                    borderRadius: "50%",
+                    background: "rgba(16,185,129,0.12)",
+                    border: "1px solid rgba(16,185,129,0.3)",
+                    color: "#059669",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    cursor: "pointer",
+                  }}
                   title="Səsli zəng"
                 >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
-                  </svg>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                 </button>
               </div>
 
-              <div className="flex-1 overflow-y-auto p-4 md:p-5 space-y-3">
+              {/* Message List */}
+              <div style={{ flex: 1, overflowY: "auto", padding: "24px", display: "flex", flexDirection: "column", gap: 12, background: "var(--bg)" }}>
                 {messages.map((m, i) => (
-                  <div
-                    key={m.id ?? i}
-                    className={`flex ${m.is_mine ? "justify-end" : "justify-start"} animate-fade-in`}
-                  >
+                  <div key={m.id ?? i} style={{ display: "flex", justifyContent: m.is_mine ? "flex-end" : "flex-start" }}>
                     <div
-                      className={`max-w-[80%] md:max-w-[75%] px-4 py-2.5 rounded-2xl ${
-                        m.is_mine
-                          ? "bg-gradient-to-r from-indigo-600 to-indigo-500 text-white rounded-br-md"
-                          : "bg-slate-700/50 text-slate-200 rounded-bl-md"
-                      }`}
+                      style={{
+                        maxWidth: "75%",
+                        padding: "12px 18px",
+                        borderRadius: m.is_mine ? "18px 18px 4px 18px" : "18px 18px 18px 4px",
+                        background: m.is_mine ? "linear-gradient(135deg, #7F1D1D 0%, #B71C1C 100%)" : "var(--surface)",
+                        color: m.is_mine ? "#FFFFFF" : "var(--text-dark)",
+                        border: m.is_mine ? "none" : "1px solid var(--border)",
+                        boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+                      }}
                     >
                       {!m.is_mine && (
-                        <p className="text-[11px] font-semibold text-indigo-400 mb-0.5">
+                        <p style={{ fontSize: "0.72rem", fontWeight: 900, color: "var(--primary)", margin: "0 0 4px 0" }}>
                           {m.sender_name}
                         </p>
                       )}
-                      <p className="text-sm leading-relaxed break-words">{m.body}</p>
-                      <p
-                        className={`text-[10px] mt-1.5 ${
-                          m.is_mine ? "text-indigo-200/70" : "text-slate-500"
-                        }`}
-                      >
+                      <p style={{ fontSize: "0.9rem", lineHeight: 1.5, margin: 0, wordBreak: "break-word" }}>{m.body}</p>
+                      <p style={{ fontSize: "0.68rem", marginTop: 4, textAlign: "right", color: m.is_mine ? "rgba(255,255,255,0.7)" : "var(--text-light)", margin: "4px 0 0 0" }}>
                         {m.created_at}
                       </p>
                     </div>
@@ -282,33 +306,31 @@ export default function Chat() {
                 <div ref={bottomRef} />
               </div>
 
-              <form onSubmit={send} className="p-3 md:p-4 border-t border-white/5 flex gap-2 md:gap-3">
+              {/* Message Input Form */}
+              <form onSubmit={send} style={{ padding: "16px 20px", borderTop: "1px solid var(--border)", display: "flex", gap: 12, background: "var(--surface)" }}>
                 <input
                   value={text}
                   onChange={(e) => setText(e.target.value)}
-                  placeholder="Mesaj yazın..."
-                  className="flex-1 px-4 md:px-5 py-3 bg-slate-800/50 border border-white/5 rounded-2xl text-sm text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20"
+                  placeholder="Mesajınızı yazın..."
+                  className="ac-input"
+                  style={{ flex: 1, padding: "12px 18px", borderRadius: 14, fontSize: "0.9rem", fontWeight: 600 }}
                 />
                 <button
                   type="submit"
-                  className="w-12 h-12 rounded-2xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white flex items-center justify-center hover:from-indigo-500 hover:to-purple-500 hover:shadow-lg hover:shadow-indigo-500/25 shrink-0"
+                  className="ac-btn"
+                  style={{ width: 48, height: 48, borderRadius: 14, display: "flex", alignItems: "center", justifyContent: "center", shrink: 0, padding: 0 }}
                 >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <line x1="22" y1="2" x2="11" y2="13" />
-                    <polygon points="22 2 15 22 11 13 2 9 22 2" />
-                  </svg>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
                 </button>
               </form>
             </>
           ) : (
-            <div className="flex-1 flex flex-col items-center justify-center">
-              <div className="w-24 h-24 rounded-3xl bg-slate-800/30 flex items-center justify-center mb-6">
-                <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#334155" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                </svg>
+            <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 32, textAlign: "center" }}>
+              <div style={{ width: 80, height: 80, borderRadius: 24, background: "var(--primary-light)", border: "1px solid var(--secondary-light)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "2.5rem", marginBottom: 16 }}>
+                💬
               </div>
-              <p className="text-slate-400 text-lg font-medium mb-2">Söhbət seçin</p>
-              <p className="text-slate-600 text-sm">Soldan söhbət seçin və ya yeni başladın</p>
+              <p style={{ fontSize: "1.2rem", fontWeight: 900, color: "var(--text-dark)", marginBottom: 4 }}>Canlı Mesajlaşma</p>
+              <p style={{ fontSize: "0.85rem", color: "var(--text-light)", margin: 0 }}>Soldakı siyahıdan həkiminizlə söhbət seçin və ya yeni mesajlaşma başladın</p>
             </div>
           )}
         </div>

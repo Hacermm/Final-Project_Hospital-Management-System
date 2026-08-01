@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import api from "../../lib/api";
 import Navbar from "../../components/Navbar";
+
 export default function BookAppointment() {
   const [departments, setDepartments] = useState([]);
   const [doctors, setDoctors] = useState([]);
@@ -26,17 +27,24 @@ export default function BookAppointment() {
     if (!selectedDoctor || !date) return;
     let cancelled = false;
     const fetchSlots = async () => {
-      setLoadingSlots(true); setSelectedSlot("");
-      try { const res = await api.get(`/doctors/${selectedDoctor}/slots?date=${date}`); if (!cancelled) setSlots(res.data.slots); }
-      catch { if (!cancelled) setSlots([]); }
-      finally { if (!cancelled) setLoadingSlots(false); }
+      setLoadingSlots(true);
+      setSelectedSlot("");
+      try {
+        const res = await api.get(`/doctors/${selectedDoctor}/slots?date=${date}`);
+        if (!cancelled) setSlots(res.data.slots);
+      } catch {
+        if (!cancelled) setSlots([]);
+      } finally {
+        if (!cancelled) setLoadingSlots(false);
+      }
     };
     fetchSlots();
     return () => { cancelled = true; };
   }, [selectedDoctor, date]);
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); setMessage("");
+    e.preventDefault();
+    setMessage("");
     try {
       await api.post("/appointments", { doctor_id: selectedDoctor, appointment_date: date, appointment_time: selectedSlot, reason });
       setMessage("✅ Randevu uğurla alındı! Həkim təsdiqini gözləyin.");
@@ -50,78 +58,185 @@ export default function BookAppointment() {
   const today = new Date().toISOString().split("T")[0];
 
   return (
-    <div className="min-h-screen bg-[#0f172a]">      <Navbar />
-      <nav className="sticky top-0 z-50 px-6 py-4 bg-[#0f172a]/80 backdrop-blur-xl border-b border-white/5">
-        <div className="max-w-4xl mx-auto flex items-center gap-3">
-          <Link to="/patient" className="text-slate-400 hover:text-white"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></Link>
-          <h1 className="text-lg font-bold text-white">Randevu Al</h1>
+    <div style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-dark)", fontFamily: "'Plus Jakarta Sans', sans-serif", display: "flex", flexDirection: "column" }}>
+      <Navbar />
+
+      <main style={{ maxWidth: 840, margin: "0 auto", padding: "40px 24px 80px", width: "100%", flex: 1, boxSizing: "border-box" }}>
+        
+        {/* Navigation Breadcrumb */}
+        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 24 }}>
+          <Link to="/patient" style={{ display: "inline-flex", alignItems: "center", gap: 6, color: "var(--primary)", fontWeight: 700, fontSize: "0.88rem", textDecoration: "none" }}>
+            ← Pasiyent Kabinetinə Qayıt
+          </Link>
         </div>
-      </nav>
 
-      <div className="max-w-4xl mx-auto px-6 py-8">
-        <form onSubmit={handleSubmit} className="glass-card p-6 space-y-5 animate-fade-in-up">
-          <div>
-            <label className="block text-sm font-medium text-slate-400 mb-1.5">1. Şöbə seçin</label>
-            <select value={selectedDept} onChange={(e) => { setSelectedDept(e.target.value); setSelectedDoctor(""); }} className="hms-select">
-              <option value="">Bütün şöbələr</option>
-              {departments.map((d) => (<option key={d.id} value={d.id}>{d.name}</option>))}
-            </select>
+        {/* Title Card */}
+        <div className="ac-card" style={{ padding: "32px 36px", marginBottom: 28, background: "linear-gradient(135deg, #7F1D1D 0%, #B71C1C 100%)", color: "#FFFFFF" }}>
+          <div style={{ display: "inline-block", padding: "4px 14px", borderRadius: 20, background: "rgba(255,255,255,0.15)", fontSize: "0.75rem", fontWeight: 800, letterSpacing: "1px", textTransform: "uppercase", marginBottom: 12 }}>
+            ONLAYN QUZEY
           </div>
+          <h1 style={{ fontSize: "1.8rem", fontWeight: 900, marginBottom: 8, letterSpacing: "-0.5px" }}>Həkim Qəbuluna Yazılın</h1>
+          <p style={{ fontSize: "0.92rem", color: "rgba(255,255,255,0.85)", margin: 0 }}>
+            İstədiyiniz tibbi şöbə və mütəxəssisi seçərək uyğun iş saatına onlayn randevu təyin edin.
+          </p>
+        </div>
 
-          <div>
-            <label className="block text-sm font-medium text-slate-400 mb-1.5">2. Həkim seçin</label>
-            <select value={selectedDoctor} onChange={(e) => setSelectedDoctor(e.target.value)} required className="hms-select">
-              <option value="">Həkim seçin...</option>
-              {filteredDoctors.map((d) => (<option key={d.id} value={d.id}>{d.name} — {d.specialization} ({d.consultation_fee} ₼)</option>))}
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-slate-400 mb-1.5">3. Tarix seçin</label>
-            <input type="date" value={date} min={today} onChange={(e) => setDate(e.target.value)} required className="hms-input" />
-          </div>
-
-          {selectedDoctor && date && (
+        {/* Form Container Card */}
+        <div className="ac-card" style={{ padding: "36px 32px" }}>
+          <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+            
+            {/* Step 1: Department */}
             <div>
-              <label className="block text-sm font-medium text-slate-400 mb-2">4. Boş saat seçin</label>
-              {loadingSlots ? (
-                <p className="text-slate-500 text-sm flex items-center gap-2">
-                  <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeDasharray="60" strokeDashoffset="20" strokeLinecap="round"/></svg>
-                  Yüklənir...
-                </p>
-              ) : slots.length === 0 ? (
-                <div className="glass-card-light p-4 text-amber-400 text-sm">
-                  Bu həkimin seçilmiş tarixdə iş saatı yoxdur. Başqa tarix və ya həkim seçin.
-                </div>
-              ) : (
-                <div className="grid grid-cols-4 md:grid-cols-6 gap-2">
-                  {slots.map((slot) => (
-                    <button key={slot} type="button" onClick={() => setSelectedSlot(slot)}
-                      className={`py-2.5 rounded-xl text-sm font-medium border ${
-                        selectedSlot === slot
-                          ? "bg-indigo-500/20 text-indigo-300 border-indigo-500/30"
-                          : "bg-transparent text-slate-400 border-white/10 hover:border-indigo-500/20 hover:text-indigo-400"
-                      }`}>
-                      {slot}
-                    </button>
-                  ))}
-                </div>
-              )}
+              <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 800, color: "var(--text-dark)", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 8 }}>
+                1. Tibbi Şöbə Seçin
+              </label>
+              <select
+                value={selectedDept}
+                onChange={(e) => { setSelectedDept(e.target.value); setSelectedDoctor(""); }}
+                className="ac-input"
+                style={{ width: "100%", padding: "14px 16px", borderRadius: 12, fontWeight: 700 }}
+              >
+                <option value="">Bütün şöbələr</option>
+                {departments.map((d) => (<option key={d.id} value={d.id}>{d.name}</option>))}
+              </select>
             </div>
-          )}
 
-          <div>
-            <label className="block text-sm font-medium text-slate-400 mb-1.5">5. Şikayətiniz (istəyə bağlı)</label>
-            <textarea value={reason} onChange={(e) => setReason(e.target.value)} placeholder="Məsələn: Ürəyimdə ağrı var..." className="hms-input" rows="2" />
-          </div>
+            {/* Step 2: Doctor */}
+            <div>
+              <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 800, color: "var(--text-dark)", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 8 }}>
+                2. Həkim Seçin *
+              </label>
+              <select
+                value={selectedDoctor}
+                onChange={(e) => setSelectedDoctor(e.target.value)}
+                required
+                className="ac-input"
+                style={{ width: "100%", padding: "14px 16px", borderRadius: 12, fontWeight: 700 }}
+              >
+                <option value="">Həkim seçin...</option>
+                {filteredDoctors.map((d) => (
+                  <option key={d.id} value={d.id}>
+                    {d.name} — {d.specialization} ({d.consultation_fee} ₼)
+                  </option>
+                ))}
+              </select>
+            </div>
 
-          <button type="submit" disabled={!selectedSlot} className="hms-btn w-full !py-3">
-            {selectedSlot ? `Randevu al — ${date} ${selectedSlot}` : "Saat seçin"}
-          </button>
+            {/* Step 3: Date */}
+            <div>
+              <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 800, color: "var(--text-dark)", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 8 }}>
+                3. Randevu Tarixi *
+              </label>
+              <input
+                type="date"
+                value={date}
+                min={today}
+                onChange={(e) => setDate(e.target.value)}
+                required
+                className="ac-input"
+                style={{ width: "100%", padding: "14px 16px", borderRadius: 12, fontWeight: 700 }}
+              />
+            </div>
 
-          {message && <p className={`text-center text-sm font-medium ${message.startsWith("✅") ? "hms-message-success" : "hms-message-error"}`}>{message}</p>}
-        </form>
-      </div>
+            {/* Step 4: Time Slot */}
+            {selectedDoctor && date && (
+              <div>
+                <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 800, color: "var(--text-dark)", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 8 }}>
+                  4. Uyğun İş Saatı Seçin *
+                </label>
+                {loadingSlots ? (
+                  <p style={{ color: "var(--text-light)", fontSize: "0.88rem", fontWeight: 700 }}>
+                    İş saatları yüklənir...
+                  </p>
+                ) : slots.length === 0 ? (
+                  <div style={{ padding: "16px", borderRadius: 12, background: "rgba(245,158,11,0.1)", border: "1px solid rgba(245,158,11,0.3)", color: "#d97706", fontSize: "0.85rem", fontWeight: 700 }}>
+                    Bu həkimin seçilmiş tarixdə iş saatı yoxdur. Başqa tarix və ya həkim seçin.
+                  </div>
+                ) : (
+                  <div className="responsive-2x2-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(100px, 1fr))", gap: 10 }}>
+                    {slots.map((slot) => {
+                      const isSelected = selectedSlot === slot;
+                      return (
+                        <button
+                          key={slot}
+                          type="button"
+                          onClick={() => setSelectedSlot(slot)}
+                          style={{
+                            padding: "12px",
+                            borderRadius: 12,
+                            fontSize: "0.85rem",
+                            fontWeight: 800,
+                            cursor: "pointer",
+                            transition: "all 0.2s",
+                            border: isSelected ? "1.5px solid var(--primary)" : "1px solid var(--border)",
+                            background: isSelected ? "var(--primary)" : "var(--bg)",
+                            color: isSelected ? "#FFFFFF" : "var(--text-dark)",
+                            boxShadow: isSelected ? "0 4px 12px rgba(198,40,40,0.3)" : "none",
+                          }}
+                        >
+                          {slot}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Step 5: Complaint / Reason */}
+            <div>
+              <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 800, color: "var(--text-dark)", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 8 }}>
+                5. Şikayətiniz və Qeydləriniz (istəyə bağlı)
+              </label>
+              <textarea
+                value={reason}
+                onChange={(e) => setReason(e.target.value)}
+                placeholder="Məsələn: Ürək nahiyəsində ağrılar və təngnəfəslik var..."
+                className="ac-input"
+                rows={3}
+                style={{ width: "100%", padding: "14px 16px", borderRadius: 12, fontWeight: 600, resize: "vertical" }}
+              />
+            </div>
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={!selectedSlot}
+              className="ac-btn"
+              style={{
+                width: "100%",
+                padding: "16px",
+                borderRadius: 12,
+                fontSize: "0.95rem",
+                fontWeight: 900,
+                letterSpacing: "0.5px",
+                marginTop: 8,
+              }}
+            >
+              {selectedSlot ? `RANDEVU AL — ${date} ${selectedSlot}` : "LÜTFƏN SAAT SEÇİN"}
+            </button>
+
+            {message && (
+              <p
+                style={{
+                  padding: "14px 16px",
+                  borderRadius: 12,
+                  fontSize: "0.88rem",
+                  fontWeight: 800,
+                  textAlign: "center",
+                  background: message.startsWith("✅") ? "rgba(16,185,129,0.1)" : "rgba(239,68,68,0.1)",
+                  color: message.startsWith("✅") ? "#059669" : "#dc2626",
+                  border: message.startsWith("✅") ? "1px solid rgba(16,185,129,0.3)" : "1px solid rgba(239,68,68,0.3)",
+                }}
+              >
+                {message}
+              </p>
+            )}
+
+          </form>
+        </div>
+
+      </main>
     </div>
   );
 }

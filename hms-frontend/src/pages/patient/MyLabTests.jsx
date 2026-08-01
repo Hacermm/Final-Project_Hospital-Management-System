@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import api from "../../lib/api";
 import Navbar from "../../components/Navbar";
 
@@ -26,53 +27,143 @@ export default function MyLabTests() {
       link.remove();
       window.URL.revokeObjectURL(url);
     } catch {
-      setMessage("❌ Endirilə bilmədi");
+      setMessage("❌ PDF faylı endirilə bilmədi.");
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#0f172a]">
+    <div style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-dark)", fontFamily: "'Plus Jakarta Sans', sans-serif", display: "flex", flexDirection: "column" }}>
       <Navbar />
 
-      <div className="max-w-4xl mx-auto px-4 md:px-6 py-6 md:py-8">
-        <h1 className="text-2xl font-bold text-white mb-6">Lab Nəticələrim</h1>
+      <main style={{ maxWidth: 920, margin: "0 auto", padding: "40px 24px 80px", width: "100%", flex: 1, boxSizing: "border-box" }}>
+        
+        {/* Navigation Breadcrumb */}
+        <div style={{ display: "flex", alignItems: "center", justify: "space-between", marginBottom: 24 }}>
+          <Link to="/patient" style={{ display: "inline-flex", alignItems: "center", gap: 6, color: "var(--primary)", fontWeight: 700, fontSize: "0.88rem", textDecoration: "none" }}>
+            ← Pasiyent Kabinetinə Qayıt
+          </Link>
+        </div>
 
-        {message && <p className="mb-4 text-sm font-medium hms-message-error">{message}</p>}
-
-        {loading ? (
-          <div className="flex items-center gap-3 text-slate-400 justify-center py-16">
-            <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeDasharray="60" strokeDashoffset="20" strokeLinecap="round" />
-            </svg>
-            Yüklənir...
+        {/* Title Header Card */}
+        <div className="ac-card" style={{ padding: "28px 32px", marginBottom: 28 }}>
+          <div style={{ display: "flex", justify: "space-between", alignItems: "center" }}>
+            <div>
+              <h1 style={{ fontSize: "1.6rem", fontWeight: 900, color: "var(--text-dark)", margin: "0 0 4px 0" }}>
+                Laboratoriya Analiz Nəticələri
+              </h1>
+              <p style={{ fontSize: "0.88rem", color: "var(--text-light)", margin: 0 }}>
+                Həkimləriniz tərəfindən verilmiş laboratoriya müayinələrinin elektron PDF sənədləri
+              </p>
+            </div>
+            <span style={{ padding: "6px 16px", borderRadius: 20, fontSize: "0.82rem", fontWeight: 900, background: "var(--primary-light)", color: "var(--primary)" }}>
+              {labTests.length} Analiz
+            </span>
           </div>
-        ) : (
-          <div className="glass-card overflow-hidden animate-fade-in-up">
-            {labTests.map((t) => (
-              <div
-                key={t.id}
-                className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 px-4 md:px-6 py-4 border-b border-white/5 last:border-0"
-              >
-                <div className="min-w-0">
-                  <p className="font-medium text-white">🔬 {t.title}</p>
-                  <p className="text-sm text-slate-500">{t.doctor} — {t.date}</p>
-                  {t.description && <p className="text-sm text-slate-600">{t.description}</p>}
-                </div>
-                <button
-                  onClick={() => download(t.id, t.file_name)}
-                  className="hms-btn text-sm !py-2 !px-4 shrink-0 self-start sm:self-auto"
-                >
-                  📄 Endir
-                </button>
-              </div>
-            ))}
+        </div>
 
-            {labTests.length === 0 && (
-              <p className="text-slate-500 text-center py-12">Hələ lab nəticəniz yoxdur.</p>
-            )}
-          </div>
+        {message && (
+          <p
+            style={{
+              padding: "14px 16px",
+              borderRadius: 12,
+              fontSize: "0.88rem",
+              fontWeight: 800,
+              textAlign: "center",
+              marginBottom: 20,
+              background: "rgba(239,68,68,0.1)",
+              color: "#dc2626",
+              border: "1px solid rgba(239,68,68,0.3)",
+            }}
+          >
+            {message}
+          </p>
         )}
-      </div>
+
+        {/* Lab Tests List */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          {loading && (
+            <div style={{ textAlign: "center", padding: "60px 0", color: "var(--text-light)", fontWeight: 700, fontSize: "0.95rem" }} className="animate-pulse">
+              Analizlər yüklənir...
+            </div>
+          )}
+
+          {!loading && labTests.length === 0 && (
+            <div className="ac-card" style={{ padding: "60px 32px", textAlign: "center" }}>
+              <div style={{ fontSize: "3rem", marginBottom: 12 }}>🧪</div>
+              <h3 style={{ fontSize: "1.2rem", fontWeight: 900, color: "var(--text-dark)", marginBottom: 8 }}>
+                Hələ Laboratoriya Analiziniz Yoxdur
+              </h3>
+              <p style={{ fontSize: "0.88rem", color: "var(--text-light)" }}>
+                Analiz nəticələriniz hazır olduqda həkiminiz tərəfindən sistemə PDF olaraq əlavə ediləcəkdir.
+              </p>
+            </div>
+          )}
+
+          {!loading && labTests.map((t) => (
+            <div
+              key={t.id}
+              className="ac-card"
+              style={{
+                padding: "20px 24px",
+                display: "flex",
+                justify: "space-between",
+                alignItems: "center",
+                gap: 20,
+                flexWrap: "wrap",
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: 16, overflow: "hidden" }}>
+                <div
+                  style={{
+                    width: 50,
+                    height: 50,
+                    borderRadius: 14,
+                    background: "var(--primary-light)",
+                    border: "1px solid var(--secondary-light)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: "1.4rem",
+                    shrink: 0,
+                  }}
+                >
+                  🔬
+                </div>
+
+                <div>
+                  <h3 style={{ fontSize: "1rem", fontWeight: 900, color: "var(--text-dark)", margin: "0 0 4px 0" }}>
+                    {t.title}
+                  </h3>
+                  <p style={{ fontSize: "0.82rem", fontWeight: 800, color: "var(--primary)", margin: "0 0 4px 0" }}>
+                    {t.doctor} — 📅 {t.date}
+                  </p>
+                  {t.description && (
+                    <p style={{ fontSize: "0.78rem", color: "var(--text-light)", margin: 0 }}>
+                      {t.description}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <button
+                onClick={() => download(t.id, t.file_name)}
+                className="ac-btn"
+                style={{
+                  padding: "10px 20px",
+                  fontSize: "0.84rem",
+                  fontWeight: 800,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
+                }}
+              >
+                📄 PDF ENDİR
+              </button>
+            </div>
+          ))}
+        </div>
+
+      </main>
     </div>
   );
 }

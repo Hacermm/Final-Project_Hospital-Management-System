@@ -62,37 +62,37 @@ export default function AiAssistant() {
   };
 
   const styles = {
-    container: { minHeight: "100vh", backgroundColor: "#F8FAFC", display: "flex", flexDirection: "column", fontFamily: "'Inter', system-ui, -apple-system, sans-serif" },
+    container: { minHeight: "100vh", backgroundColor: "var(--bg)", display: "flex", flexDirection: "column", fontFamily: "'Inter', system-ui, -apple-system, sans-serif", transition: "background-color 0.3s ease" },
     main: { flex: 1, maxWidth: "1050px", width: "100%", margin: "0 auto", display: "flex", flexDirection: "column", boxSizing: "border-box" },
-    card: { flex: 1, backgroundColor: "#FFFFFF", display: "flex", flexDirection: "column", overflow: "hidden", boxShadow: "0 20px 60px rgba(0,0,0,0.08)", border: "1px solid rgba(227, 30, 36, 0.1)" },
-    header: { padding: "22px 28px", background: "linear-gradient(135deg, #E31E24 0%, #B91C1C 100%)", display: "flex", alignItems: "center", gap: "16px", color: "#FFFFFF", boxShadow: "0 4px 16px rgba(227, 30, 36, 0.25)" },
+    card: { flex: 1, backgroundColor: "var(--surface)", display: "flex", flexDirection: "column", overflow: "hidden", boxShadow: "0 20px 60px rgba(0,0,0,0.18)", border: "1px solid var(--border)", transition: "all 0.3s ease" },
+    header: { padding: "22px 28px", background: "linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%)", display: "flex", alignItems: "center", gap: "16px", color: "#FFFFFF", boxShadow: "0 4px 16px rgba(198, 40, 40, 0.25)" },
     avatar: { width: "50px", height: "50px", backgroundColor: "#FFFFFF", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 12px rgba(0,0,0,0.15)", border: "2px solid rgba(255,255,255,0.95)", flexShrink: 0 },
-    avatarIcon: { width: "26px", height: "26px", color: "#E31E24" },
+    avatarIcon: { width: "26px", height: "26px", color: "var(--primary)" },
     headerText: { flex: 1 },
-    headerTitle: { margin: 0, fontSize: "20px", fontWeight: "700", display: "flex", alignItems: "center", gap: "10px" },
+    headerTitle: { margin: 0, fontSize: "20px", fontWeight: "700", display: "flex", alignItems: "center", gap: "10px", color: "#FFFFFF" },
     onlineBadge: { display: "flex", alignItems: "center", gap: "6px", fontSize: "12px", fontWeight: "600", backgroundColor: "rgba(255,255,255,0.18)", padding: "3px 10px", borderRadius: "99px", color: "#FFFFFF" },
     onlineDot: { width: "8px", height: "8px", backgroundColor: "#4ade80", borderRadius: "50%", animation: "fadeInOut 2s infinite" },
-    headerSub: { margin: "4px 0 0", fontSize: "13px", opacity: 0.9, fontWeight: "500" },
+    headerSub: { margin: "4px 0 0", fontSize: "13px", opacity: 0.9, fontWeight: "500", color: "#FFFFFF" },
     clearBtn: { background: "rgba(255,255,255,0.18)", border: "none", padding: "10px 18px", borderRadius: "12px", color: "#FFFFFF", fontSize: "13px", fontWeight: "600", cursor: "pointer", transition: "all 0.2s ease" },
-    chatArea: { flex: 1, padding: "28px", overflowY: "auto", display: "flex", flexDirection: "column", gap: "20px", backgroundColor: "#F8FAFC" },
+    chatArea: { flex: 1, padding: "28px", overflowY: "auto", display: "flex", flexDirection: "column", gap: "20px", backgroundColor: "var(--bg)", transition: "background-color 0.3s ease" },
     welcomeBlock: { display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", textAlign: "center", animation: "fadeIn 0.5s ease" },
-    welcomeIcon: { width: "88px", height: "88px", borderRadius: "50%", background: "linear-gradient(135deg, #FFF1F2 0%, #FFE4E6 100%)", border: "2px solid #FECDD3", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "20px", boxShadow: "0 12px 32px rgba(227, 30, 36, 0.12)" },
-    welcomeTitle: { margin: "0 0 10px 0", fontSize: "26px", fontWeight: "700", color: "#0F172A" },
-    welcomeSubTitle: { margin: "0 0 8px 0", fontSize: "15px", fontWeight: "600", color: "#E31E24" },
-    welcomeSub: { margin: "0 0 32px 0", fontSize: "15px", color: "#64748B", maxWidth: "440px", lineHeight: "1.6" },
+    welcomeIcon: { width: "88px", height: "88px", borderRadius: "50%", background: "var(--primary-light)", border: "2px solid var(--secondary-light)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "20px", boxShadow: "0 12px 32px rgba(198, 40, 40, 0.12)" },
+    welcomeTitle: { margin: "0 0 10px 0", fontSize: "26px", fontWeight: "700", color: "var(--text-dark)" },
+    welcomeSubTitle: { margin: "0 0 8px 0", fontSize: "15px", fontWeight: "600", color: "var(--primary)" },
+    welcomeSub: { margin: "0 0 32px 0", fontSize: "15px", color: "var(--text-mid)", maxWidth: "440px", lineHeight: "1.6" },
     suggestionsWrap: { display: "grid", gap: "12px", width: "100%", maxWidth: "640px" },
-    suggestionItem: { backgroundColor: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: "9999px", padding: "14px 22px", fontSize: "14px", color: "#1E293B", fontWeight: "600", cursor: "pointer", textAlign: "center", transition: "all 0.2s ease", boxShadow: "0 2px 8px rgba(0,0,0,0.03)" },
+    suggestionItem: { backgroundColor: "var(--surface)", border: "1px solid var(--border)", borderRadius: "9999px", padding: "14px 22px", fontSize: "14px", color: "var(--text-dark)", fontWeight: "600", cursor: "pointer", textAlign: "center", transition: "all 0.2s ease", boxShadow: "var(--shadow-xs)" },
     msgRow: { display: "flex", width: "100%", animation: "fadeIn 0.3s ease" },
-    msgUser: { maxWidth: "75%", padding: "16px 22px", borderRadius: "24px 24px 6px 24px", background: "linear-gradient(135deg, #E31E24 0%, #B91C1C 100%)", color: "#FFFFFF", fontSize: "15px", lineHeight: "1.6", boxShadow: "0 6px 16px rgba(227, 30, 36, 0.25)" },
+    msgUser: { maxWidth: "75%", padding: "16px 22px", borderRadius: "24px 24px 6px 24px", background: "linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%)", color: "#FFFFFF", fontSize: "15px", lineHeight: "1.6", boxShadow: "0 6px 16px rgba(198, 40, 40, 0.25)" },
     msgBotRow: { display: "flex", gap: "12px", maxWidth: "80%", alignItems: "flex-end" },
-    botAvatarTiny: { width: "32px", height: "32px", borderRadius: "50%", background: "linear-gradient(135deg, #E31E24 0%, #B91C1C 100%)", color: "#FFFFFF", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "15px", flexShrink: 0, marginBottom: "2px" },
-    msgBot: { padding: "16px 22px", borderRadius: "24px 24px 24px 6px", backgroundColor: "#FFFFFF", color: "#1E293B", fontSize: "15px", lineHeight: "1.6", border: "1px solid #E2E8F0", boxShadow: "0 4px 12px rgba(0,0,0,0.04)" },
-    typingBlock: { display: "flex", gap: "6px", padding: "18px 24px", backgroundColor: "#FFFFFF", borderRadius: "24px 24px 24px 6px", border: "1px solid #E2E8F0", width: "fit-content", boxShadow: "0 4px 12px rgba(0,0,0,0.04)" },
-    dot: { width: "8px", height: "8px", backgroundColor: "#E31E24", borderRadius: "50%" },
-    form: { padding: "20px 28px", backgroundColor: "#FFFFFF", borderTop: "1px solid #F1F5F9", display: "flex", gap: "16px", alignItems: "center" },
-    input: { flex: 1, padding: "16px 24px", backgroundColor: "#F8FAFC", border: "1px solid #E2E8F0", borderRadius: "9999px", fontSize: "15px", color: "#0F172A", outline: "none", transition: "all 0.2s ease" },
-    sendBtn: { width: "52px", height: "52px", borderRadius: "50%", background: "linear-gradient(135deg, #E31E24 0%, #B91C1C 100%)", border: "none", color: "#FFFFFF", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", boxShadow: "0 6px 16px rgba(227, 30, 36, 0.35)", flexShrink: 0 },
-    footerNote: { margin: "16px 0", textAlign: "center", fontSize: "12px", color: "#9CA3AF" }
+    botAvatarTiny: { width: "32px", height: "32px", borderRadius: "50%", background: "linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%)", color: "#FFFFFF", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "15px", flexShrink: 0, marginBottom: "2px" },
+    msgBot: { padding: "16px 22px", borderRadius: "24px 24px 24px 6px", backgroundColor: "var(--surface)", color: "var(--text-dark)", fontSize: "15px", lineHeight: "1.6", border: "1px solid var(--border)", boxShadow: "var(--shadow-xs)" },
+    typingBlock: { display: "flex", gap: "6px", padding: "18px 24px", backgroundColor: "var(--surface)", borderRadius: "24px 24px 24px 6px", border: "1px solid var(--border)", width: "fit-content", boxShadow: "var(--shadow-xs)" },
+    dot: { width: "8px", height: "8px", backgroundColor: "var(--primary)", borderRadius: "50%" },
+    form: { padding: "20px 28px", backgroundColor: "var(--surface)", borderTop: "1px solid var(--border)", display: "flex", gap: "16px", alignItems: "center" },
+    input: { flex: 1, padding: "16px 24px", backgroundColor: "var(--bg)", border: "1px solid var(--border)", borderRadius: "9999px", fontSize: "15px", color: "var(--text-dark)", outline: "none", transition: "all 0.2s ease" },
+    sendBtn: { width: "52px", height: "52px", borderRadius: "50%", background: "linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%)", border: "none", color: "#FFFFFF", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", boxShadow: "0 6px 16px rgba(198, 40, 40, 0.35)", flexShrink: 0 },
+    footerNote: { margin: "16px 0", textAlign: "center", fontSize: "12px", color: "var(--text-light)" }
   };
 
   return (
@@ -135,8 +135,8 @@ export default function AiAssistant() {
           }
         }
         .ai-btn-hover:hover { background-color: rgba(255,255,255,0.25) !important; transform: translateY(-1px); }
-        .ai-sugg-item:hover { background-color: #FFF1F2 !important; border-color: #FECDD3 !important; color: #E31E24 !important; transform: translateY(-2px); }
-        .ai-page-input:focus { border-color: #E31E24 !important; background-color: #FFFFFF !important; box-shadow: 0 0 0 4px rgba(227, 30, 36, 0.1) !important; }
+        .ai-sugg-item:hover { background-color: var(--primary-light) !important; border-color: var(--secondary-light) !important; color: var(--primary) !important; transform: translateY(-2px); }
+        .ai-page-input:focus { border-color: var(--primary) !important; background-color: var(--surface) !important; box-shadow: 0 0 0 4px rgba(198, 40, 40, 0.15) !important; }
         .ai-page-send:hover:not(:disabled) { transform: scale(1.06); }
         .ai-page-send:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
       `}</style>
@@ -173,7 +173,7 @@ export default function AiAssistant() {
               {messages.length === 0 && !sending && (
                 <div style={styles.welcomeBlock}>
                   <div style={styles.welcomeIcon}>
-                    <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#E31E24" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M12 2a8 8 0 0 0-8 8v3a4 4 0 0 0 4 4h1v-7H5v-1a7 7 0 0 1 14 0v1h-4v7h1a4 4 0 0 0 4-4v-3a8 8 0 0 0-8-8z"/>
                       <circle cx="12" cy="17" r="1"/>
                     </svg>
@@ -248,7 +248,7 @@ export default function AiAssistant() {
             </form>
           </div>
           <p style={styles.footerNote}>
-            AI köməkçi tibbi diaqnoz qoymur. Sağlamlıq problemləri üçün mütləq həkimə müraciət edin.
+            NovaCare AI tibbi məsləhətçi sistemi. Vacib tibbi hallar üçün həkiminizlə məsləhətləşin.
           </p>
         </main>
       </div>
