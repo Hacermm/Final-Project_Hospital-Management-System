@@ -94,7 +94,7 @@ export default function Analytics() {
                       outerRadius={90}
                       innerRadius={50}
                       paddingAngle={3}
-                      label={({ value }) => `${value}`}                    >
+                      label={({ value }) => `${value}`} >
                       {data.by_status.map((_, i) => (
                         <Cell key={i} fill={COLORS[i % COLORS.length]} />
                       ))}

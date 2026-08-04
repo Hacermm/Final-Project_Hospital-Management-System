@@ -220,7 +220,7 @@ export default function Chat() {
 
             {conversations.length === 0 && (
               <div style={{ padding: "48px 20px", textAlign: "center" }}>
-                <div style={{ fontSize: "2.4rem", marginBottom: 8 }}>💬</div>
+                <div style={{ fontSize: "2.4rem", marginBottom: 8 }}></div>
                 <p style={{ fontSize: "0.88rem", fontWeight: 800, color: "var(--text-dark)", margin: "0 0 4px 0" }}>Hələ söhbətiniz yoxdur</p>
                 <p style={{ fontSize: "0.78rem", color: "var(--text-light)", margin: 0 }}>Yuxarıdakı seçimdən yeni söhbət başladın</p>
               </div>
@@ -252,7 +252,7 @@ export default function Chat() {
                 </div>
                 <div style={{ minWidth: 0 }}>
                   <p style={{ fontSize: "1rem", fontWeight: 900, color: "var(--text-dark)", margin: 0 }}>{activeConv.other_user?.name}</p>
-                  <span style={{ fontSize: "0.75rem", color: "#059669", fontWeight: 800 }}>● Canlı Söhbət</span>
+                  <span style={{ fontSize: "0.75rem", color: "#059669", fontWeight: 800 }}> Canlı Söhbət</span>
                 </div>
 
                 <button
@@ -327,7 +327,7 @@ export default function Chat() {
           ) : (
             <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 32, textAlign: "center" }}>
               <div style={{ width: 80, height: 80, borderRadius: 24, background: "var(--primary-light)", border: "1px solid var(--secondary-light)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "2.5rem", marginBottom: 16 }}>
-                💬
+                
               </div>
               <p style={{ fontSize: "1.2rem", fontWeight: 900, color: "var(--text-dark)", marginBottom: 4 }}>Canlı Mesajlaşma</p>
               <p style={{ fontSize: "0.85rem", color: "var(--text-light)", margin: 0 }}>Soldakı siyahıdan həkiminizlə söhbət seçin və ya yeni mesajlaşma başladın</p>

@@ -512,3 +512,9 @@ body {
     grid-template-columns: 1fr !important;
   }
 }
+
+@media (min-width: 1024px) {
+  .lg\:hidden, .mobile-menu-btn {
+    display: none !important;
+  }
+}

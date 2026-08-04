@@ -27,7 +27,7 @@ export default function MyLabTests() {
       link.remove();
       window.URL.revokeObjectURL(url);
     } catch {
-      setMessage("❌ PDF faylı endirilə bilmədi.");
+      setMessage(" PDF faylı endirilə bilmədi.");
     }
   };
 
@@ -89,7 +89,7 @@ export default function MyLabTests() {
 
           {!loading && labTests.length === 0 && (
             <div className="ac-card" style={{ padding: "60px 32px", textAlign: "center" }}>
-              <div style={{ fontSize: "3rem", marginBottom: 12 }}>🧪</div>
+              <div style={{ fontSize: "3rem", marginBottom: 12 }}></div>
               <h3 style={{ fontSize: "1.2rem", fontWeight: 900, color: "var(--text-dark)", marginBottom: 8 }}>
                 Hələ Laboratoriya Analiziniz Yoxdur
               </h3>
@@ -127,7 +127,7 @@ export default function MyLabTests() {
                     shrink: 0,
                   }}
                 >
-                  🔬
+                  
                 </div>
 
                 <div>
@@ -135,7 +135,7 @@ export default function MyLabTests() {
                     {t.title}
                   </h3>
                   <p style={{ fontSize: "0.82rem", fontWeight: 800, color: "var(--primary)", margin: "0 0 4px 0" }}>
-                    {t.doctor} — 📅 {t.date}
+                    {t.doctor} — {t.date}
                   </p>
                   {t.description && (
                     <p style={{ fontSize: "0.78rem", color: "var(--text-light)", margin: 0 }}>
@@ -157,7 +157,7 @@ export default function MyLabTests() {
                   gap: 8,
                 }}
               >
-                📄 PDF ENDİR
+                 PDF ENDİR
               </button>
             </div>
           ))}

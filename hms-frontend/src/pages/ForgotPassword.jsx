@@ -15,9 +15,9 @@ export default function ForgotPassword() {
     setLoading(true);
     try {
       const res = await api.post("/forgot-password", { email });
-      setMessage(`✅ ${res.data.message}`);
+      setMessage(` ${res.data.message}`);
     } catch (err) {
-      setMessage(`❌ ${err.response?.data?.message || "Xəta baş verdi."}`);
+      setMessage(` ${err.response?.data?.message || "Xəta baş verdi."}`);
     } finally {
       setLoading(false);
     }
@@ -253,7 +253,7 @@ export default function ForgotPassword() {
                 marginTop: 8,
               }}
             >
-              {loading ? "GÖNDƏRİLİR..." : "BƏRPA KODUNU GÖNDƏR ➔"}
+              {loading ? "GÖNDƏRİLİR..." : "BƏRPA KODUNU GÖNDƏR "}
             </button>
           </form>
 
@@ -266,9 +266,9 @@ export default function ForgotPassword() {
                 fontSize: "0.82rem",
                 fontWeight: 700,
                 textAlign: "center",
-                background: message.startsWith("✅") ? "rgba(16,185,129,0.1)" : "rgba(239,68,68,0.1)",
-                color: message.startsWith("✅") ? "#059669" : "#dc2626",
-                border: message.startsWith("✅") ? "1px solid rgba(16,185,129,0.3)" : "1px solid rgba(239,68,68,0.3)",
+                background: message.startsWith("") ? "rgba(16,185,129,0.1)" : "rgba(239,68,68,0.1)",
+                color: message.startsWith("") ? "#059669" : "#dc2626",
+                border: message.startsWith("") ? "1px solid rgba(16,185,129,0.3)" : "1px solid rgba(239,68,68,0.3)",
               }}
             >
               {message}

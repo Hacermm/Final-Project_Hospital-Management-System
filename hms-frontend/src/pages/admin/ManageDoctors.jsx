@@ -36,12 +36,12 @@ export default function ManageDoctors() {
         await api.post(`/doctors/${editId}`, data, {
           headers: { "Content-Type": "multipart/form-data" },
         });
-        setMessage("✅ Həkim yeniləndi");
+        setMessage(" Həkim yeniləndi");
       } else {
         await api.post("/doctors", data, {
           headers: { "Content-Type": "multipart/form-data" },
         });
-        setMessage("✅ Həkim əlavə olundu");
+        setMessage(" Həkim əlavə olundu");
       }
       setForm(emptyForm);
       setPhoto(null);
@@ -53,7 +53,7 @@ export default function ManageDoctors() {
         err.response?.data?.message ||
         Object.values(err.response?.data?.errors || {})[0]?.[0] ||
         "Xəta";
-      setMessage(`❌ ${msg}`);
+      setMessage(` ${msg}`);
     }
   };
 
@@ -77,10 +77,10 @@ export default function ManageDoctors() {
     if (!confirm("Bu həkimi silmək istəyirsiniz?")) return;
     try {
       await api.delete(`/doctors/${id}`);
-      setMessage("✅ Həkim silindi");
+      setMessage(" Həkim silindi");
       load();
     } catch (err) {
-      setMessage(`❌ ${err.response?.data?.message || "Xəta"}`);
+      setMessage(` ${err.response?.data?.message || "Xəta"}`);
     }
   };
 
@@ -148,7 +148,7 @@ export default function ManageDoctors() {
         </form>
 
         {message && (
-          <p className={`mb-4 text-sm font-medium ${message.startsWith("✅") ? "hms-message-success" : "hms-message-error"}`}>
+          <p className={`mb-4 text-sm font-medium ${message.startsWith("") ? "hms-message-success" : "hms-message-error"}`}>
             {message}
           </p>
         )}
@@ -178,7 +178,7 @@ export default function ManageDoctors() {
                           />
                         ) : (
                           <div className="w-10 h-10 rounded-full bg-slate-700/50 flex items-center justify-center text-sm shrink-0">
-                            👨‍⚕️
+                            
                           </div>
                         )}
                         <span>{doc.name}</span>

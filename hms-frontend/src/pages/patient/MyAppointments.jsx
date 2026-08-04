@@ -29,10 +29,10 @@ export default function MyAppointments() {
     if (!confirm("Bu randevunu ləğv etmək istəyirsiniz?")) return;
     try {
       await api.put(`/appointments/${id}`, { status: "cancelled" });
-      setMessage("✅ Randevu uğurla ləğv edildi.");
+      setMessage(" Randevu uğurla ləğv edildi.");
       load();
     } catch (err) {
-      setMessage(`❌ ${err.response?.data?.message || "Xəta baş verdi."}`);
+      setMessage(` ${err.response?.data?.message || "Xəta baş verdi."}`);
     }
   };
 
@@ -79,9 +79,9 @@ export default function MyAppointments() {
               fontWeight: 800,
               textAlign: "center",
               marginBottom: 20,
-              background: message.startsWith("✅") ? "rgba(16,185,129,0.1)" : "rgba(239,68,68,0.1)",
-              color: message.startsWith("✅") ? "#059669" : "#dc2626",
-              border: message.startsWith("✅") ? "1px solid rgba(16,185,129,0.3)" : "1px solid rgba(239,68,68,0.3)",
+              background: message.startsWith("") ? "rgba(16,185,129,0.1)" : "rgba(239,68,68,0.1)",
+              color: message.startsWith("") ? "#059669" : "#dc2626",
+              border: message.startsWith("") ? "1px solid rgba(16,185,129,0.3)" : "1px solid rgba(239,68,68,0.3)",
             }}
           >
             {message}
@@ -98,7 +98,7 @@ export default function MyAppointments() {
 
           {!loading && appointments.length === 0 && (
             <div className="ac-card" style={{ padding: "60px 32px", textAlign: "center" }}>
-              <div style={{ fontSize: "3rem", marginBottom: 12 }}>📋</div>
+              <div style={{ fontSize: "3rem", marginBottom: 12 }}></div>
               <h3 style={{ fontSize: "1.2rem", fontWeight: 900, color: "var(--text-dark)", marginBottom: 8 }}>
                 Hələ Heç Bir Randevunuz Yoxdur
               </h3>
@@ -165,7 +165,7 @@ export default function MyAppointments() {
                     </p>
 
                     <p style={{ fontSize: "0.8rem", color: "var(--text-light)", margin: 0 }}>
-                      📅 {a.date} — 🕐 {a.time} {a.reason && `• "${a.reason}"`}
+                       {a.date} — {a.time} {a.reason && `• "${a.reason}"`}
                     </p>
                   </div>
                 </div>
@@ -187,7 +187,7 @@ export default function MyAppointments() {
                       gap: 6,
                     }}
                   >
-                    💬 Mesajlaş
+                     Mesajlaş
                   </Link>
 
                   {canCancel && (

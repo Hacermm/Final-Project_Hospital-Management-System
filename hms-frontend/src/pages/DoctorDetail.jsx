@@ -69,7 +69,7 @@ export default function DoctorDetail() {
                 {doctor.photo_url ? (
                   <img src={doctor.photo_url} alt={doctor.name} style={{ width: 160, height: 160, borderRadius: 20, objectFit: "cover", border: "1px solid var(--border)" }} />
                 ) : (
-                  <div style={{ width: 160, height: 160, borderRadius: 20, background: "var(--primary-light)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "4rem" }}>👨‍⚕️</div>
+                  <div style={{ width: 160, height: 160, borderRadius: 20, background: "var(--primary-light)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "4rem" }}></div>
                 )}
                 <span style={{ position: "absolute", bottom: -8, right: 8, padding: "4px 12px", borderRadius: 20, fontSize: "0.72rem", fontWeight: 800, background: "#ecfdf5", color: "#059669", border: "1px solid #a7f3d0", display: "flex", alignItems: "center", gap: 6 }}>
                   <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#059669" }} className="animate-pulse" />
@@ -90,22 +90,22 @@ export default function DoctorDetail() {
 
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 24, padding: "16px 0", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)", fontSize: "0.9rem" }}>
                   <div style={{ color: "var(--text-mid)" }}>
-                    🏆 Təcrübə: <strong style={{ color: "var(--text-dark)" }}>{doctor.experience_years} İl</strong>
+                     Təcrübə: <strong style={{ color: "var(--text-dark)" }}>{doctor.experience_years} İl</strong>
                   </div>
                   <div style={{ color: "var(--text-mid)" }}>
-                    💳 Qəbul Haqqı: <strong style={{ color: "var(--primary)", fontWeight: 900 }}>{doctor.consultation_fee} AZN</strong>
+                     Qəbul Haqqı: <strong style={{ color: "var(--primary)", fontWeight: 900 }}>{doctor.consultation_fee} AZN</strong>
                   </div>
                   <div style={{ color: "var(--text-mid)" }}>
-                    📍 Otaq: <strong style={{ color: "var(--text-dark)" }}>{doctor.room_number || "204"}</strong>
+                     Otaq: <strong style={{ color: "var(--text-dark)" }}>{doctor.room_number || "204"}</strong>
                   </div>
                 </div>
 
                 <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
                   <button onClick={handleBook} className="ac-btn" style={{ padding: "12px 28px", fontSize: "0.9rem" }}>
-                    📅 Onlayn Randevu Al
+                     Onlayn Randevu Al
                   </button>
                   <a href="tel:+994123456789" style={{ padding: "12px 24px", borderRadius: 12, border: "1.5px solid var(--border)", color: "var(--text-dark)", fontWeight: 700, fontSize: "0.9rem", textDecoration: "none", background: "var(--surface)" }}>
-                    📞 Zəng Et
+                     Zəng Et
                   </a>
                 </div>
               </div>
@@ -116,7 +116,7 @@ export default function DoctorDetail() {
               <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
                 <div className="ac-card" style={{ padding: 32 }}>
                   <h2 style={{ fontSize: "1.2rem", fontWeight: 800, color: "var(--text-dark)", borderBottom: "1px solid var(--border)", paddingBottom: 14, marginBottom: 18, display: "flex", alignItems: "center", gap: 8 }}>
-                    <span style={{ color: "var(--primary)" }}>📄</span> Həkim Haqqında
+                    <span style={{ color: "var(--primary)" }}></span> Həkim Haqqında
                   </h2>
                   <p style={{ fontSize: "0.95rem", color: "var(--text-mid)", lineHeight: 1.7, whiteSpace: "pre-line" }}>
                     {doctor.bio || `${doctor.name} NovaCare Healthcare Group-da ${doctor.specialization} sahəsində ${doctor.experience_years} ildən artıq peşəkar təcrübəyə malikdir.`}
@@ -125,7 +125,7 @@ export default function DoctorDetail() {
 
                 <div className="ac-card" style={{ padding: 32 }}>
                   <h2 style={{ fontSize: "1.2rem", fontWeight: 800, color: "var(--text-dark)", borderBottom: "1px solid var(--border)", paddingBottom: 14, marginBottom: 18, display: "flex", alignItems: "center", gap: 8 }}>
-                    <span style={{ color: "var(--primary)" }}>🎓</span> Təhsil Və Akkreditasiya
+                    <span style={{ color: "var(--primary)" }}></span> Təhsil Və Akkreditasiya
                   </h2>
                   <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 16 }}>
                     {[
@@ -133,7 +133,7 @@ export default function DoctorDetail() {
                       { t: "NovaCare Beynəlxalq Sertifikat", d: "JCI standartlarına uyğun müalicə protokolları" },
                     ].map((e, i) => (
                       <li key={i} style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
-                        <span style={{ fontWeight: 900, color: "var(--primary)", marginTop: 2 }}>✓</span>
+                        <span style={{ fontWeight: 900, color: "var(--primary)", marginTop: 2 }}></span>
                         <div>
                           <strong style={{ display: "block", fontSize: "0.9rem", color: "var(--text-dark)" }}>{e.t}</strong>
                           <span style={{ fontSize: "0.82rem", color: "var(--text-light)" }}>{e.d}</span>
@@ -147,7 +147,7 @@ export default function DoctorDetail() {
               <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
                 <div className="ac-card" style={{ padding: 28 }}>
                   <h3 style={{ fontSize: "1.1rem", fontWeight: 800, color: "var(--text-dark)", borderBottom: "1px solid var(--border)", paddingBottom: 14, marginBottom: 18, display: "flex", alignItems: "center", gap: 8 }}>
-                    <span style={{ color: "var(--primary)" }}>🗓️</span> Qəbul Qrafiki
+                    <span style={{ color: "var(--primary)" }}></span> Qəbul Qrafiki
                   </h3>
                   <div style={{ display: "flex", flexDirection: "column", gap: 10, fontSize: "0.88rem" }}>
                     {[
@@ -167,7 +167,7 @@ export default function DoctorDetail() {
                   <h4 style={{ fontWeight: 800, fontSize: "1.1rem", marginBottom: 8, color: "#FFFFFF" }}>NovaCare 24/7 Dəstək</h4>
                   <p style={{ fontSize: "0.84rem", color: "rgba(255,255,255,0.78)", marginBottom: 20, lineHeight: 1.5 }}>Randevu və təcili məsləhət üçün dəstək mərkəzimiz zənglərinizi qəbul edir.</p>
                   <a href="tel:+994123456789" style={{ display: "block", textAlign: "center", background: "#FFFFFF", color: "var(--primary)", fontWeight: 900, fontSize: "0.88rem", padding: "12px", borderRadius: 12, textDecoration: "none" }}>
-                    📞 +994 (12) 345 67 89
+                     +994 (12) 345 67 89
                   </a>
                 </div>
               </div>

@@ -26,7 +26,7 @@ export default function ManageAdmins() {
     setMessage("");
     try {
       await api.post("/admins", form);
-      setMessage("✅ Admin yaradıldı");
+      setMessage(" Admin yaradıldı");
       setForm(emptyForm);
       load();
     } catch (err) {
@@ -34,17 +34,17 @@ export default function ManageAdmins() {
         err.response?.data?.message ||
         Object.values(err.response?.data?.errors || {})[0]?.[0] ||
         "Xəta";
-      setMessage(`❌ ${msg}`);
+      setMessage(` ${msg}`);
     }
   };
 
   const changeRole = async (id, role) => {
     try {
       await api.put(`/admins/${id}`, { role });
-      setMessage("✅ Rol yeniləndi");
+      setMessage(" Rol yeniləndi");
       load();
     } catch (err) {
-      setMessage(`❌ ${err.response?.data?.message || "Xəta"}`);
+      setMessage(` ${err.response?.data?.message || "Xəta"}`);
     }
   };
 
@@ -52,10 +52,10 @@ export default function ManageAdmins() {
     if (!confirm(`"${name}" hesabını silmək istəyirsiniz?`)) return;
     try {
       await api.delete(`/admins/${id}`);
-      setMessage("✅ Admin silindi");
+      setMessage(" Admin silindi");
       load();
     } catch (err) {
-      setMessage(`❌ ${err.response?.data?.message || "Xəta"}`);
+      setMessage(` ${err.response?.data?.message || "Xəta"}`);
     }
   };
 
@@ -86,7 +86,7 @@ export default function ManageAdmins() {
         </form>
 
         {message && (
-          <p className={`mb-4 text-sm font-medium ${message.startsWith("✅") ? "hms-message-success" : "hms-message-error"}`}>
+          <p className={`mb-4 text-sm font-medium ${message.startsWith("") ? "hms-message-success" : "hms-message-error"}`}>
             {message}
           </p>
         )}

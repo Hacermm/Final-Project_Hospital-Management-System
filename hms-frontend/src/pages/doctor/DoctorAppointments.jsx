@@ -19,14 +19,14 @@ export default function DoctorAppointments() {
   useEffect(() => { load(); }, []);
 
   const changeStatus = async (id, status) => {
-    try { await api.put(`/appointments/${id}`, { status }); setMessage(`✅ Status yeniləndi: ${statusLabels[status]}`); load(); }
-    catch (err) { setMessage(`❌ ${err.response?.data?.message || "Xəta"}`); }
+    try { await api.put(`/appointments/${id}`, { status }); setMessage(` Status yeniləndi: ${statusLabels[status]}`); load(); }
+    catch (err) { setMessage(` ${err.response?.data?.message || "Xəta"}`); }
   };
 
   const filtered = filter === "all" ? appointments : appointments.filter((a) => a.status === filter);
 
   return (
-    <div className="min-h-screen" style={{ background: "var(--bg)", transition: "background-color 0.3s ease" }}>      <Navbar />
+    <div className="min-h-screen" style={{ background: "var(--bg)", transition: "background-color 0.3s ease" }}> <Navbar />
       <nav className="sticky top-0 z-50 px-6 py-4 backdrop-blur-xl" style={{ background: "var(--surface)", borderBottom: "1px solid var(--border)", transition: "background-color 0.3s ease" }}>
         <div className="max-w-5xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -51,7 +51,7 @@ export default function DoctorAppointments() {
           ))}
         </div>
 
-        {message && <p className={`mb-4 text-sm font-medium ${message.startsWith("✅") ? "hms-message-success" : "hms-message-error"}`}>{message}</p>}
+        {message && <p className={`mb-4 text-sm font-medium ${message.startsWith("") ? "hms-message-success" : "hms-message-error"}`}>{message}</p>}
 
         <div className="space-y-4 stagger-children">
           {filtered.map((a) => (
@@ -62,7 +62,7 @@ export default function DoctorAppointments() {
                     <h3 className="font-semibold text-white">{a.patient?.name}</h3>
                     <span className={`hms-badge border ${statusStyles[a.status]}`}>{statusLabels[a.status]}</span>
                   </div>
-                  <p className="text-sm text-slate-500">📅 {a.date} — 🕐 {a.time}</p>
+                  <p className="text-sm text-slate-500"> {a.date} — {a.time}</p>
                   {a.reason && <p className="text-sm text-slate-600 mt-1 italic">"{a.reason}"</p>}
                 </div>
                 <div className="flex gap-2 shrink-0">

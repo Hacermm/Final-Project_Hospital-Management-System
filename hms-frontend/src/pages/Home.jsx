@@ -112,7 +112,7 @@ const REVIEWS = [
 
 export default function Home() {
   const [stats, setStats] = useState({ doctors: 0, departments: 0 });
-  const { theme, toggleTheme } = useTheme();
+  const { toggleTheme } = useTheme();
 
   useEffect(() => {
     Promise.all([api.get("/doctors"), api.get("/departments")])
@@ -136,9 +136,9 @@ export default function Home() {
         <div style={{
           position: "absolute",
           inset: 0,
-          backgroundImage: "url('/hero-bg.png')",
+          backgroundImage: "url('/hero-bg.jpg')",
           backgroundSize: "cover",
-          backgroundPosition: "center",
+          backgroundPosition: "center -90px",
           mixBlendMode: "luminosity",
           pointerEvents: "none"
         }} />
@@ -150,7 +150,7 @@ export default function Home() {
           pointerEvents: "none"
         }} />
 
-        <div className="responsive-hero-grid" style={{ maxWidth: 1240, margin: "0 auto", padding: "0 24px", position: "relative", zIndex: 2, display: "grid", gridTemplateColumns: "1.2fr 0.8fr", gap: 48, alignItems: "center" }}>
+        <div className="responsive-hero-grid" style={{ maxWidth: 1240, margin: "0 auto", padding: "0 24px", position: "relative", zIndex: 2 }}>
           
           <div className="animate-fade-in-up">
             <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 30, padding: "6px 18px", marginBottom: 24 }}>
@@ -228,71 +228,57 @@ export default function Home() {
 
             <div style={{ display: "flex", gap: 24, marginTop: 40, paddingTop: 28, borderTop: "1px solid rgba(255,255,255,0.15)", fontSize: "0.85rem", color: "rgba(255,255,255,0.85)" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <span style={{ color: "#EF5350", fontWeight: 900 }}>✓</span> Ani Randevu
+                <span style={{ color: "#EF5350", fontWeight: 900 }}></span> Ani Randevu
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <span style={{ color: "#EF5350", fontWeight: 900 }}>✓</span> 100% Məxfilik
+                <span style={{ color: "#EF5350", fontWeight: 900 }}></span> 100% Məxfilik
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <span style={{ color: "#EF5350", fontWeight: 900 }}>✓</span> 24/7 Dəstək
+                <span style={{ color: "#EF5350", fontWeight: 900 }}></span> 24/7 Dəstək
               </div>
             </div>
           </div>
 
          
-          <div style={{ display: "flex", justifyContent: "center" }}>
+          <div style={{ position: "absolute", bottom: 24, right: 40, zIndex: 10 }}>
             <div style={{
-              background: "var(--surface)",
+              background: "rgba(255,255,255,0.95)",
+              backdropFilter: "blur(16px)",
+              WebkitBackdropFilter: "blur(16px)",
               color: "var(--text-dark)",
-              borderRadius: 22,
-              padding: 32,
-              boxShadow: "0 8px 40px rgba(0,0,0,0.18), 0 2px 12px rgba(0,0,0,0.10)",
-              width: "100%",
-              maxWidth: 420,
-              border: "1px solid var(--border)",
+              borderRadius: 16,
+              padding: "16px 20px",
+              boxShadow: "0 8px 32px rgba(0,0,0,0.2), 0 2px 8px rgba(0,0,0,0.10)",
+              maxWidth: 260,
+              border: "1px solid rgba(255,255,255,0.3)",
               transition: "transform 0.3s ease, box-shadow 0.3s ease",
               cursor: "default"
             }}
             className="animate-float"
             onMouseEnter={e => {
-              e.currentTarget.style.transform = "translateY(-6px)";
-              e.currentTarget.style.boxShadow = "0 18px 56px rgba(0,0,0,0.22), 0 4px 16px rgba(0,0,0,0.12)";
+              e.currentTarget.style.transform = "translateY(-4px)";
+              e.currentTarget.style.boxShadow = "0 14px 40px rgba(0,0,0,0.25), 0 4px 12px rgba(0,0,0,0.12)";
             }}
             onMouseLeave={e => {
               e.currentTarget.style.transform = "translateY(0)";
-              e.currentTarget.style.boxShadow = "0 8px 40px rgba(0,0,0,0.18), 0 2px 12px rgba(0,0,0,0.10)";
+              e.currentTarget.style.boxShadow = "0 8px 32px rgba(0,0,0,0.2), 0 2px 8px rgba(0,0,0,0.10)";
             }}
             >
-              
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                  <div style={{ width: 48, height: 48, borderRadius: 14, background: "var(--primary-light)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2.2">
-                      <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                      <circle cx="9" cy="7" r="4" />
-                      <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h4 style={{ fontWeight: 800, fontSize: "1rem", color: "var(--text-dark)" }}>Təcrübəli Həkim Qəbulu</h4>
-                    <span style={{ fontSize: "0.78rem", color: "var(--text-light)" }}>Peşəkar tibbi xidmət</span>
-                  </div>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
+                <div style={{ width: 36, height: 36, borderRadius: 10, background: "var(--primary-light)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2.2">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                  </svg>
+                </div>
+                <div>
+                  <h4 style={{ fontWeight: 800, fontSize: "0.85rem", color: "var(--text-dark)", margin: 0 }}>Həkim Qəbulu</h4>
+                  <span style={{ fontSize: "0.7rem", color: "var(--text-light)" }}>Peşəkar tibbi xidmət</span>
                 </div>
               </div>
 
-              <div style={{ background: "var(--bg)", borderRadius: 16, padding: 18, border: "1px solid var(--border)", marginBottom: 20 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.85rem", marginBottom: 8 }}>
-                  <span style={{ color: "var(--text-light)", fontWeight: 600 }}>Mümkün Xidmətlər:</span>
-                  <span style={{ color: "var(--primary)", fontWeight: 700 }}>Aktiv</span>
-                </div>
-                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                  <span style={{ background: "var(--surface)", border: "1px solid var(--border)", padding: "4px 10px", borderRadius: 8, fontSize: "0.76rem", fontWeight: 600, color: "var(--text-dark)" }}>Kardiologiya</span>
-                  <span style={{ background: "var(--surface)", border: "1px solid var(--border)", padding: "4px 10px", borderRadius: 8, fontSize: "0.76rem", fontWeight: 600, color: "var(--text-dark)" }}>Nevrologiya</span>
-                  <span style={{ background: "var(--surface)", border: "1px solid var(--border)", padding: "4px 10px", borderRadius: 8, fontSize: "0.76rem", fontWeight: 600, color: "var(--text-dark)" }}>Pediatriya</span>
-                </div>
-              </div>
-
-              <Link to="/patient/book" className="ac-btn" style={{ display: "block", textAlign: "center", width: "100%" }}>
+              <Link to="/patient/book" className="ac-btn" style={{ display: "block", textAlign: "center", width: "100%", fontSize: "0.82rem", padding: "10px 16px" }}>
                 Randevu Təyin Et
               </Link>
             </div>
@@ -365,12 +351,12 @@ export default function Home() {
             </p>
             <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
               <Link to="/ai" className="ac-btn" style={{ padding: "12px 24px", fontSize: "0.9rem" }}>
-                🤖 AI Assistentlə Danış
+                 AI Assistentlə Danış
               </Link>
               <Link to="/chat" style={{ background: "transparent", border: "1.5px solid var(--secondary)", color: "var(--secondary)", fontWeight: 700, padding: "12px 24px", borderRadius: 10, textDecoration: "none", fontSize: "0.9rem", transition: "all 0.2s" }}
                 onMouseEnter={e => { e.currentTarget.style.background = "var(--secondary)"; e.currentTarget.style.color = "#FFFFFF"; }}
                 onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--secondary)"; }}>
-                💬 Canlı Çat
+                 Canlı Çat
               </Link>
             </div>
           </div>
@@ -419,7 +405,7 @@ export default function Home() {
           {REVIEWS.map((r, i) => (
             <div key={i} className="ac-card" style={{ padding: 28 }}>
               <div style={{ color: "var(--secondary)", fontSize: "1.1rem", marginBottom: 12 }}>
-                {"★".repeat(r.stars)}
+                {"".repeat(r.stars)}
               </div>
               <p style={{ fontSize: "0.92rem", color: "var(--text-mid)", lineHeight: 1.65, fontStyle: "italic", marginBottom: 20 }}>
                 "{r.comment}"

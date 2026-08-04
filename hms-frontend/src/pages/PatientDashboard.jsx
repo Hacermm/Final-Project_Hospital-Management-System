@@ -102,13 +102,13 @@ export default function PatientDashboard() {
           {/* Navigation Links */}
           <nav style={{ display: "flex", flexDirection: "column", gap: 6 }}>
             {[
-              { to: "/patient", label: "Pasiyent Portalı", icon: "📊", active: true },
-              { to: "/patient/book", label: "Randevu Al", icon: "📅" },
-              { to: "/patient/appointments", label: "Randevularım", icon: "📋" },
-              { to: "/patient/history", label: "Tibbi Tarixçəm", icon: "🩺" },
-              { to: "/patient/lab-tests", label: "Lab Nəticələri", icon: "🧪" },
-              { to: "/chat", label: "Mesajlar", icon: "💬" },
-              { to: "/ai", label: "AI Tibbi Assistent", icon: "🤖" },
+              { to: "/patient", label: "Pasiyent Portalı", icon: "", active: true },
+              { to: "/patient/book", label: "Randevu Al", icon: "" },
+              { to: "/patient/appointments", label: "Randevularım", icon: "" },
+              { to: "/patient/history", label: "Tibbi Tarixçəm", icon: "" },
+              { to: "/patient/lab-tests", label: "Lab Nəticələri", icon: "" },
+              { to: "/chat", label: "Mesajlar", icon: "" },
+              { to: "/ai", label: "AI Tibbi Assistent", icon: "" },
             ].map((item) => (
               <Link
                 key={item.to}
@@ -147,7 +147,7 @@ export default function PatientDashboard() {
             marginTop: 24,
           }}
         >
-          <div style={{ fontSize: "1.3rem", marginBottom: 6 }}>🩺</div>
+          <div style={{ fontSize: "1.3rem", marginBottom: 6 }}></div>
           <h4 style={{ fontSize: "0.82rem", fontWeight: 800, color: "#FFFFFF", marginBottom: 4 }}>24/7 Tibbi Dəstək</h4>
           <p style={{ fontSize: "0.72rem", color: "#FFCDD2", lineHeight: 1.5, marginBottom: 12 }}>Suallarınız olduqda AI Assistent və ya həkimlərinizlə dərhal əlaqə saxlayın.</p>
           <Link
@@ -232,7 +232,7 @@ export default function PatientDashboard() {
                 whiteSpace: "nowrap",
               }}
             >
-              🚪 Çıxış
+               Çıxış
             </button>
           </div>
         </header>
@@ -275,7 +275,7 @@ export default function PatientDashboard() {
                   {user?.photo_url ? (
                     <img src={user.photo_url} alt={user.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                   ) : (
-                    <span>👤</span>
+                    <span></span>
                   )}
                 </div>
                 <span style={{ position: "absolute", bottom: 2, right: 2, width: 14, height: 14, borderRadius: "50%", background: "#10b981", border: "2px solid var(--surface)" }} title="Aktiv pasiyent" />
@@ -317,7 +317,7 @@ export default function PatientDashboard() {
             >
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid var(--border)", paddingBottom: 12, marginBottom: 16 }}>
                 <h4 style={{ fontSize: "0.95rem", fontWeight: 900, color: "var(--text-dark)", display: "flex", alignItems: "center", gap: 8, margin: 0 }}>
-                  <span>📋</span> Ümumi Məlumatlar
+                  <span></span> Ümumi Məlumatlar
                 </h4>
                 <span style={{ fontSize: "0.78rem", fontWeight: 800, color: "var(--primary)", cursor: "pointer" }}>Düzəliş Et</span>
               </div>
@@ -343,7 +343,7 @@ export default function PatientDashboard() {
 
               <div style={{ paddingTop: 12, borderTop: "1px solid var(--border)", display: "flex", justifyContent: "space-between", fontSize: "0.75rem", color: "var(--text-light)", marginTop: 12 }}>
                 <span>Son yenilənmə: Bu gün</span>
-                <span style={{ color: "#059669", fontWeight: 800 }}>✓ Təsdiqlənib</span>
+                <span style={{ color: "#059669", fontWeight: 800 }}> Təsdiqlənib</span>
               </div>
             </div>
 
@@ -361,7 +361,7 @@ export default function PatientDashboard() {
             >
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid var(--border)", paddingBottom: 12, marginBottom: 16 }}>
                 <h4 style={{ fontSize: "0.95rem", fontWeight: 900, color: "var(--text-dark)", display: "flex", alignItems: "center", gap: 8, margin: 0 }}>
-                  <span>🩺</span> Anamnez Və Sağlamlıq
+                  <span></span> Anamnez Və Sağlamlıq
                 </h4>
                 <span style={{ fontSize: "0.78rem", fontWeight: 800, color: "var(--primary)", cursor: "pointer" }}>Təfərrüat</span>
               </div>
@@ -455,7 +455,7 @@ export default function PatientDashboard() {
 
                 {!loading && activeTab === "future" && futureAppointments.length === 0 && (
                   <div style={{ textAlign: "center", padding: "48px 0" }}>
-                    <div style={{ fontSize: "2.4rem", marginBottom: 12 }}>📅</div>
+                    <div style={{ fontSize: "2.4rem", marginBottom: 12 }}></div>
                     <p style={{ fontSize: "0.88rem", fontWeight: 700, color: "var(--text-light)", marginBottom: 16 }}>
                       Gələcək planlaşdırılmış randevunuz yoxdur.
                     </p>
@@ -467,7 +467,7 @@ export default function PatientDashboard() {
 
                 {!loading && activeTab === "past" && pastAppointments.length === 0 && (
                   <div style={{ textAlign: "center", padding: "48px 0" }}>
-                    <div style={{ fontSize: "2.4rem", marginBottom: 12 }}>📋</div>
+                    <div style={{ fontSize: "2.4rem", marginBottom: 12 }}></div>
                     <p style={{ fontSize: "0.88rem", fontWeight: 700, color: "var(--text-light)" }}>
                       Keçmiş randevu tarixçəsi tapılmadı.
                     </p>
@@ -522,7 +522,7 @@ export default function PatientDashboard() {
                             {app.doctor?.specialization || "Kardiologiya / Poliklinika"}
                           </p>
                           <span style={{ fontSize: "0.75rem", color: "var(--text-light)" }}>
-                            🕐 {app.time || "10:00"} — {app.reason || "Müayinə"}
+                             {app.time || "10:00"} — {app.reason || "Müayinə"}
                           </span>
                         </div>
                       </div>
@@ -532,7 +532,7 @@ export default function PatientDashboard() {
                           {statusLabels[app.status] || app.status}
                         </span>
                         <Link to="/chat" style={{ padding: "8px 12px", borderRadius: 10, background: "var(--surface)", border: "1px solid var(--border)", fontSize: "0.9rem", textDecoration: "none" }} title="Həkimlə Mesajlaş">
-                          💬
+                          
                         </Link>
                       </div>
                     </div>
@@ -549,7 +549,7 @@ export default function PatientDashboard() {
               <div className="ac-card" style={{ padding: "28px 24px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid var(--border)", paddingBottom: 14, marginBottom: 18 }}>
                   <h4 style={{ fontSize: "0.95rem", fontWeight: 900, color: "var(--text-dark)", display: "flex", alignItems: "center", gap: 8, margin: 0 }}>
-                    <span>🧪</span> Lab Analizləri & Sənədlər
+                    <span></span> Lab Analizləri & Sənədlər
                   </h4>
                   <Link to="/patient/lab-tests" style={{ fontSize: "0.78rem", fontWeight: 800, color: "var(--primary)", textDecoration: "none" }}>
                     Bütün PDF-lər
@@ -576,7 +576,7 @@ export default function PatientDashboard() {
                       }}
                     >
                       <div style={{ display: "flex", alignItems: "center", gap: 10, overflow: "hidden" }}>
-                        <span style={{ fontSize: "1.2rem", color: "var(--primary)" }}>📄</span>
+                        <span style={{ fontSize: "1.2rem", color: "var(--primary)" }}></span>
                         <div style={{ overflow: "hidden" }}>
                           <p style={{ fontWeight: 800, color: "var(--text-dark)", margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                             {file.name}
@@ -596,7 +596,7 @@ export default function PatientDashboard() {
               <div className="ac-card" style={{ padding: "28px 24px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid var(--border)", paddingBottom: 14, marginBottom: 18 }}>
                   <h4 style={{ fontSize: "0.95rem", fontWeight: 900, color: "var(--text-dark)", display: "flex", alignItems: "center", gap: 8, margin: 0 }}>
-                    <span>📝</span> Həkim Təyinatları Və Qeydlər
+                    <span></span> Həkim Təyinatları Və Qeydlər
                   </h4>
                   <Link to="/patient/history" style={{ fontSize: "0.78rem", fontWeight: 800, color: "var(--primary)", textDecoration: "none" }}>
                     Ətraflı

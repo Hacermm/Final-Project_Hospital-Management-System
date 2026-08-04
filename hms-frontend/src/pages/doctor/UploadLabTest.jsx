@@ -15,16 +15,16 @@ export default function UploadLabTest() {
 
   const handleSubmit = async (e) => {
     e.preventDefault(); setMessage("");
-    if (!file) { setMessage("❌ Fayl seçin"); return; }
+    if (!file) { setMessage(" Fayl seçin"); return; }
     const data = new FormData();
     data.append("patient_id", form.patient_id); data.append("title", form.title); data.append("description", form.description); data.append("file", file);
     setUploading(true);
     try {
       await api.post("/lab-tests", data, { headers: { "Content-Type": "multipart/form-data" } });
-      setMessage("✅ Fayl yükləndi"); setForm({ patient_id: "", title: "", description: "" }); setFile(null); e.target.reset(); load();
+      setMessage(" Fayl yükləndi"); setForm({ patient_id: "", title: "", description: "" }); setFile(null); e.target.reset(); load();
     } catch (err) {
       const msg = err.response?.data?.message || Object.values(err.response?.data?.errors || {})[0]?.[0] || "Xəta";
-      setMessage(`❌ ${msg}`);
+      setMessage(` ${msg}`);
     } finally { setUploading(false); }
   };
 
@@ -34,11 +34,11 @@ export default function UploadLabTest() {
       const url = window.URL.createObjectURL(new Blob([res.data]));
       const link = document.createElement("a"); link.href = url; link.setAttribute("download", fileName);
       document.body.appendChild(link); link.click(); link.remove(); window.URL.revokeObjectURL(url);
-    } catch { setMessage("❌ Endirilə bilmədi"); }
+    } catch { setMessage(" Endirilə bilmədi"); }
   };
 
   return (
-    <div className="min-h-screen" style={{ background: "var(--bg)", transition: "background-color 0.3s ease" }}>      <Navbar />
+    <div className="min-h-screen" style={{ background: "var(--bg)", transition: "background-color 0.3s ease" }}> <Navbar />
       <nav className="sticky top-0 z-50 px-6 py-4 backdrop-blur-xl" style={{ background: "var(--surface)", borderBottom: "1px solid var(--border)", transition: "background-color 0.3s ease" }}>
         <div className="max-w-4xl mx-auto flex items-center gap-3">
           <Link to="/doctor" className="text-slate-400 hover:text-white"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></Link>
@@ -61,7 +61,7 @@ export default function UploadLabTest() {
               className="w-full text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-indigo-600 file:text-white hover:file:bg-indigo-500 file:cursor-pointer file:font-medium file:text-sm" />
           </div>
           <button type="submit" disabled={uploading} className="hms-btn">{uploading ? "Yüklənir..." : "Yüklə"}</button>
-          {message && <p className={`text-sm font-medium ${message.startsWith("✅") ? "hms-message-success" : "hms-message-error"}`}>{message}</p>}
+          {message && <p className={`text-sm font-medium ${message.startsWith("") ? "hms-message-success" : "hms-message-error"}`}>{message}</p>}
         </form>
 
         <div className="glass-card overflow-hidden animate-fade-in-up" style={{animationDelay:"0.1s"}}>
@@ -69,11 +69,11 @@ export default function UploadLabTest() {
           {labTests.map((t) => (
             <div key={t.id} className="flex justify-between items-center px-6 py-4 border-b border-white/5 last:border-0">
               <div>
-                <p className="font-medium text-white">🔬 {t.title}</p>
+                <p className="font-medium text-white"> {t.title}</p>
                 <p className="text-sm text-slate-500">{t.patient} — {t.date}</p>
                 {t.description && <p className="text-sm text-slate-600">{t.description}</p>}
               </div>
-              <button onClick={() => download(t.id, t.file_name)} className="text-indigo-400 hover:text-indigo-300 text-sm font-medium">📄 Endir</button>
+              <button onClick={() => download(t.id, t.file_name)} className="text-indigo-400 hover:text-indigo-300 text-sm font-medium"> Endir</button>
             </div>
           ))}
           {labTests.length === 0 && <p className="text-slate-500 text-center py-10">Hələ nəticə yoxdur.</p>}

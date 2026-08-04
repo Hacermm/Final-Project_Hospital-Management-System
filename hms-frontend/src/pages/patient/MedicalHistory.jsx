@@ -27,7 +27,7 @@ export default function MedicalHistory() {
       link.remove();
       window.URL.revokeObjectURL(url);
     } catch {
-      setMessage("❌ PDF yüklənə bilmədi.");
+      setMessage(" PDF yüklənə bilmədi.");
     }
   };
 
@@ -89,7 +89,7 @@ export default function MedicalHistory() {
 
           {!loading && records.length === 0 && (
             <div className="ac-card" style={{ padding: "60px 32px", textAlign: "center" }}>
-              <div style={{ fontSize: "3rem", marginBottom: 12 }}>🩺</div>
+              <div style={{ fontSize: "3rem", marginBottom: 12 }}></div>
               <h3 style={{ fontSize: "1.2rem", fontWeight: 900, color: "var(--text-dark)", marginBottom: 8 }}>
                 Hələ Tibbi Tarixçə Qeydiniz Yoxdur
               </h3>
@@ -110,7 +110,7 @@ export default function MedicalHistory() {
                     {r.doctor?.name} — {r.doctor?.specialization}
                   </p>
                   <p style={{ fontSize: "0.8rem", color: "var(--text-light)", margin: 0 }}>
-                    📅 Tarix: {r.date}
+                     Tarix: {r.date}
                   </p>
                 </div>
 
@@ -126,7 +126,7 @@ export default function MedicalHistory() {
                     gap: 8,
                   }}
                 >
-                  📄 RESEPTİ PDF YÜKLƏ
+                   RESEPTİ PDF YÜKLƏ
                 </button>
               </div>
 
@@ -144,7 +144,7 @@ export default function MedicalHistory() {
                   <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                     {r.prescriptions.map((p) => (
                       <div key={p.id} style={{ display: "flex", alignItems: "center", gap: 10, fontSize: "0.85rem", background: "var(--bg)", padding: "10px 14px", borderRadius: 10, border: "1px solid var(--border)" }}>
-                        <span style={{ fontSize: "1.1rem" }}>💊</span>
+                        <span style={{ fontSize: "1.1rem" }}></span>
                         <span style={{ fontWeight: 800, color: "var(--primary)" }}>{p.medicine}</span>
                         {p.dosage && <span style={{ color: "var(--text-mid)", fontWeight: 600 }}>— {p.dosage}</span>}
                         {p.duration && <span style={{ color: "var(--text-light)", fontSize: "0.78rem" }}>({p.duration})</span>}

@@ -4,7 +4,7 @@ export default function CallOverlay({ callState, peer, error, onAccept, onReject
     return (
       <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] bg-rose-600/95 text-white px-6 py-3.5 rounded-2xl shadow-xl backdrop-blur-md flex items-center gap-4 animate-fade-in-up border border-rose-500/50">
         <span className="text-sm font-semibold">{error}</span>
-        <button onClick={onClearError} className="text-white/80 hover:text-white transition p-1 rounded-lg hover:bg-white/10" title="Bağla">✕</button>
+        <button onClick={onClearError} className="text-white/80 hover:text-white transition p-1 rounded-lg hover:bg-white/10" title="Bağla"></button>
       </div>
     );
   }

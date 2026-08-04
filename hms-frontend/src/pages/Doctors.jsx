@@ -4,12 +4,7 @@ import api from "../lib/api";
 import { useTheme } from "../context/ThemeContext.jsx";
 import Navbar from "../components/Navbar";
 
-const NAV_LINKS = [
-  { to: "/departments", label: "Şöbələr" },
-  { to: "/doctors", label: "Həkimlər" },
-  { to: "/about", label: "Haqqımızda" },
-  { to: "/contact", label: "Əlaqə" },
-];
+
 
 const FALLBACK_AVATARS = [
   "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=600&auto=format&fit=crop&q=80",
@@ -24,7 +19,7 @@ export default function Doctors() {
   const [selectedDept, setSelectedDept] = useState("");
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
-  const { theme, toggleTheme } = useTheme();
+  const { toggleTheme } = useTheme();
 
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
@@ -56,171 +51,78 @@ export default function Doctors() {
   };
 
   return (
+    
     <div style={{ background: "var(--bg)", color: "var(--text-dark)", minHeight: "100vh", fontFamily: "'Plus Jakarta Sans', sans-serif", transition: "background-color 0.3s ease, color 0.3s ease", display: "flex", flexDirection: "column" }}>
       <Navbar />
 
+      {/* Səhifə Başlığı və Axtarış Paneli */}
+      <section style={{ maxWidth: 1240, margin: "0 auto", padding: "40px 24px 10px", width: "100%" }}>
+        <div style={{ marginBottom: 28 }}>
+          <span style={{
+            display: "inline-block", background: "var(--primary-light)",
+            border: "1px solid var(--secondary-light)", borderRadius: 30,
+            padding: "5px 16px", fontSize: "0.72rem", fontWeight: 800,
+            letterSpacing: "1px", color: "var(--primary)", marginBottom: 12,
+          }}>
+            PEŞƏKAR MÜTƏXƏSSİS HEYƏTİ
+          </span>
 
-      {/* ═══════ PREMIUM HERO ═══════ */}
-      <section style={{ position: "relative", overflow: "hidden", background: "linear-gradient(135deg, #1a0303 0%, #2d0606 35%, #8B1A1A 75%, #C62828 100%)", color: "#FFFFFF", padding: "64px 0 64px" }}>
+          <h1 style={{
+            fontSize: "clamp(1.8rem, 3.2vw, 2.4rem)", fontWeight: 900,
+            lineHeight: 1.2, letterSpacing: "-0.8px", color: "var(--text-dark)", marginBottom: 8,
+          }}>
+            Həkimlərimiz
+          </h1>
 
-        {/* Dot grid pattern */}
-        <div style={{
-          position: "absolute", inset: 0, pointerEvents: "none", zIndex: 0,
-          backgroundImage: "radial-gradient(rgba(255,255,255,0.07) 1px, transparent 1px)",
-          backgroundSize: "28px 28px"
-        }} />
-
-        {/* Glowing orbs */}
-        <div style={{ position: "absolute", top: "-80px", right: "20%", width: 380, height: 380, borderRadius: "50%", background: "radial-gradient(circle, rgba(239,68,68,0.28) 0%, transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
-        <div style={{ position: "absolute", bottom: "0", left: "-60px", width: 280, height: 280, borderRadius: "50%", background: "radial-gradient(circle, rgba(198,40,40,0.22) 0%, transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
-
-        <div className="responsive-hero-grid" style={{ maxWidth: 1240, margin: "0 auto", padding: "0 24px", position: "relative", zIndex: 2, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "center" }}>
-
-          {/* LEFT — text */}
-          <div style={{ paddingBottom: 64 }}>
-            {/* Badge */}
-            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 40, padding: "6px 18px", marginBottom: 24, backdropFilter: "blur(8px)" }}>
-              <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#4ade80", display: "inline-block", boxShadow: "0 0 8px #4ade80" }} />
-              <span style={{ fontSize: "0.75rem", fontWeight: 800, letterSpacing: "1px", color: "#FFCDD2", textTransform: "uppercase" }}>PEŞƏKAR MÜTƏXƏSSİS HEYƏTİ</span>
-            </div>
-
-            <h1 style={{ fontSize: "clamp(2.2rem, 4vw, 3.2rem)", fontWeight: 900, lineHeight: 1.12, marginBottom: 20, letterSpacing: "-1.5px" }}>
-              Həkimlərimizi
-              <span style={{ display: "block", background: "linear-gradient(90deg, #FFCDD2, #FF8A80)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Tanıyın &amp; Randevu</span>
-              Alın
-            </h1>
-
-            <p style={{ fontSize: "1rem", lineHeight: 1.7, color: "rgba(255,255,255,0.8)", maxWidth: 460, marginBottom: 32 }}>
-              NovaCare-də fəaliyyət göstərən 50+ ixtisaslı həkimləri axtarın, təcrübələri ilə tanış olun və birbaşa onlayn randevu Alın.
-            </p>
-
-            {/* Mini stats row */}
-            <div className="responsive-stats-row" style={{ display: "flex", gap: 0, marginBottom: 0 }}>
-              {[
-                { val: "50+", label: "Həkim" },
-                { val: "15+", label: "Şöbə" },
-                { val: "24/7", label: "Xidmət" },
-                { val: "98%", label: "Məmnuniyyət" },
-              ].map((s, i) => (
-                <div key={i} style={{ paddingRight: 28, borderRight: i < 3 ? "1px solid rgba(255,255,255,0.15)" : "none", paddingLeft: i > 0 ? 28 : 0 }}>
-                  <div style={{ fontSize: "1.8rem", fontWeight: 900, color: "#FFFFFF", lineHeight: 1 }}>{s.val}</div>
-                  <div style={{ fontSize: "0.72rem", fontWeight: 700, color: "rgba(255,255,255,0.6)", marginTop: 4, textTransform: "uppercase", letterSpacing: "0.5px" }}>{s.label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* RIGHT — decorative visual */}
-          <div style={{ position: "relative", display: "flex", alignItems: "flex-end", justifyContent: "center", paddingBottom: 0, height: 340 }}>
-
-            {/* Main card — doctor illustration */}
-            <div style={{
-              position: "absolute",
-              bottom: 0,
-              left: "50%",
-              transform: "translateX(-50%)",
-              width: 220,
-              height: 300,
-              borderRadius: "24px 24px 0 0",
-              background: "linear-gradient(180deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.06) 100%)",
-              border: "1px solid rgba(255,255,255,0.2)",
-              backdropFilter: "blur(12px)",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 12,
-            }}>
-              <svg width="72" height="72" viewBox="0 0 80 80" fill="none">
-                <circle cx="40" cy="28" r="20" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.35)" strokeWidth="1.5" />
-                <circle cx="40" cy="24" r="10" fill="rgba(255,255,255,0.3)" />
-                <path d="M14 72c0-14.36 11.64-26 26-26s26 11.64 26 26" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5" />
-                <path d="M40 52v14M34 58h12" stroke="rgba(255,200,200,0.9)" strokeWidth="2.5" strokeLinecap="round" />
-              </svg>
-              <div style={{ textAlign: "center" }}>
-                <div style={{ fontSize: "0.9rem", fontWeight: 800, color: "#FFFFFF" }}>Dr. Mütəxəssis</div>
-                <div style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.65)", marginTop: 4 }}>Kardiologiya</div>
-              </div>
-              <div style={{ display: "flex", gap: 4 }}>
-                {[1,2,3,4,5].map(s => <span key={s} style={{ color: "#FDB931", fontSize: "0.8rem" }}>★</span>)}
-              </div>
-            </div>
-
-            {/* Floating card — top left */}
-            <div style={{
-              position: "absolute",
-              top: 24,
-              left: 0,
-              background: "rgba(255,255,255,0.12)",
-              backdropFilter: "blur(16px)",
-              border: "1px solid rgba(255,255,255,0.2)",
-              borderRadius: 16,
-              padding: "14px 18px",
-              minWidth: 150,
-              animation: "floatSlow 3s ease-in-out infinite"
-            }}>
-              <div style={{ fontSize: "0.7rem", color: "rgba(255,255,255,0.7)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.5px" }}>Bu Həftə</div>
-              <div style={{ fontSize: "1.4rem", fontWeight: 900, color: "#FFFFFF", marginTop: 4 }}>142</div>
-              <div style={{ fontSize: "0.72rem", color: "#FFCDD2", fontWeight: 600 }}>Randevu Alındı</div>
-            </div>
-
-            {/* Floating card — top right */}
-            <div style={{
-              position: "absolute",
-              top: 80,
-              right: 0,
-              background: "rgba(255,255,255,0.12)",
-              backdropFilter: "blur(16px)",
-              border: "1px solid rgba(255,255,255,0.2)",
-              borderRadius: 16,
-              padding: "12px 16px",
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              animation: "floatSlow 3.5s ease-in-out infinite"
-            }}>
-              <div style={{ width: 38, height: 38, borderRadius: 12, background: "rgba(74,222,128,0.2)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.1rem" }}>✓</div>
-              <div>
-                <div style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.7)", fontWeight: 700 }}>ONLINE</div>
-                <div style={{ fontSize: "0.8rem", fontWeight: 800, color: "#FFFFFF" }}>18 Həkim</div>
-              </div>
-            </div>
-          </div>
+          <p style={{ fontSize: "0.98rem", color: "var(--text-mid)", maxWidth: 560 }}>
+            İxtisas üzrə həkim axtarın, təcrübələri ilə tanış olun və birbaşa randevu alın.
+          </p>
         </div>
-      </section>
 
-      {/* SEARCH PANEL — clean floating card overlapping hero */}
-      <section style={{ maxWidth: 1240, margin: "-36px auto 0", padding: "0 24px", position: "relative", zIndex: 10 }}>
+        {/* Axtarış paneli */}
         <div className="responsive-search-panel" style={{
           background: "var(--surface)",
           borderRadius: 20,
-          padding: "24px 28px",
-          boxShadow: "0 12px 40px rgba(0,0,0,0.12)",
+          padding: "20px 24px",
+          boxShadow: "0 10px 30px rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.03)",
           border: "1px solid var(--border)",
           display: "grid",
           gridTemplateColumns: "1.5fr 1fr auto",
-          gap: 14,
+          gap: 16,
           alignItems: "center",
-          transition: "background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease"
         }}>
           <div style={{ position: "relative" }}>
             <svg style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", opacity: 0.45 }} width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--text-dark)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
             </svg>
-            <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Həkim adı və ya ixtisas sahəsi..." className="ac-input" style={{ paddingLeft: 42 }} />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Həkim adı və ya ixtisas..."
+              className="ac-input"
+              style={{ paddingLeft: 42 }}
+            />
           </div>
+
           <select value={selectedDept} onChange={(e) => setSelectedDept(e.target.value)} className="ac-input" style={{ cursor: "pointer" }}>
             <option value="">Bütün Şöbələr</option>
             {departments.map((d) => (<option key={d.id} value={d.id}>{d.name}</option>))}
           </select>
-          {(search || selectedDept) ? (
-            <button onClick={() => { setSearch(""); setSelectedDept(""); }} style={{ padding: "12px 20px", borderRadius: 10, background: "var(--primary-light)", border: "1px solid var(--secondary-light)", color: "var(--primary)", fontWeight: 700, fontSize: "0.85rem", cursor: "pointer", whiteSpace: "nowrap" }}>✕ Sıfırla</button>
-          ) : (
-            <button className="ac-btn" style={{ padding: "12px 22px", fontSize: "0.85rem", whiteSpace: "nowrap" }}>Axtar</button>
-          )}
+
+          <div style={{ fontSize: "0.85rem", color: "var(--text-light)", fontWeight: 700, whiteSpace: "nowrap", textAlign: "center" }}>
+            {filtered.length} həkim
+            {(search || selectedDept) && (
+              <button
+                onClick={() => { setSearch(""); setSelectedDept(""); }}
+                style={{ display: "block", marginTop: 4, background: "none", border: "none", color: "var(--primary)", fontWeight: 700, fontSize: "0.8rem", cursor: "pointer" }}
+              >
+                Sıfırla
+              </button>
+            )}
+          </div>
         </div>
       </section>
-
 
       <main style={{ maxWidth: 1240, margin: "0 auto", padding: "36px 24px 80px", width: "100%", flex: 1 }}>
         {loading && (
@@ -274,7 +176,7 @@ export default function Doctors() {
                       color: "#FFFFFF",
                       display: "flex",
                       alignItems: "center",
-                      justify: "center",
+                      justifyContent: "center",
                       zIndex: 10,
                       boxShadow: "0 4px 12px rgba(230, 74, 25, 0.4)",
                       transition: "transform 0.25s ease, background 0.25s ease",
@@ -424,7 +326,7 @@ export default function Doctors() {
 
         {!loading && filtered.length === 0 && (
           <div className="ac-card" style={{ padding: "60px 30px", textAlign: "center", maxWidth: 440, margin: "40px auto" }}>
-            <div style={{ fontSize: "3rem", marginBottom: 16 }}>🔍</div>
+            <div style={{ fontSize: "3rem", marginBottom: 16 }}></div>
             <h3 style={{ fontWeight: 800, fontSize: "1.1rem", color: "var(--text-dark)", marginBottom: 8 }}>Həkim Tapılmadı</h3>
             <p style={{ fontSize: "0.85rem", color: "var(--text-light)", marginBottom: 20 }}>Axtarış meyarlarınıza uyğun heç bir mütəxəssis tapılmadı.</p>
             <button

@@ -15,9 +15,9 @@ export default function Login() {
   const verified = searchParams.get("verified");
 
   const verifyMessages = {
-    success: { text: "✅ Email uğurla təsdiqləndi! İndi giriş edə bilərsiniz.", ok: true },
-    already: { text: "ℹ️ Email artıq təsdiqlənib. Giriş edə bilərsiniz.", ok: true },
-    invalid: { text: "❌ Təsdiq linki etibarsız və ya vaxtı bitib.", ok: false },
+    success: { text: " Email uğurla təsdiqləndi! İndi giriş edə bilərsiniz.", ok: true },
+    already: { text: "ℹ Email artıq təsdiqlənib. Giriş edə bilərsiniz.", ok: true },
+    invalid: { text: " Təsdiq linki etibarsız və ya vaxtı bitib.", ok: false },
   };
   const verifyMsg = verifyMessages[verified];
 
@@ -44,7 +44,7 @@ export default function Login() {
       } else if (err.response.data?.message) {
         msg = err.response.data.message;
       }
-      setMessage(`❌ ${msg}`);
+      setMessage(` ${msg}`);
     } finally {
       setLoading(false);
     }
@@ -362,7 +362,7 @@ export default function Login() {
                 marginTop: 8,
               }}
             >
-              {loading ? "GİRİŞ EDİLİR..." : "GİRİŞ ET ➔"}
+              {loading ? "GİRİŞ EDİLİR..." : "GİRİŞ ET "}
             </button>
           </form>
 

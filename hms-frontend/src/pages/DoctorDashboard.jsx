@@ -7,12 +7,12 @@ export default function DoctorDashboard() {
   const logout = () => { localStorage.removeItem("token"); localStorage.removeItem("role"); navigate("/login"); };
 
   const menuItems = [
-    { to: "/doctor/appointments", icon: "📋", title: "Randevularım", desc: "Qəbullar və pasiyent randevu siyahısı", badge: "Aktiv" },
-    { to: "/doctor/schedule", icon: "🕒", title: "İş Qrafikim", desc: "Qəbul saatları və iş günləri", badge: "Təqvim" },
-    { to: "/doctor/records/new", icon: "📝", title: "Tibbi Qeyd Yaz", desc: "Pasiyentlər üçün diaqnoz və resept təyini", badge: "Yazı" },
-    { to: "/doctor/lab-tests", icon: "🧪", title: "Lab Nəticələri", desc: "Analiz fayllarının yüklənməsi", badge: "Upload" },
-    { to: "/chat", icon: "💬", title: "Mesajlar", desc: "Pasiyentlərlə təhlükəsiz canlı söhbət", badge: "Canlı" },
-    { to: "/ai", icon: "🤖", title: "AI Asistent", desc: "Diaqnostika və tibbi təhlil köməkçisi", badge: "AI Assistant" },
+    { to: "/doctor/appointments", icon: "", title: "Randevularım", desc: "Qəbullar və pasiyent randevu siyahısı", badge: "Aktiv" },
+    { to: "/doctor/schedule", icon: "", title: "İş Qrafikim", desc: "Qəbul saatları və iş günləri", badge: "Təqvim" },
+    { to: "/doctor/records/new", icon: "", title: "Tibbi Qeyd Yaz", desc: "Pasiyentlər üçün diaqnoz və resept təyini", badge: "Yazı" },
+    { to: "/doctor/lab-tests", icon: "", title: "Lab Nəticələri", desc: "Analiz fayllarının yüklənməsi", badge: "Upload" },
+    { to: "/chat", icon: "", title: "Mesajlar", desc: "Pasiyentlərlə təhlükəsiz canlı söhbət", badge: "Canlı" },
+    { to: "/ai", icon: "", title: "AI Asistent", desc: "Diaqnostika və tibbi təhlil köməkçisi", badge: "AI Assistant" },
   ];
 
   return (
@@ -57,7 +57,7 @@ export default function DoctorDashboard() {
               onMouseEnter={e => { e.currentTarget.style.background = "rgba(239,68,68,0.08)"; }}
               onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
             >
-              🚪 Çıxış
+               Çıxış
             </button>
           </div>
         </div>

@@ -7,9 +7,9 @@ export default function SuperAdminDashboard() {
   const logout = () => { localStorage.removeItem("token"); localStorage.removeItem("role"); navigate("/login"); };
 
   const menuItems = [
-    { to: "/admin/departments", icon: "🏥", title: "Şöbə İdarəetməsi", desc: "Şöbələri əlavə edin, redaktə edin və ya silin", badge: "Şöbələr" },
-    { to: "/admin/doctors", icon: "👨‍⚕️", title: "Həkim İdarəetməsi", desc: "Bütün mütəxəssis həkim hesabları və qiymətləri", badge: "Həkimlər" },
-    { to: "/admin/patients", icon: "👤", title: "Xəstə İdarəetməsi", desc: "Bütün pasiyent profilləri və bazası", badge: "Pasiyentlər" },
+    { to: "/admin/departments", icon: "", title: "Şöbə İdarəetməsi", desc: "Şöbələri əlavə edin, redaktə edin və ya silin", badge: "Şöbələr" },
+    { to: "/admin/doctors", icon: "", title: "Həkim İdarəetməsi", desc: "Bütün mütəxəssis həkim hesabları və qiymətləri", badge: "Həkimlər" },
+    { to: "/admin/patients", icon: "", title: "Xəstə İdarəetməsi", desc: "Bütün pasiyent profilləri və bazası", badge: "Pasiyentlər" },
   ];
 
   return (
@@ -54,7 +54,7 @@ export default function SuperAdminDashboard() {
               onMouseEnter={e => { e.currentTarget.style.background = "rgba(239,68,68,0.08)"; }}
               onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
             >
-              🚪 Çıxış
+               Çıxış
             </button>
           </div>
         </div>

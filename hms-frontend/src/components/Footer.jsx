@@ -41,7 +41,7 @@ export default function Footer() {
                 className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all text-slate-900 shadow-md"
                 style={{ background: "#fdb931" }}
               >
-                <span>📞 TƏCİLİ:</span> +994 (12) 500 00 00
+                <span> TƏCİLİ:</span> +994 (12) 500 00 00
               </a>
               <a
                 href="https://wa.me/994125000000"
@@ -49,7 +49,7 @@ export default function Footer() {
                 rel="noreferrer"
                 className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all bg-emerald-500/20 border border-emerald-400/40 text-emerald-300"
               >
-                <span>💬</span> WhatsApp
+                <span></span> WhatsApp
               </a>
             </div>
           </div>
@@ -84,21 +84,21 @@ export default function Footer() {
             <h4 className="font-display font-bold text-xs tracking-wider uppercase border-b border-white/10 pb-2.5" style={{ color: "#fdb931" }}>Ünvan Və İş Rejimi</h4>
             <div className="space-y-2.5 text-xs text-slate-300">
               <p className="flex items-start gap-2">
-                <span className="text-amber-300 shrink-0 mt-0.5">📍</span>
+                <span className="text-amber-300 shrink-0 mt-0.5"></span>
                 <span>Bakı şəhəri, Nərimanov r., Atatürk pr. 58</span>
               </p>
               <p className="flex items-center gap-2">
-                <span className="text-amber-300 shrink-0">📞</span>
+                <span className="text-amber-300 shrink-0"></span>
                 <span>+994 (12) 500 00 00 / 24/7 Qaynar Xətt</span>
               </p>
               <p className="flex items-center gap-2">
-                <span className="text-amber-300 shrink-0">✉️</span>
+                <span className="text-amber-300 shrink-0"></span>
                 <span>info@novacare.az</span>
               </p>
               <div className="pt-2">
                 <div className="p-3 rounded-xl border border-white/10 bg-white/5 space-y-1">
                   <div className="flex items-center gap-2 text-xs font-extrabold text-amber-300">
-                    <span>🏆</span> JCI Beynəlxalq Sertifikatı
+                    <span></span> JCI Beynəlxalq Sertifikatı
                   </div>
                   <p className="text-[11px] text-slate-400 leading-relaxed">Dünya standartlarına uyğun pasiyent təhlükəsizliyi.</p>
                 </div>
@@ -125,16 +125,16 @@ export default function Footer() {
         style={{ background: "#001935" }}
       >
         <a href="tel:+994125000000" className="flex flex-col items-center gap-0.5 active:scale-95 transition" style={{ color: "#fdb931" }}>
-          <span className="text-base">📞</span><span className="text-[10px]">Təcili</span>
+          <span className="text-base"></span><span className="text-[10px]">Təcili</span>
         </a>
         <a href="https://wa.me/994125000000" target="_blank" rel="noreferrer" className="flex flex-col items-center gap-0.5 text-emerald-400 active:scale-95 transition">
-          <span className="text-base">💬</span><span className="text-[10px]">WhatsApp</span>
+          <span className="text-base"></span><span className="text-[10px]">WhatsApp</span>
         </a>
         <Link to="/doctors" className="flex flex-col items-center gap-0.5 text-sky-400 active:scale-95 transition">
-          <span className="text-base">👨‍⚕️</span><span className="text-[10px]">Həkimlər</span>
+          <span className="text-base"></span><span className="text-[10px]">Həkimlər</span>
         </Link>
         <Link to="/register" className="flex flex-col items-center gap-0.5 active:scale-95 transition" style={{ color: "#fdb931" }}>
-          <span className="text-base">📅</span><span className="text-[10px]">Randevu</span>
+          <span className="text-base"></span><span className="text-[10px]">Randevu</span>
         </Link>
       </div>
     </footer>

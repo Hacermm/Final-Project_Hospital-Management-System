@@ -17,10 +17,10 @@ export default function Register() {
     setLoading(true);
     try {
       const res = await api.post("/register", form);
-      setMessage(`✅ ${res.data.message}`);
+      setMessage(` ${res.data.message}`);
     } catch (err) {
       const msg = err.response?.data?.message || Object.values(err.response?.data?.errors || {})[0]?.[0] || "Xəta baş verdi.";
-      setMessage(`❌ ${msg}`);
+      setMessage(` ${msg}`);
     } finally {
       setLoading(false);
     }
@@ -392,7 +392,7 @@ export default function Register() {
                 marginTop: 6,
               }}
             >
-              {loading ? "QEYDİYYAT EDİLİR..." : "QEYDİYYATDAN KEÇ ➔"}
+              {loading ? "QEYDİYYAT EDİLİR..." : "QEYDİYYATDAN KEÇ "}
             </button>
           </form>
 
@@ -405,9 +405,9 @@ export default function Register() {
                 fontSize: "0.82rem",
                 fontWeight: 700,
                 textAlign: "center",
-                background: message.startsWith("✅") ? "rgba(16,185,129,0.1)" : "rgba(239,68,68,0.1)",
-                color: message.startsWith("✅") ? "#059669" : "#dc2626",
-                border: message.startsWith("✅") ? "1px solid rgba(16,185,129,0.3)" : "1px solid rgba(239,68,68,0.3)",
+                background: message.startsWith("") ? "rgba(16,185,129,0.1)" : "rgba(239,68,68,0.1)",
+                color: message.startsWith("") ? "#059669" : "#dc2626",
+                border: message.startsWith("") ? "1px solid rgba(16,185,129,0.3)" : "1px solid rgba(239,68,68,0.3)",
               }}
             >
               {message}

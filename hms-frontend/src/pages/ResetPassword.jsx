@@ -18,11 +18,11 @@ export default function ResetPassword() {
     setLoading(true);
     try {
       const res = await api.post("/reset-password", form);
-      setMessage(`✅ ${res.data.message}`);
+      setMessage(` ${res.data.message}`);
       setTimeout(() => navigate("/login"), 2000);
     } catch (err) {
       const msg = err.response?.data?.message || Object.values(err.response?.data?.errors || {})[0]?.[0] || "Xəta baş verdi.";
-      setMessage(`❌ ${msg}`);
+      setMessage(` ${msg}`);
     } finally {
       setLoading(false);
     }
@@ -329,7 +329,7 @@ export default function ResetPassword() {
                 marginTop: 6,
               }}
             >
-              {loading ? "YENİLƏNİR..." : "PAROLU DƏYİŞ ➔"}
+              {loading ? "YENİLƏNİR..." : "PAROLU DƏYİŞ "}
             </button>
           </form>
 
@@ -342,9 +342,9 @@ export default function ResetPassword() {
                 fontSize: "0.82rem",
                 fontWeight: 700,
                 textAlign: "center",
-                background: message.startsWith("✅") ? "rgba(16,185,129,0.1)" : "rgba(239,68,68,0.1)",
-                color: message.startsWith("✅") ? "#059669" : "#dc2626",
-                border: message.startsWith("✅") ? "1px solid rgba(16,185,129,0.3)" : "1px solid rgba(239,68,68,0.3)",
+                background: message.startsWith("") ? "rgba(16,185,129,0.1)" : "rgba(239,68,68,0.1)",
+                color: message.startsWith("") ? "#059669" : "#dc2626",
+                border: message.startsWith("") ? "1px solid rgba(16,185,129,0.3)" : "1px solid rgba(239,68,68,0.3)",
               }}
             >
               {message}

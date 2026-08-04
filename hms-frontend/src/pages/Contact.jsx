@@ -51,13 +51,13 @@ export default function Contact() {
                 onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.2)"}
                 onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.12)"}
               >
-                📞 +994 (12) 345 67 89
+                 +994 (12) 345 67 89
               </a>
               <a href="mailto:info@novacare.az" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "10px 18px", borderRadius: 30, background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.85)", fontSize: "0.84rem", fontWeight: 600, textDecoration: "none", backdropFilter: "blur(8px)", transition: "all 0.2s" }}
                 onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.16)"}
                 onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.08)"}
               >
-                ✉️ info@novacare.az
+                 info@novacare.az
               </a>
             </div>
           </div>
@@ -65,9 +65,9 @@ export default function Contact() {
           {/* RIGHT — contact info cards */}
           <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
             {[
-              { icon: "📍", title: "Ünvan", val: "Bakı, Nərimanov r., Atatürk pr. 58", sub: "Bakı Metroya 5 dəqiqə" },
-              { icon: "🕑", title: "İş Saatları", val: "B.e — Cuma: 08:00 – 20:00", sub: "Şənbə – Bazar: 10:00 – 16:00" },
-              { icon: "🚨", title: "Təcili Xidmət", val: "+994 (12) 999 00 11", sub: "24 saat, 7 gün aktiv" },
+              { icon: "", title: "Ünvan", val: "Bakı, Nərimanov r., Atatürk pr. 58", sub: "Bakı Metroya 5 dəqiqə" },
+              { icon: "", title: "İş Saatları", val: "B.e — Cuma: 08:00 – 20:00", sub: "Şənbə – Bazar: 10:00 – 16:00" },
+              { icon: "", title: "Təcili Xidmət", val: "+994 (12) 999 00 11", sub: "24 saat, 7 gün aktiv" },
             ].map((item, i) => (
               <div key={i} style={{
                 display: "flex",
@@ -107,7 +107,7 @@ export default function Contact() {
               <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
                 <div style={{ display: "flex", alignItems: "flex-start", gap: 16 }}>
                   <div style={{ width: 44, height: 44, borderRadius: 14, background: "var(--primary-light)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.2rem", shrink: 0 }}>
-                    📍
+                    
                   </div>
                   <div>
                     <strong style={{ display: "block", color: "var(--text-dark)", fontWeight: 800, fontSize: "0.9rem", marginBottom: 2 }}>Ünvan:</strong>
@@ -117,7 +117,7 @@ export default function Contact() {
 
                 <div style={{ display: "flex", alignItems: "flex-start", gap: 16 }}>
                   <div style={{ width: 44, height: 44, borderRadius: 14, background: "var(--primary-light)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.2rem", shrink: 0 }}>
-                    📞
+                    
                   </div>
                   <div>
                     <strong style={{ display: "block", color: "var(--text-dark)", fontWeight: 800, fontSize: "0.9rem", marginBottom: 2 }}>Təcili Əlaqə:</strong>
@@ -129,7 +129,7 @@ export default function Contact() {
 
                 <div style={{ display: "flex", alignItems: "flex-start", gap: 16 }}>
                   <div style={{ width: 44, height: 44, borderRadius: 14, background: "var(--primary-light)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.2rem", shrink: 0 }}>
-                    ✉️
+                    
                   </div>
                   <div>
                     <strong style={{ display: "block", color: "var(--text-dark)", fontWeight: 800, fontSize: "0.9rem", marginBottom: 2 }}>E-Poçt Ünvanı:</strong>
@@ -141,7 +141,7 @@ export default function Contact() {
 
                 <div style={{ display: "flex", alignItems: "flex-start", gap: 16 }}>
                   <div style={{ width: 44, height: 44, borderRadius: 14, background: "var(--primary-light)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.2rem", shrink: 0 }}>
-                    🕒
+                    
                   </div>
                   <div>
                     <strong style={{ display: "block", color: "var(--text-dark)", fontWeight: 800, fontSize: "0.9rem", marginBottom: 2 }}>İş Rejimi:</strong>
@@ -176,7 +176,7 @@ export default function Contact() {
                   boxShadow: "0 4px 14px rgba(37,211,102,0.3)",
                 }}
               >
-                💬 WhatsApp İlə Yazın
+                 WhatsApp İlə Yazın
               </a>
             </div>
           </div>
@@ -185,7 +185,7 @@ export default function Contact() {
             {submitted ? (
               <div style={{ padding: "60px 20px", textAlign: "center" }}>
                 <div style={{ width: 64, height: 64, borderRadius: "50%", background: "var(--primary-light)", color: "var(--primary)", fontWeight: 900, fontSize: "1.8rem", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
-                  ✓
+                  
                 </div>
                 <h2 style={{ fontSize: "1.5rem", fontWeight: 900, color: "var(--text-dark)", marginBottom: 12 }}>Mesajınız Göndərildi!</h2>
                 <p style={{ fontSize: "0.92rem", color: "var(--text-light)", lineHeight: 1.6, maxWidth: 360, margin: "0 auto 28px" }}>

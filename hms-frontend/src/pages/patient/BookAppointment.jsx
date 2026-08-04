@@ -47,11 +47,11 @@ export default function BookAppointment() {
     setMessage("");
     try {
       await api.post("/appointments", { doctor_id: selectedDoctor, appointment_date: date, appointment_time: selectedSlot, reason });
-      setMessage("✅ Randevu uğurla alındı! Həkim təsdiqini gözləyin.");
+      setMessage(" Randevu uğurla alındı! Həkim təsdiqini gözləyin.");
       setTimeout(() => navigate("/patient/appointments"), 1500);
     } catch (err) {
       const msg = err.response?.data?.message || Object.values(err.response?.data?.errors || {})[0]?.[0] || "Xəta baş verdi.";
-      setMessage(`❌ ${msg}`);
+      setMessage(` ${msg}`);
     }
   };
 
@@ -224,9 +224,9 @@ export default function BookAppointment() {
                   fontSize: "0.88rem",
                   fontWeight: 800,
                   textAlign: "center",
-                  background: message.startsWith("✅") ? "rgba(16,185,129,0.1)" : "rgba(239,68,68,0.1)",
-                  color: message.startsWith("✅") ? "#059669" : "#dc2626",
-                  border: message.startsWith("✅") ? "1px solid rgba(16,185,129,0.3)" : "1px solid rgba(239,68,68,0.3)",
+                  background: message.startsWith("") ? "rgba(16,185,129,0.1)" : "rgba(239,68,68,0.1)",
+                  color: message.startsWith("") ? "#059669" : "#dc2626",
+                  border: message.startsWith("") ? "1px solid rgba(16,185,129,0.3)" : "1px solid rgba(239,68,68,0.3)",
                 }}
               >
                 {message}

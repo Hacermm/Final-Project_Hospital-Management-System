@@ -5,37 +5,37 @@ import { useTheme } from "../context/ThemeContext";
 
 const menus = {
   patient: [
-    { to: "/patient", label: "Panel", icon: "📊" },
-    { to: "/patient/book", label: "Randevu Al", icon: "📅" },
-    { to: "/patient/appointments", label: "Randevularım", icon: "📋" },
-    { to: "/patient/history", label: "Tibbi Tarixçə", icon: "🩺" },
-    { to: "/patient/lab-tests", label: "Lab Nəticələri", icon: "🧪" },
-    { to: "/chat", label: "Mesajlar", icon: "💬", badge: true },
+    { to: "/patient", label: "Panel", icon: "" },
+    { to: "/patient/book", label: "Randevu Al", icon: "" },
+    { to: "/patient/appointments", label: "Randevularım", icon: "" },
+    { to: "/patient/history", label: "Tibbi Tarixçə", icon: "" },
+    { to: "/patient/lab-tests", label: "Lab Nəticələri", icon: "" },
+    { to: "/chat", label: "Mesajlar", icon: "", badge: true },
   ],
   doctor: [
-    { to: "/doctor", label: "Panel", icon: "📊" },
-    { to: "/doctor/appointments", label: "Randevularım", icon: "📋" },
-    { to: "/doctor/schedule", label: "İş Qrafiki", icon: "🕒" },
-    { to: "/doctor/records/new", label: "Tibbi Qeyd Yaz", icon: "📝" },
-    { to: "/doctor/lab-tests", label: "Lab Nəticələri", icon: "🧪" },
-    { to: "/chat", label: "Mesajlar", icon: "💬", badge: true },
+    { to: "/doctor", label: "Panel", icon: "" },
+    { to: "/doctor/appointments", label: "Randevularım", icon: "" },
+    { to: "/doctor/schedule", label: "İş Qrafiki", icon: "" },
+    { to: "/doctor/records/new", label: "Tibbi Qeyd Yaz", icon: "" },
+    { to: "/doctor/lab-tests", label: "Lab Nəticələri", icon: "" },
+    { to: "/chat", label: "Mesajlar", icon: "", badge: true },
   ],
   admin: [
-    { to: "/admin", label: "Panel", icon: "📊" },
-    { to: "/admin/doctors", label: "Həkimlər", icon: "👨‍⚕️" },
-    { to: "/admin/patients", label: "Xəstələr", icon: "🏥" },
-    { to: "/admin/departments", label: "Şöbələr", icon: "🏢" },
+    { to: "/admin", label: "Panel", icon: "" },
+    { to: "/admin/doctors", label: "Həkimlər", icon: "" },
+    { to: "/admin/patients", label: "Xəstələr", icon: "" },
+    { to: "/admin/departments", label: "Şöbələr", icon: "" },
   ],
   super_admin: [
-    { to: "/admin/super", label: "Super Panel", icon: "⚡" },
-    { to: "/admin/doctors", label: "Həkimlər", icon: "👨‍⚕️" },
-    { to: "/admin/patients", label: "Xəstələr", icon: "🏥" },
-    { to: "/admin/departments", label: "Şöbələr", icon: "🏢" },
+    { to: "/admin/super", label: "Super Panel", icon: "" },
+    { to: "/admin/doctors", label: "Həkimlər", icon: "" },
+    { to: "/admin/patients", label: "Xəstələr", icon: "" },
+    { to: "/admin/departments", label: "Şöbələr", icon: "" },
   ],
   guest: [
     { to: "/departments", label: "Şöbələr" },
     { to: "/doctors", label: "Həkimlər" },
-    { to: "/about", label: "Haqqımızda" },
+    { to: "/about", label: "Niyə NovaCare?" },
     { to: "/contact", label: "Əlaqə" },
   ],
 };
@@ -82,15 +82,15 @@ export default function Navbar() {
         <div style={{ maxWidth: 1240, margin: "0 auto", padding: "0 24px" }} className="flex items-center justify-between font-medium">
           <div className="flex items-center gap-6">
             <a href="tel:+994123456789" style={{ color: "var(--secondary)", fontWeight: 700 }} className="flex items-center gap-2 transition">
-              <span>📞 TƏCİLİ:</span> +994 (12) 345 67 89
+              <span> TƏCİLİ:</span> +994 (12) 345 67 89
             </a>
             <span style={{ color: "var(--border)" }}>|</span>
             <a href="mailto:info@novacare.az" style={{ color: "var(--text-mid)" }} className="flex items-center gap-2 transition hover:opacity-80">
-              <span>✉️</span> info@novacare.az
+              <span></span> info@novacare.az
             </a>
             <span style={{ color: "var(--border)" }}>|</span>
             <span style={{ color: "var(--text-mid)" }} className="flex items-center gap-1.5">
-              <span>📍</span> Bakı ş., Azərbaycan
+              <span></span> Bakı ş., Azərbaycan
             </span>
           </div>
 
@@ -230,7 +230,7 @@ export default function Navbar() {
               {/* Mobile Drawer Trigger Toggle */}
               <button
                 onClick={() => setOpen(!open)}
-                className="lg:hidden w-11 h-11 rounded-xl flex items-center justify-center ac-theme-toggle"
+                className="lg:hidden mobile-menu-btn w-11 h-11 rounded-xl flex items-center justify-center ac-theme-toggle"
                 aria-label="Menyu"
               >
                 {open ? (
@@ -276,7 +276,7 @@ export default function Navbar() {
                     className="w-full text-left px-4 py-3 rounded-xl text-sm font-extrabold flex items-center gap-2"
                     style={{ color: "#ef4444", background: "rgba(239,68,68,0.08)" }}
                   >
-                    <span>🚪</span> ÇIXIŞ ET
+                    <span></span> ÇIXIŞ ET
                   </button>
                 ) : (
                   <>

@@ -5,10 +5,10 @@ import { useTheme } from "../context/ThemeContext.jsx";
 import Navbar from "../components/Navbar";
 
 const CATEGORIES = [
-  { id: "all", label: "Bütün Şöbələr", icon: "✨" },
-  { id: "terapiya", label: "Terapiya & Daxili", icon: "🩺" },
-  { id: "cerrahiyye", label: "Cərrahiyyə", icon: "🏥" },
-  { id: "diaqnostika", label: "Diaqnostika & Lab", icon: "🔬" },
+  { id: "all", label: "Bütün Şöbələr", icon: "" },
+  { id: "terapiya", label: "Terapiya & Daxili", icon: "" },
+  { id: "cerrahiyye", label: "Cərrahiyyə", icon: "" },
+  { id: "diaqnostika", label: "Diaqnostika & Lab", icon: "" },
 ];
 
 export default function Departments() {
@@ -105,7 +105,7 @@ export default function Departments() {
                   marginBottom: 20,
                 }}
               >
-                <span style={{ fontSize: "0.9rem" }}>🏥</span>
+                <span style={{ fontSize: "0.9rem" }}></span>
                 <span style={{ fontSize: "0.78rem", fontWeight: 800, letterSpacing: "0.8px", color: "#FFCDD2", textTransform: "uppercase" }}>
                   NovaCare Tibb Mərkəzi
                 </span>
@@ -177,7 +177,7 @@ export default function Departments() {
                         fontSize: "0.75rem",
                       }}
                     >
-                      ✕
+                      
                     </button>
                   )}
                 </div>
@@ -199,7 +199,7 @@ export default function Departments() {
               >
                 <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20, pb: 16, borderBottom: "1px solid rgba(255,255,255,0.12)" }}>
                   <div style={{ width: 44, height: 44, borderRadius: 14, background: "linear-gradient(135deg, #C62828 0%, #B71C1C 100%)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.3rem" }}>
-                    🏥
+                    
                   </div>
                   <div>
                     <h4 style={{ fontWeight: 800, fontSize: "0.98rem", color: "#FFFFFF" }}>Yüksək Tibbi Standart</h4>
@@ -209,7 +209,7 @@ export default function Departments() {
 
                 <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 12, background: "rgba(255,255,255,0.06)", padding: "12px 14px", borderRadius: 14, border: "1px solid rgba(255,255,255,0.08)" }}>
-                    <span style={{ fontSize: "1.2rem" }}>🔬</span>
+                    <span style={{ fontSize: "1.2rem" }}></span>
                     <div>
                       <div style={{ fontSize: "0.84rem", fontWeight: 700, color: "#FFFFFF" }}>3D Tomoqrafiya & Ultra-Müasir Lab</div>
                       <div style={{ fontSize: "0.74rem", color: "rgba(255,255,255,0.75)" }}>Dəqiq diaqnostika</div>
@@ -217,7 +217,7 @@ export default function Departments() {
                   </div>
 
                   <div style={{ display: "flex", alignItems: "center", gap: 12, background: "rgba(255,255,255,0.06)", padding: "12px 14px", borderRadius: 14, border: "1px solid rgba(255,255,255,0.08)" }}>
-                    <span style={{ fontSize: "1.2rem" }}>⚡</span>
+                    <span style={{ fontSize: "1.2rem" }}></span>
                     <div>
                       <div style={{ fontSize: "0.84rem", fontWeight: 700, color: "#FFFFFF" }}>24/7 Təcili Cərrahi Qəbul</div>
                       <div style={{ fontSize: "0.74rem", color: "rgba(255,255,255,0.75)" }}>Növbəsiz təcili yardım</div>
@@ -225,7 +225,7 @@ export default function Departments() {
                   </div>
 
                   <div style={{ display: "flex", alignItems: "center", gap: 12, background: "rgba(255,255,255,0.06)", padding: "12px 14px", borderRadius: 14, border: "1px solid rgba(255,255,255,0.08)" }}>
-                    <span style={{ fontSize: "1.2rem" }}>👨‍⚕️</span>
+                    <span style={{ fontSize: "1.2rem" }}></span>
                     <div>
                       <div style={{ fontSize: "0.84rem", fontWeight: 700, color: "#FFFFFF" }}>Təcrübəli Həkim Qrupu</div>
                       <div style={{ fontSize: "0.74rem", color: "rgba(255,255,255,0.75)" }}>Fərdi müalicə planı</div>
@@ -292,7 +292,7 @@ export default function Departments() {
                 <div>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
                     <div style={{ width: 54, height: 54, background: "var(--primary-light)", borderRadius: 14, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.5rem" }}>
-                      🏥
+                      
                     </div>
                     <span style={{ fontSize: "0.72rem", fontWeight: 800, color: "var(--primary)", background: "var(--primary-light)", padding: "4px 12px", borderRadius: 20, border: "1px solid var(--secondary-light)" }}>
                       {dept.doctors_count || 0} HƏKİM
@@ -320,7 +320,7 @@ export default function Departments() {
 
         {!loading && !error && filteredDepts.length === 0 && (
           <div className="ac-card" style={{ padding: "60px 30px", textAlign: "center", maxWidth: 440, margin: "40px auto" }}>
-            <div style={{ fontSize: "3rem", marginBottom: 16 }}>🏥</div>
+            <div style={{ fontSize: "3rem", marginBottom: 16 }}></div>
             <h3 style={{ fontWeight: 800, fontSize: "1.1rem", color: "var(--text-dark)", marginBottom: 8 }}>Şöbə Tapılmadı</h3>
             <p style={{ fontSize: "0.85rem", color: "var(--text-light)" }}>Axtarışınıza və ya seçilmiş kateqoriyaya uyğun heç bir tibbi şöbə tapılmadı.</p>
           </div>

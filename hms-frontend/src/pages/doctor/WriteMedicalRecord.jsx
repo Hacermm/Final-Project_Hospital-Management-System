@@ -24,16 +24,16 @@ export default function WriteMedicalRecord() {
     const validPrescriptions = prescriptions.filter((p) => p.medicine.trim());
     try {
       await api.post("/medical-records", { appointment_id: selectedAppt, diagnosis, notes, prescriptions: validPrescriptions });
-      setMessage("✅ Tibbi qeyd yaradıldı! Randevu tamamlandı.");
+      setMessage(" Tibbi qeyd yaradıldı! Randevu tamamlandı.");
       setTimeout(() => navigate("/doctor/appointments"), 1500);
     } catch (err) {
       const msg = err.response?.data?.message || Object.values(err.response?.data?.errors || {})[0]?.[0] || "Xəta";
-      setMessage(`❌ ${msg}`);
+      setMessage(` ${msg}`);
     }
   };
 
   return (
-    <div className="min-h-screen" style={{ background: "var(--bg)", transition: "background-color 0.3s ease" }}>      <Navbar />
+    <div className="min-h-screen" style={{ background: "var(--bg)", transition: "background-color 0.3s ease" }}> <Navbar />
       <nav className="sticky top-0 z-50 px-6 py-4 backdrop-blur-xl" style={{ background: "var(--surface)", borderBottom: "1px solid var(--border)", transition: "background-color 0.3s ease" }}>
         <div className="max-w-4xl mx-auto flex items-center gap-3">
           <Link to="/doctor/appointments" className="text-slate-400 hover:text-white"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></Link>
@@ -81,7 +81,7 @@ export default function WriteMedicalRecord() {
           </div>
 
           <button type="submit" className="hms-btn w-full !py-3">Qeydi yadda saxla və randevunu tamamla</button>
-          {message && <p className={`text-center text-sm font-medium ${message.startsWith("✅") ? "hms-message-success" : "hms-message-error"}`}>{message}</p>}
+          {message && <p className={`text-center text-sm font-medium ${message.startsWith("") ? "hms-message-success" : "hms-message-error"}`}>{message}</p>}
         </form>
       </div>
     </div>

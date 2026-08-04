@@ -19,12 +19,12 @@ export default function ManagePatients() {
   const handleSubmit = async (e) => {
     e.preventDefault(); setMessage("");
     try {
-      if (editId) { await api.put(`/patients/${editId}`, form); setMessage("✅ Xəstə yeniləndi"); }
-      else { await api.post("/patients", form); setMessage("✅ Xəstə əlavə olundu"); }
+      if (editId) { await api.put(`/patients/${editId}`, form); setMessage(" Xəstə yeniləndi"); }
+      else { await api.post("/patients", form); setMessage(" Xəstə əlavə olundu"); }
       setForm(emptyForm); setEditId(null); load();
     } catch (err) {
       const msg = err.response?.data?.message || Object.values(err.response?.data?.errors || {})[0]?.[0] || "Xəta";
-      setMessage(`❌ ${msg}`);
+      setMessage(` ${msg}`);
     }
   };
 
@@ -35,14 +35,14 @@ export default function ManagePatients() {
 
   const handleDelete = async (id) => {
     if (!confirm("Bu xəstəni silmək istəyirsiniz?")) return;
-    try { await api.delete(`/patients/${id}`); setMessage("✅ Xəstə silindi"); load(); }
-    catch (err) { setMessage(`❌ ${err.response?.data?.message || "Xəta"}`); }
+    try { await api.delete(`/patients/${id}`); setMessage(" Xəstə silindi"); load(); }
+    catch (err) { setMessage(` ${err.response?.data?.message || "Xəta"}`); }
   };
 
   const logout = () => { localStorage.clear(); navigate("/login"); };
 
   return (
-    <div className="min-h-screen" style={{ background: "var(--bg)", transition: "background-color 0.3s ease" }}>      <Navbar />
+    <div className="min-h-screen" style={{ background: "var(--bg)", transition: "background-color 0.3s ease" }}> <Navbar />
       <nav className="sticky top-0 z-50 px-6 py-4 backdrop-blur-xl" style={{ background: "var(--surface)", borderBottom: "1px solid var(--border)", transition: "background-color 0.3s ease" }}>
         <div className="max-w-5xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -84,7 +84,7 @@ export default function ManagePatients() {
           </div>
         </form>
 
-        {message && <p className={`mb-4 text-sm font-medium ${message.startsWith("✅") ? "hms-message-success" : "hms-message-error"}`}>{message}</p>}
+        {message && <p className={`mb-4 text-sm font-medium ${message.startsWith("") ? "hms-message-success" : "hms-message-error"}`}>{message}</p>}
 
         <div className="glass-card overflow-hidden animate-fade-in-up" style={{animationDelay:"0.1s"}}>
           <table className="hms-table">
