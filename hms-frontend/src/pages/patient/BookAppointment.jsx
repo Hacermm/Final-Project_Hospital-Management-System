@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import api from "../../lib/api";
-import Navbar from "../../components/Navbar";
-
 export default function BookAppointment() {
   const [departments, setDepartments] = useState([]);
   const [doctors, setDoctors] = useState([]);
@@ -58,9 +56,7 @@ export default function BookAppointment() {
   const today = new Date().toISOString().split("T")[0];
 
   return (
-    <div style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-dark)", fontFamily: "'Plus Jakarta Sans', sans-serif", display: "flex", flexDirection: "column" }}>
-      <Navbar />
-
+    <>
       <main style={{ maxWidth: 840, margin: "0 auto", padding: "40px 24px 80px", width: "100%", flex: 1, boxSizing: "border-box" }}>
         
         {/* Navigation Breadcrumb */}
@@ -237,6 +233,6 @@ export default function BookAppointment() {
         </div>
 
       </main>
-    </div>
+    </>
   );
 }

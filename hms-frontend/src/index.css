@@ -518,3 +518,13 @@ body {
     display: none !important;
   }
 }
+
+.chat-wrap { height: calc(100vh - 80px); }
+
+@media (max-width: 860px) {
+  .chat-wrap { padding: 12px !important; gap: 0 !important; }
+  .chat-side { width: 100% !important; }
+  .chat-side-hidden { display: none !important; }
+  .chat-main-hidden { display: none !important; }
+  .chat-back { display: block !important; }
+}

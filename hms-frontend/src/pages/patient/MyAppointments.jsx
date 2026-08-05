@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../../lib/api";
-import Navbar from "../../components/Navbar";
-
 export default function MyAppointments() {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -37,9 +35,7 @@ export default function MyAppointments() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-dark)", fontFamily: "'Plus Jakarta Sans', sans-serif", display: "flex", flexDirection: "column" }}>
-      <Navbar />
-
+    <>
       <main style={{ maxWidth: 920, margin: "0 auto", padding: "40px 24px 80px", width: "100%", flex: 1, boxSizing: "border-box" }}>
         
         {/* Navigation Breadcrumb */}
@@ -214,6 +210,6 @@ export default function MyAppointments() {
         </div>
 
       </main>
-    </div>
+    </>
   );
 }

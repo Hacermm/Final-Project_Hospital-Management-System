@@ -1,23 +1,22 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../lib/api";
-import { useTheme } from "../context/ThemeContext.jsx";
 import Navbar from "../components/Navbar";
 
-const CATEGORIES = [
-  { id: "all", label: "Bütün Şöbələr", icon: "" },
-  { id: "terapiya", label: "Terapiya & Daxili", icon: "" },
-  { id: "cerrahiyye", label: "Cərrahiyyə", icon: "" },
-  { id: "diaqnostika", label: "Diaqnostika & Lab", icon: "" },
-];
+const DEPT_ICONS = {
+  Kardiologiya: "M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z",
+  Nevrologiya: "M12 2a3 3 0 0 0-3 3 3 3 0 0 0-3 3v1a3 3 0 0 0 0 6v1a3 3 0 0 0 3 3 3 3 0 0 0 6 0 3 3 0 0 0 3-3v-1a3 3 0 0 0 0-6V8a3 3 0 0 0-3-3 3 3 0 0 0-3-3z",
+  Pediatriya: "M9 12h.01M15 12h.01M10 16s.8 1 2 1 2-1 2-1M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z",
+  Ortopediya: "M6 4v6a6 6 0 0 0 12 0V4M6 20v-6a6 6 0 0 1 12 0v6",
+  Terapiya: "M22 12h-4l-3 9L9 3l-3 9H2",
+  Oftalmologiya: "M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z",
+};
 
 export default function Departments() {
   const [departments, setDepartments] = useState([]);
   const [search, setSearch] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("all");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     api
@@ -32,246 +31,59 @@ export default function Departments() {
       d.name.toLowerCase().includes(search.toLowerCase()) ||
       (d.description && d.description.toLowerCase().includes(search.toLowerCase()));
 
-    if (!matchesSearch) return false;
-    if (selectedCategory === "all") return true;
-
-    const nameLower = d.name.toLowerCase();
-    if (selectedCategory === "cerrahiyye") {
-      return nameLower.includes("cərrah") || nameLower.includes("əməliyyat") || nameLower.includes("travma");
-    }
-    if (selectedCategory === "diaqnostika") {
-      return nameLower.includes("lab") || nameLower.includes("rentgen") || nameLower.includes("ultrasəs") || nameLower.includes("radiologiya");
-    }
-    if (selectedCategory === "terapiya") {
-      return !nameLower.includes("cərrah") && !nameLower.includes("lab");
-    }
-    return true;
+    return matchesSearch;
   });
 
   return (
     <div style={{ background: "var(--bg)", color: "var(--text-dark)", minHeight: "100vh", fontFamily: "'Plus Jakarta Sans', sans-serif", transition: "background-color 0.3s ease, color 0.3s ease", display: "flex", flexDirection: "column" }}>
       <Navbar />
 
-    
-      <section
-        style={{
-          position: "relative",
-          overflow: "hidden",
-          background: "linear-gradient(135deg, #160202 0%, #2e0505 40%, #B71C1C 100%)",
-          color: "#FFFFFF",
-          padding: "72px 0 80px",
-          borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
-        }}
-      >
- 
-        <div
-          style={{
-            position: "absolute",
-            top: "-20%",
-            left: "10%",
-            width: "420px",
-            height: "420px",
-            background: "radial-gradient(circle, rgba(239, 83, 80, 0.22) 0%, rgba(0,0,0,0) 70%)",
-            filter: "blur(60px)",
-            pointerEvents: "none",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            bottom: "-30%",
-            right: "5%",
-            width: "500px",
-            height: "500px",
-            background: "radial-gradient(circle, rgba(198, 40, 40, 0.2) 0%, rgba(0,0,0,0) 70%)",
-            filter: "blur(80px)",
-            pointerEvents: "none",
-          }}
-        />
-
-        <div style={{ maxWidth: 1240, margin: "0 auto", padding: "0 24px", position: "relative", zIndex: 2 }}>
-          <div className="responsive-hero-grid" style={{ display: "grid", gridTemplateColumns: "1.2fr 0.8fr", gap: 40, alignItems: "center" }}>
-            
+      {/* Qısa, açıq başlıq — digər səhifələrdən fərqli */}
+      <section style={{
+        background: "var(--surface)",
+        borderBottom: "1px solid var(--border)",
+        padding: "48px 24px 40px",
+      }}>
+        <div style={{ maxWidth: 1240, margin: "0 auto" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 24, flexWrap: "wrap" }}>
             <div>
-              <div
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 8,
-                  background: "rgba(255, 255, 255, 0.12)",
-                  border: "1px solid rgba(255, 255, 255, 0.2)",
-                  borderRadius: 30,
-                  padding: "6px 18px",
-                  marginBottom: 20,
-                }}
-              >
-                <span style={{ fontSize: "0.9rem" }}></span>
-                <span style={{ fontSize: "0.78rem", fontWeight: 800, letterSpacing: "0.8px", color: "#FFCDD2", textTransform: "uppercase" }}>
-                  NovaCare Tibb Mərkəzi
-                </span>
-              </div>
-
-              <h1 style={{ fontSize: "clamp(2.2rem, 4.2vw, 3.4rem)", fontWeight: 900, lineHeight: 1.15, marginBottom: 18, letterSpacing: "-1px", color: "#FFFFFF" }}>
-                Klinik Şöbələr və <br />
-                <span style={{ color: "#FFCDD2" }}>
-                  Poliklinik Xidmətlərimiz
-                </span>
+              <span style={{
+                display: "inline-block", background: "var(--primary-light)",
+                border: "1px solid var(--secondary-light)", borderRadius: 30,
+                padding: "5px 16px", fontSize: "0.74rem", fontWeight: 800,
+                letterSpacing: "1px", color: "var(--primary)", marginBottom: 14,
+              }}>
+                KLİNİK ŞÖBƏLƏR
+              </span>
+              <h1 style={{
+                fontSize: "clamp(1.9rem, 3.6vw, 2.8rem)", fontWeight: 900,
+                color: "var(--text-dark)", letterSpacing: "-1px", margin: 0, lineHeight: 1.15
+              }}>
+                Şöbələrimiz
               </h1>
-
-              <p style={{ fontSize: "1.05rem", lineHeight: 1.7, color: "rgba(255,255,255,0.9)", maxWidth: 560, marginBottom: 32 }}>
-                Beynəlxalq keyfiyyət standartlarına cavab verən, son texnoloji diaqnostika avadanlıqları ilə təchiz olunmuş ixtisaslaşdırılmış tibbi şöbələrimizi kəşf edin.
+              <p style={{ fontSize: "1rem", color: "var(--text-mid)", marginTop: 10, maxWidth: 520 }}>
+                İxtisaslaşdırılmış tibbi şöbələrimizi kəşf edin və uyğun həkimə randevu alın.
               </p>
-
-         
-              <div style={{ display: "flex", gap: 12, maxWidth: 520, position: "relative" }}>
-                <div style={{ position: "relative", flex: 1 }}>
-                  <svg
-                    style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", opacity: 0.7 }}
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#FFFFFF"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <circle cx="11" cy="11" r="8" />
-                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                  </svg>
-                  <input
-                    type="text"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Şöbə adı və ya xidmət üzrə axtarış..."
-                    style={{
-                      width: "100%",
-                      padding: "14px 18px 14px 46px",
-                      borderRadius: 16,
-                      border: "1px solid rgba(255,255,255,0.22)",
-                      background: "rgba(0, 0, 0, 0.35)",
-                      color: "#FFFFFF",
-                      fontSize: "0.92rem",
-                      outline: "none",
-                      backdropFilter: "blur(12px)",
-                      transition: "all 0.25s",
-                    }}
-                    onFocus={(e) => (e.target.style.borderColor = "#FFCDD2")}
-                    onBlur={(e) => (e.target.style.borderColor = "rgba(255,255,255,0.22)")}
-                  />
-                  {search && (
-                    <button
-                      onClick={() => setSearch("")}
-                      style={{
-                        position: "absolute",
-                        right: 14,
-                        top: "50%",
-                        transform: "translateY(-50%)",
-                        background: "rgba(255,255,255,0.15)",
-                        border: "none",
-                        color: "#FFFFFF",
-                        borderRadius: "50%",
-                        width: 24,
-                        height: 24,
-                        cursor: "pointer",
-                        fontSize: "0.75rem",
-                      }}
-                    >
-                      
-                    </button>
-                  )}
-                </div>
-              </div>
             </div>
 
-
-            <div style={{ display: "flex", justifySelf: "end", width: "100%", maxWidth: 380 }}>
-              <div
-                style={{
-                  background: "rgba(35, 6, 6, 0.75)",
-                  border: "1px solid rgba(255, 255, 255, 0.16)",
-                  borderRadius: 24,
-                  padding: 28,
-                  boxShadow: "0 20px 50px rgba(0,0,0,0.4)",
-                  backdropFilter: "blur(16px)",
-                  width: "100%",
-                }}
-              >
-                <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20, pb: 16, borderBottom: "1px solid rgba(255,255,255,0.12)" }}>
-                  <div style={{ width: 44, height: 44, borderRadius: 14, background: "linear-gradient(135deg, #C62828 0%, #B71C1C 100%)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.3rem" }}>
-                    
-                  </div>
-                  <div>
-                    <h4 style={{ fontWeight: 800, fontSize: "0.98rem", color: "#FFFFFF" }}>Yüksək Tibbi Standart</h4>
-                    <span style={{ fontSize: "0.76rem", color: "#FFCDD2", fontWeight: 700 }}>Beynəlxalq Akreditasiya</span>
-                  </div>
-                </div>
-
-                <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 12, background: "rgba(255,255,255,0.06)", padding: "12px 14px", borderRadius: 14, border: "1px solid rgba(255,255,255,0.08)" }}>
-                    <span style={{ fontSize: "1.2rem" }}></span>
-                    <div>
-                      <div style={{ fontSize: "0.84rem", fontWeight: 700, color: "#FFFFFF" }}>3D Tomoqrafiya & Ultra-Müasir Lab</div>
-                      <div style={{ fontSize: "0.74rem", color: "rgba(255,255,255,0.75)" }}>Dəqiq diaqnostika</div>
-                    </div>
-                  </div>
-
-                  <div style={{ display: "flex", alignItems: "center", gap: 12, background: "rgba(255,255,255,0.06)", padding: "12px 14px", borderRadius: 14, border: "1px solid rgba(255,255,255,0.08)" }}>
-                    <span style={{ fontSize: "1.2rem" }}></span>
-                    <div>
-                      <div style={{ fontSize: "0.84rem", fontWeight: 700, color: "#FFFFFF" }}>24/7 Təcili Cərrahi Qəbul</div>
-                      <div style={{ fontSize: "0.74rem", color: "rgba(255,255,255,0.75)" }}>Növbəsiz təcili yardım</div>
-                    </div>
-                  </div>
-
-                  <div style={{ display: "flex", alignItems: "center", gap: 12, background: "rgba(255,255,255,0.06)", padding: "12px 14px", borderRadius: 14, border: "1px solid rgba(255,255,255,0.08)" }}>
-                    <span style={{ fontSize: "1.2rem" }}></span>
-                    <div>
-                      <div style={{ fontSize: "0.84rem", fontWeight: 700, color: "#FFFFFF" }}>Təcrübəli Həkim Qrupu</div>
-                      <div style={{ fontSize: "0.74rem", color: "rgba(255,255,255,0.75)" }}>Fərdi müalicə planı</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            {/* Axtarış — sağda */}
+            <div style={{ position: "relative", minWidth: 280, flex: "0 1 340px" }}>
+              <svg style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", opacity: 0.45 }} width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--text-dark)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Şöbə axtar..."
+                className="ac-input"
+                style={{ paddingLeft: 42 }}
+              />
             </div>
-
           </div>
-
-       
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 44, paddingTop: 24, borderTop: "1px solid rgba(255,255,255,0.14)" }}>
-            {CATEGORIES.map((cat) => {
-              const isSelected = selectedCategory === cat.id;
-              return (
-                <button
-                  key={cat.id}
-                  onClick={() => setSelectedCategory(cat.id)}
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 8,
-                    padding: "10px 20px",
-                    borderRadius: 14,
-                    fontSize: "0.86rem",
-                    fontWeight: 700,
-                    cursor: "pointer",
-                    transition: "all 0.25s",
-                    border: isSelected ? "1px solid #FFCDD2" : "1px solid rgba(255,255,255,0.18)",
-                    background: isSelected ? "linear-gradient(135deg, #C62828 0%, #B71C1C 100%)" : "rgba(0, 0, 0, 0.35)",
-                    color: "#FFFFFF",
-                    boxShadow: isSelected ? "0 4px 14px rgba(198, 40, 40, 0.4)" : "none",
-                  }}
-                >
-                  <span>{cat.icon}</span>
-                  <span>{cat.label}</span>
-                </button>
-              );
-            })}
-          </div>
-
         </div>
       </section>
 
-   
       <main style={{ maxWidth: 1240, margin: "0 auto", padding: "60px 24px 80px", width: "100%", flex: 1 }}>
         {loading && (
           <div style={{ padding: "80px 0", textAlign: "center", color: "var(--text-light)", fontWeight: 700, fontSize: "0.95rem" }} className="animate-pulse">
@@ -291,8 +103,10 @@ export default function Departments() {
               <div key={dept.id} className="ac-card" style={{ padding: 30, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                 <div>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-                    <div style={{ width: 54, height: 54, background: "var(--primary-light)", borderRadius: 14, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.5rem" }}>
-                      
+                    <div style={{ width: 54, height: 54, background: "var(--primary-light)", borderRadius: 14, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d={DEPT_ICONS[dept.name] || "M22 12h-4l-3 9L9 3l-3 9H2"} />
+                      </svg>
                     </div>
                     <span style={{ fontSize: "0.72rem", fontWeight: 800, color: "var(--primary)", background: "var(--primary-light)", padding: "4px 12px", borderRadius: 20, border: "1px solid var(--secondary-light)" }}>
                       {dept.doctors_count || 0} HƏKİM
@@ -304,10 +118,10 @@ export default function Departments() {
                   </p>
                 </div>
 
-                <div style={{ pt: 16, borderTop: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 12 }}>
+                <div style={{ paddingTop: 16, borderTop: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 12 }}>
                   <span style={{ color: "var(--text-light)", fontSize: "0.8rem", fontWeight: 600 }}>NovaCare Hospital</span>
                   <Link
-                    to="/doctors"
+                    to={`/doctors?department=${dept.id}`}
                     style={{ display: "inline-flex", alignItems: "center", gap: 6, color: "var(--primary)", fontWeight: 700, fontSize: "0.88rem", textDecoration: "none" }}
                   >
                     Həkimlərə Bax →
@@ -320,9 +134,8 @@ export default function Departments() {
 
         {!loading && !error && filteredDepts.length === 0 && (
           <div className="ac-card" style={{ padding: "60px 30px", textAlign: "center", maxWidth: 440, margin: "40px auto" }}>
-            <div style={{ fontSize: "3rem", marginBottom: 16 }}></div>
             <h3 style={{ fontWeight: 800, fontSize: "1.1rem", color: "var(--text-dark)", marginBottom: 8 }}>Şöbə Tapılmadı</h3>
-            <p style={{ fontSize: "0.85rem", color: "var(--text-light)" }}>Axtarışınıza və ya seçilmiş kateqoriyaya uyğun heç bir tibbi şöbə tapılmadı.</p>
+            <p style={{ fontSize: "0.85rem", color: "var(--text-light)" }}>Axtarışınıza uyğun heç bir tibbi şöbə tapılmadı.</p>
           </div>
         )}
       </main>

@@ -22,6 +22,7 @@ import ManageDepartments from './pages/admin/ManageDepartments.jsx'
 import ManageDoctors from './pages/admin/ManageDoctors.jsx'
 import ManagePatients from './pages/admin/ManagePatients.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
+import PatientLayout from './layouts/PatientLayout.jsx'
 import BookAppointment from './pages/patient/BookAppointment.jsx'
 import MyAppointments from './pages/patient/MyAppointments.jsx'
 import DoctorAppointments from './pages/doctor/DoctorAppointments.jsx'
@@ -35,6 +36,7 @@ import AiAssistant from './pages/AiAssistant.jsx'
 import AiWidget from './components/AiWidget.jsx'
 import Analytics from './pages/admin/Analytics.jsx'
 import ManageAdmins from './pages/admin/ManageAdmins.jsx'
+import ContactMessages from './pages/admin/ContactMessages.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -53,9 +55,13 @@ createRoot(document.getElementById('root')).render(
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
 
-          <Route path="/patient" element={
-            <ProtectedRoute allowedRole="patient"><PatientDashboard /></ProtectedRoute>
-          } />
+          <Route element={<ProtectedRoute allowedRole="patient"><PatientLayout /></ProtectedRoute>}>
+            <Route path="/patient" element={<PatientDashboard />} />
+            <Route path="/patient/book" element={<BookAppointment />} />
+            <Route path="/patient/appointments" element={<MyAppointments />} />
+            <Route path="/patient/history" element={<MedicalHistory />} />
+            <Route path="/patient/lab-tests" element={<MyLabTests />} />
+          </Route>
           <Route path="/doctor" element={
             <ProtectedRoute allowedRole="doctor"><DoctorDashboard /></ProtectedRoute>
           } />
@@ -75,12 +81,10 @@ createRoot(document.getElementById('root')).render(
           <Route path="/admin/patients" element={
             <ProtectedRoute allowedRole="admin"><ManagePatients /></ProtectedRoute>
           } />
-          <Route path="/patient/book" element={
-            <ProtectedRoute allowedRole="patient"><BookAppointment /></ProtectedRoute>
+          <Route path="/admin/messages" element={
+            <ProtectedRoute allowedRole="admin"><ContactMessages /></ProtectedRoute>
           } />
-          <Route path="/patient/appointments" element={
-            <ProtectedRoute allowedRole="patient"><MyAppointments /></ProtectedRoute>
-          } />
+
           <Route path="/doctor/appointments" element={
             <ProtectedRoute allowedRole="doctor"><DoctorAppointments /></ProtectedRoute>
           } />
@@ -90,15 +94,11 @@ createRoot(document.getElementById('root')).render(
           <Route path="/doctor/records/new" element={
             <ProtectedRoute allowedRole="doctor"><WriteMedicalRecord /></ProtectedRoute>
           } />
-          <Route path="/patient/history" element={
-            <ProtectedRoute allowedRole="patient"><MedicalHistory /></ProtectedRoute>
-          } />
+
           <Route path="/doctor/lab-tests" element={
             <ProtectedRoute allowedRole="doctor"><UploadLabTest /></ProtectedRoute>
           } />
-          <Route path="/patient/lab-tests" element={
-            <ProtectedRoute allowedRole="patient"><MyLabTests /></ProtectedRoute>
-          } />
+
           <Route path="/chat" element={
             <ProtectedRoute><Chat /></ProtectedRoute>
           } />

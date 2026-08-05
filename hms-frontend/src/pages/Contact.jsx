@@ -1,96 +1,80 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useTheme } from "../context/ThemeContext.jsx";
+import api from "../lib/api";
 import Navbar from "../components/Navbar";
 
 export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", phone: "", subject: "", message: "" });
-  const { theme, toggleTheme } = useTheme();
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
+    setError("");
+    setSending(true);
+    try {
+      await api.post("/contact", form);
+      setSubmitted(true);
+      setForm({ name: "", email: "", phone: "", subject: "", message: "" });
+    } catch (err) {
+      const msg =
+        Object.values(err.response?.data?.errors || {})[0]?.[0] ||
+        err.response?.data?.message ||
+        "Mesaj göndərilə bilmədi. Bir azdan cəhd edin.";
+      setError(msg);
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
     <div style={{ background: "var(--bg)", color: "var(--text-dark)", minHeight: "100vh", fontFamily: "'Plus Jakarta Sans', sans-serif", transition: "background-color 0.3s ease, color 0.3s ease", display: "flex", flexDirection: "column" }}>
       <Navbar />
 
-      {/* ═══════ PREMIUM CONTACT HERO ═══════ */}
-      <section style={{ position: "relative", overflow: "hidden", background: "linear-gradient(135deg, #1a0303 0%, #2d0606 35%, #8B1A1A 75%, #C62828 100%)", color: "#FFFFFF", padding: "56px 0 64px" }}>
+      {/* Qısa, açıq başlıq */}
+      <section style={{
+        background: "var(--surface)",
+        borderBottom: "1px solid var(--border)",
+        padding: "48px 24px 40px",
+      }}>
+        <div style={{ maxWidth: 1240, margin: "0 auto" }}>
+          <span style={{
+            display: "inline-block", background: "var(--primary-light)",
+            border: "1px solid var(--secondary-light)", borderRadius: 30,
+            padding: "5px 16px", fontSize: "0.74rem", fontWeight: 800,
+            letterSpacing: "1px", color: "var(--primary)", marginBottom: 14,
+          }}>
+            24/7 DƏSTƏK
+          </span>
+          <h1 style={{
+            fontSize: "clamp(1.9rem, 3.6vw, 2.8rem)", fontWeight: 900,
+            color: "var(--text-dark)", letterSpacing: "-1px", margin: 0, lineHeight: 1.15
+          }}>
+            Əlaqə
+          </h1>
+          <p style={{ fontSize: "1rem", color: "var(--text-mid)", marginTop: 10, maxWidth: 560 }}>
+            Suallarınızı verin, təklif bildirin və ya təcili yardım xidmətimizdən yararlanın.
+          </p>
 
-        {/* Dot grid */}
-        <div style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 0, backgroundImage: "radial-gradient(rgba(255,255,255,0.07) 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
-
-        {/* Glow orbs */}
-        <div style={{ position: "absolute", top: "-80px", left: "-60px", width: 340, height: 340, borderRadius: "50%", background: "radial-gradient(circle, rgba(239,68,68,0.22) 0%, transparent 65%)", pointerEvents: "none" }} />
-        <div style={{ position: "absolute", bottom: "-60px", right: "10%", width: 280, height: 280, borderRadius: "50%", background: "radial-gradient(circle, rgba(180,30,30,0.25) 0%, transparent 65%)", pointerEvents: "none" }} />
-
-        <div className="responsive-hero-grid" style={{ maxWidth: 1240, margin: "0 auto", padding: "0 24px", position: "relative", zIndex: 2, display: "grid", gridTemplateColumns: "1.1fr 1fr", gap: 48, alignItems: "center" }}>
-
-          {/* LEFT */}
-          <div>
-            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.22)", borderRadius: 40, padding: "5px 18px", marginBottom: 24, backdropFilter: "blur(8px)" }}>
-              <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#4ade80", display: "inline-block", boxShadow: "0 0 8px #4ade80" }} />
-              <span style={{ fontSize: "0.73rem", fontWeight: 800, letterSpacing: "0.9px", color: "#FFCDD2", textTransform: "uppercase" }}>24/7 DƏSTƏK VƏ RANDEVU</span>
-            </div>
-
-            <h1 style={{ fontSize: "clamp(2rem, 3.8vw, 3rem)", fontWeight: 900, lineHeight: 1.12, marginBottom: 18, letterSpacing: "-1.2px" }}>
-              Bizə Yazın,
-              <span style={{ display: "block", background: "linear-gradient(90deg, #FFCDD2, #FF8A80)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Əlaqə Saxlayın</span>
-            </h1>
-
-            <p style={{ fontSize: "0.97rem", lineHeight: 1.7, color: "rgba(255,255,255,0.8)", maxWidth: 440, marginBottom: 28 }}>
-              NovaCare Healthcare komandası ilə əlaqə saxlayın, suallarınızı verin və ya təcili yardım xidmətimizdən yararlananın.
-            </p>
-
-            {/* Quick contact chips */}
-            <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-              <a href="tel:+994123456789" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "10px 18px", borderRadius: 30, background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.2)", color: "#FFFFFF", fontSize: "0.84rem", fontWeight: 700, textDecoration: "none", backdropFilter: "blur(8px)", transition: "all 0.2s" }}
-                onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.2)"}
-                onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.12)"}
-              >
-                 +994 (12) 345 67 89
-              </a>
-              <a href="mailto:info@novacare.az" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "10px 18px", borderRadius: 30, background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.85)", fontSize: "0.84rem", fontWeight: 600, textDecoration: "none", backdropFilter: "blur(8px)", transition: "all 0.2s" }}
-                onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.16)"}
-                onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.08)"}
-              >
-                 info@novacare.az
-              </a>
-            </div>
-          </div>
-
-          {/* RIGHT — contact info cards */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-            {[
-              { icon: "", title: "Ünvan", val: "Bakı, Nərimanov r., Atatürk pr. 58", sub: "Bakı Metroya 5 dəqiqə" },
-              { icon: "", title: "İş Saatları", val: "B.e — Cuma: 08:00 – 20:00", sub: "Şənbə – Bazar: 10:00 – 16:00" },
-              { icon: "", title: "Təcili Xidmət", val: "+994 (12) 999 00 11", sub: "24 saat, 7 gün aktiv" },
-            ].map((item, i) => (
-              <div key={i} style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 16,
-                background: "rgba(255,255,255,0.09)",
-                backdropFilter: "blur(14px)",
-                border: "1px solid rgba(255,255,255,0.16)",
-                borderRadius: 16,
-                padding: "16px 20px",
-                transition: "background 0.2s",
-              }}
-              onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.16)"}
-              onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.09)"}
-              >
-                <div style={{ width: 48, height: 48, borderRadius: 14, background: "rgba(255,255,255,0.15)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.4rem", flexShrink: 0 }}>{item.icon}</div>
-                <div>
-                  <div style={{ fontSize: "0.7rem", fontWeight: 800, color: "rgba(255,255,255,0.55)", textTransform: "uppercase", letterSpacing: "0.8px", marginBottom: 3 }}>{item.title}</div>
-                  <div style={{ fontSize: "0.88rem", fontWeight: 800, color: "#FFFFFF", lineHeight: 1.3 }}>{item.val}</div>
-                  <div style={{ fontSize: "0.72rem", color: "#FFCDD2", marginTop: 3 }}>{item.sub}</div>
-                </div>
-              </div>
-            ))}
+          {/* Sürətli əlaqə — kiçik chip-lər */}
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 20 }}>
+            <a href="tel:+994123456789" style={{
+              display: "inline-flex", alignItems: "center", gap: 8,
+              padding: "10px 18px", borderRadius: 30,
+              background: "var(--primary)", color: "#FFFFFF",
+              fontSize: "0.85rem", fontWeight: 700, textDecoration: "none",
+            }}>
+              📞 +994 (12) 345 67 89
+            </a>
+            <a href="https://wa.me/994123456789" target="_blank" rel="noreferrer" style={{
+              display: "inline-flex", alignItems: "center", gap: 8,
+              padding: "10px 18px", borderRadius: 30,
+              background: "#25D366", color: "#FFFFFF",
+              fontSize: "0.85rem", fontWeight: 700, textDecoration: "none",
+            }}>
+              💬 WhatsApp
+            </a>
           </div>
         </div>
       </section>
@@ -106,8 +90,8 @@ export default function Contact() {
 
               <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
                 <div style={{ display: "flex", alignItems: "flex-start", gap: 16 }}>
-                  <div style={{ width: 44, height: 44, borderRadius: 14, background: "var(--primary-light)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.2rem", shrink: 0 }}>
-                    
+                  <div style={{ width: 44, height: 44, borderRadius: 14, background: "var(--primary-light)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.2rem", flexShrink: 0 }}>
+                    📍
                   </div>
                   <div>
                     <strong style={{ display: "block", color: "var(--text-dark)", fontWeight: 800, fontSize: "0.9rem", marginBottom: 2 }}>Ünvan:</strong>
@@ -116,8 +100,8 @@ export default function Contact() {
                 </div>
 
                 <div style={{ display: "flex", alignItems: "flex-start", gap: 16 }}>
-                  <div style={{ width: 44, height: 44, borderRadius: 14, background: "var(--primary-light)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.2rem", shrink: 0 }}>
-                    
+                  <div style={{ width: 44, height: 44, borderRadius: 14, background: "var(--primary-light)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.2rem", flexShrink: 0 }}>
+                    🚨
                   </div>
                   <div>
                     <strong style={{ display: "block", color: "var(--text-dark)", fontWeight: 800, fontSize: "0.9rem", marginBottom: 2 }}>Təcili Əlaqə:</strong>
@@ -128,20 +112,8 @@ export default function Contact() {
                 </div>
 
                 <div style={{ display: "flex", alignItems: "flex-start", gap: 16 }}>
-                  <div style={{ width: 44, height: 44, borderRadius: 14, background: "var(--primary-light)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.2rem", shrink: 0 }}>
-                    
-                  </div>
-                  <div>
-                    <strong style={{ display: "block", color: "var(--text-dark)", fontWeight: 800, fontSize: "0.9rem", marginBottom: 2 }}>E-Poçt Ünvanı:</strong>
-                    <a href="mailto:info@hms.az" style={{ color: "var(--primary)", fontWeight: 800, fontSize: "0.9rem", textDecoration: "none" }}>
-                      info@hms.az
-                    </a>
-                  </div>
-                </div>
-
-                <div style={{ display: "flex", alignItems: "flex-start", gap: 16 }}>
-                  <div style={{ width: 44, height: 44, borderRadius: 14, background: "var(--primary-light)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.2rem", shrink: 0 }}>
-                    
+                  <div style={{ width: 44, height: 44, borderRadius: 14, background: "var(--primary-light)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.2rem", flexShrink: 0 }}>
+                    🕐
                   </div>
                   <div>
                     <strong style={{ display: "block", color: "var(--text-dark)", fontWeight: 800, fontSize: "0.9rem", marginBottom: 2 }}>İş Rejimi:</strong>
@@ -185,7 +157,7 @@ export default function Contact() {
             {submitted ? (
               <div style={{ padding: "60px 20px", textAlign: "center" }}>
                 <div style={{ width: 64, height: 64, borderRadius: "50%", background: "var(--primary-light)", color: "var(--primary)", fontWeight: 900, fontSize: "1.8rem", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
-                  
+                  ✅
                 </div>
                 <h2 style={{ fontSize: "1.5rem", fontWeight: 900, color: "var(--text-dark)", marginBottom: 12 }}>Mesajınız Göndərildi!</h2>
                 <p style={{ fontSize: "0.92rem", color: "var(--text-light)", lineHeight: 1.6, maxWidth: 360, margin: "0 auto 28px" }}>
@@ -330,8 +302,19 @@ export default function Contact() {
                   />
                 </div>
 
-                <button type="submit" className="ac-btn" style={{ padding: "14px", fontSize: "0.9rem", width: "100%", marginTop: 8 }}>
-                  MESAJI GÖNDƏR →
+                {error && (
+                  <p style={{ color: "var(--primary)", fontSize: "0.85rem", fontWeight: 700, textAlign: "center" }}>
+                    ❌ {error}
+                  </p>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={sending}
+                  className="ac-btn"
+                  style={{ padding: "14px", fontSize: "0.9rem", width: "100%", marginTop: 8, opacity: sending ? 0.6 : 1 }}
+                >
+                  {sending ? "GÖNDƏRİLİR..." : "MESAJI GÖNDƏR →"}
                 </button>
               </form>
             )}

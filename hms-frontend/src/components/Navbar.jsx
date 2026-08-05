@@ -25,12 +25,14 @@ const menus = {
     { to: "/admin/doctors", label: "Həkimlər", icon: "" },
     { to: "/admin/patients", label: "Xəstələr", icon: "" },
     { to: "/admin/departments", label: "Şöbələr", icon: "" },
+    { to: "/admin/messages", label: "Mesajlar", icon: "" },
   ],
   super_admin: [
     { to: "/admin/super", label: "Super Panel", icon: "" },
     { to: "/admin/doctors", label: "Həkimlər", icon: "" },
     { to: "/admin/patients", label: "Xəstələr", icon: "" },
     { to: "/admin/departments", label: "Şöbələr", icon: "" },
+    { to: "/admin/messages", label: "Mesajlar", icon: "" },
   ],
   guest: [
     { to: "/departments", label: "Şöbələr" },

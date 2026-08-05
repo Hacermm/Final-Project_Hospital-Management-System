@@ -18,6 +18,7 @@ use App\Http\Controllers\Api\CallController;
 use App\Http\Controllers\Api\AiController;
 use App\Http\Controllers\Api\AnalyticsController;
 use App\Http\Controllers\Api\AdminManagementController;
+use App\Http\Controllers\Api\ContactController;
 
 Broadcast::routes(['middleware' => ['auth:sanctum']]);
 
@@ -149,4 +150,12 @@ Route::middleware(['auth:sanctum', 'role:super_admin'])->group(function () {
     Route::post('/admins', [AdminManagementController::class, 'store']);
     Route::put('/admins/{user}', [AdminManagementController::class, 'update']);
     Route::delete('/admins/{user}', [AdminManagementController::class, 'destroy']);
+});
+
+Route::post('/contact', [ContactController::class, 'store'])->middleware('throttle:5,1');
+
+Route::middleware(['auth:sanctum', 'role:admin|super_admin'])->group(function () {
+    Route::get('/contact-messages', [ContactController::class, 'index']);
+    Route::put('/contact-messages/{contactMessage}', [ContactController::class, 'markAsRead']);
+    Route::delete('/contact-messages/{contactMessage}', [ContactController::class, 'destroy']);
 });

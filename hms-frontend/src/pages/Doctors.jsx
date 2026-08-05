@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import api from "../lib/api";
-import { useTheme } from "../context/ThemeContext.jsx";
 import Navbar from "../components/Navbar";
 
 
@@ -16,10 +15,10 @@ const FALLBACK_AVATARS = [
 export default function Doctors() {
   const [doctors, setDoctors] = useState([]);
   const [departments, setDepartments] = useState([]);
-  const [selectedDept, setSelectedDept] = useState("");
+  const [searchParams] = useSearchParams();
+  const [selectedDept, setSelectedDept] = useState(searchParams.get("department") || "");
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
-  const { toggleTheme } = useTheme();
 
   const navigate = useNavigate();
   const token = localStorage.getItem("token");

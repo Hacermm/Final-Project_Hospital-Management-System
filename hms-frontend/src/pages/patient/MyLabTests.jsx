@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../../lib/api";
-import Navbar from "../../components/Navbar";
-
 export default function MyLabTests() {
   const [labTests, setLabTests] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -32,9 +30,7 @@ export default function MyLabTests() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-dark)", fontFamily: "'Plus Jakarta Sans', sans-serif", display: "flex", flexDirection: "column" }}>
-      <Navbar />
-
+    <>
       <main style={{ maxWidth: 920, margin: "0 auto", padding: "40px 24px 80px", width: "100%", flex: 1, boxSizing: "border-box" }}>
         
         {/* Navigation Breadcrumb */}
@@ -164,6 +160,6 @@ export default function MyLabTests() {
         </div>
 
       </main>
-    </div>
+    </>
   );
 }
