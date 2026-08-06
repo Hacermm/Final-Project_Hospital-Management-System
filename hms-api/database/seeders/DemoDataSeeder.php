@@ -250,7 +250,7 @@ class DemoDataSeeder extends Seeder
         $superAdmin->assignRole('super_admin');
 
         $admin = User::create([
-            'name' => 'Xəstəxana Administratoru',
+            'name' => 'Admin',
             'email' => 'admin@hms.test',
             'password' => Hash::make('password'),
         ]);

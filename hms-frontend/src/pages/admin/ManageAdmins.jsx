@@ -1,50 +1,65 @@
 import { useEffect, useState } from "react";
 import api from "../../lib/api";
-import Navbar from "../../components/Navbar";
 
 const emptyForm = { name: "", email: "", password: "", password_confirmation: "", role: "admin" };
 
-const roleLabels = { admin: "Admin", super_admin: "Super Admin" };
+const ROLES = {
+  admin: { label: "Admin", bg: "var(--bg)", color: "var(--text-dark)", border: "var(--border)" },
+  super_admin: { label: "Super Admin", bg: "rgba(212,175,55,0.15)", color: "#D4AF37", border: "rgba(212,175,55,0.4)" },
+};
 
 export default function ManageAdmins() {
   const [admins, setAdmins] = useState([]);
   const [form, setForm] = useState(emptyForm);
-  const [message, setMessage] = useState("");
+  const [toast, setToast] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [myId, setMyId] = useState(null);
 
   const load = () => {
     api.get("/admins")
-      .then((r) => setAdmins(r.data.data))
+      .then((r) => setAdmins(r.data.data || []))
       .finally(() => setLoading(false));
   };
-  useEffect(() => { load(); }, []);
+
+  useEffect(() => {
+    api.get("/me").then((r) => setMyId(r.data.user?.id)).catch(() => {});
+    load();
+  }, []);
+
+  const notify = (text, ok = true) => {
+    setToast({ text, ok });
+    setTimeout(() => setToast(null), 3500);
+  };
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage("");
+    setSaving(true);
     try {
       await api.post("/admins", form);
-      setMessage(" Admin yaradıldı");
+      notify("Administrator hesabı yaradıldı", true);
       setForm(emptyForm);
       load();
     } catch (err) {
       const msg =
-        err.response?.data?.message ||
         Object.values(err.response?.data?.errors || {})[0]?.[0] ||
-        "Xəta";
-      setMessage(` ${msg}`);
+        err.response?.data?.message ||
+        "Hesab yaradıla bilmədi";
+      notify(msg, false);
+    } finally {
+      setSaving(false);
     }
   };
 
   const changeRole = async (id, role) => {
     try {
       await api.put(`/admins/${id}`, { role });
-      setMessage(" Rol yeniləndi");
+      notify("Rol yeniləndi", true);
       load();
     } catch (err) {
-      setMessage(` ${err.response?.data?.message || "Xəta"}`);
+      notify(err.response?.data?.message || "Rol dəyişdirilə bilmədi", false);
     }
   };
 
@@ -52,101 +67,305 @@ export default function ManageAdmins() {
     if (!confirm(`"${name}" hesabını silmək istəyirsiniz?`)) return;
     try {
       await api.delete(`/admins/${id}`);
-      setMessage(" Admin silindi");
+      notify("Hesab silindi", true);
       load();
     } catch (err) {
-      setMessage(` ${err.response?.data?.message || "Xəta"}`);
+      notify(err.response?.data?.message || "Silinə bilmədi", false);
     }
   };
 
+  const superCount = admins.filter((a) => a.role === "super_admin").length;
+
+  const inputStyle = {
+    width: "100%", padding: "11px 14px", borderRadius: 12,
+    border: "1px solid var(--border)", background: "var(--bg)",
+    color: "var(--text-dark)", fontSize: "0.87rem", outline: "none",
+    fontFamily: "inherit",
+  };
+
+  const labelStyle = {
+    display: "block", fontSize: "0.73rem", fontWeight: 800,
+    color: "var(--text-dark)", marginBottom: 6,
+    textTransform: "uppercase", letterSpacing: "0.4px",
+  };
+
   return (
-    <div className="min-h-screen" style={{ background: "var(--bg)", transition: "background-color 0.3s ease" }}>
-      <Navbar />
+    <>
+      <main style={{ maxWidth: 1100, margin: "0 auto", padding: "28px 24px 64px", width: "100%", flex: 1 }}>
 
-      <div className="max-w-5xl mx-auto px-4 md:px-6 py-6 md:py-8">
-        <h1 className="text-2xl font-bold text-white mb-1">Admin İdarəetməsi</h1>
-        <p className="text-slate-500 text-sm mb-6">Sistem administratorlarını yaradın və rollarını idarə edin</p>
-
-        <form onSubmit={handleSubmit} className="glass-card p-4 md:p-6 mb-6">
-          <h2 className="font-semibold text-white mb-4">Yeni admin əlavə et</h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <input name="name" value={form.name} onChange={handleChange} required placeholder="Ad Soyad" className="hms-input" />
-            <input name="email" type="email" value={form.email} onChange={handleChange} required placeholder="Email" className="hms-input" />
-            <input name="password" type="password" value={form.password} onChange={handleChange} required placeholder="Parol (min 8, hərf+rəqəm)" className="hms-input" />
-            <input name="password_confirmation" type="password" value={form.password_confirmation} onChange={handleChange} required placeholder="Parolu təkrarla" className="hms-input" />
-
-            <select name="role" value={form.role} onChange={handleChange} className="hms-select md:col-span-2">
-              <option value="admin">Admin — həkim/xəstə/şöbə idarəetməsi</option>
-              <option value="super_admin">Super Admin — tam səlahiyyət</option>
-            </select>
+        {/* Başlıq */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 20, flexWrap: "wrap", marginBottom: 24 }}>
+          <div>
+            <span style={{
+              display: "inline-block", background: "#FFF5CC",
+              border: "1px solid rgba(161, 124, 0, 0.2)", borderRadius: 30,
+              padding: "4px 14px", fontSize: "0.7rem", fontWeight: 800,
+              letterSpacing: "0.8px", color: "#A17C00", marginBottom: 12
+            }}>
+              SUPER ADMİN SƏLAHİYYƏTİ
+            </span>
+            <h1 style={{ fontSize: "clamp(1.6rem, 3vw, 2.1rem)", fontWeight: 900, margin: 0, letterSpacing: "-0.8px" }}>
+              Administrator İdarəetməsi
+            </h1>
+            <p style={{ fontSize: "0.92rem", color: "var(--text-mid)", margin: "8px 0 0", maxWidth: 520 }}>
+              Sistem administratorlarını yaradın və səlahiyyət səviyyələrini idarə edin.
+            </p>
           </div>
 
-          <button type="submit" className="hms-btn mt-4">Əlavə et</button>
-        </form>
-
-        {message && (
-          <p className={`mb-4 text-sm font-medium ${message.startsWith("") ? "hms-message-success" : "hms-message-error"}`}>
-            {message}
-          </p>
-        )}
-
-      
-        <div className="glass-card overflow-hidden">
-          <h2 className="font-semibold text-white px-4 md:px-6 py-4 border-b border-white/5">
-            Sistem administratorları
-          </h2>
-
-          {loading ? (
-            <p className="text-slate-400 text-center py-10">Yüklənir...</p>
-          ) : (
-            admins.map((a) => (
-              <div key={a.id} className="flex flex-col sm:flex-row sm:items-center gap-3 px-4 md:px-6 py-4 border-b border-white/5 last:border-0">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-sm font-bold text-white shrink-0">
-                  {a.name.charAt(0).toUpperCase()}
-                </div>
-
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <p className="text-white font-medium truncate">{a.name}</p>
-                    <span className={`text-[11px] px-2 py-0.5 rounded-full ${
-                      a.role === "super_admin"
-                        ? "bg-purple-500/15 text-purple-400"
-                        : "bg-indigo-500/15 text-indigo-400"
-                    }`}>
-                      {roleLabels[a.role]}
-                    </span>
-                  </div>
-                  <p className="text-slate-500 text-xs">{a.email} • {a.created_at}</p>
-                </div>
-
-                <div className="flex items-center gap-3 shrink-0">
-                  <select
-                    value={a.role}
-                    onChange={(e) => changeRole(a.id, e.target.value)}
-                    className="bg-slate-800/60 border border-white/5 rounded-lg text-xs text-slate-300 px-2 py-1.5 focus:outline-none"
-                  >
-                    <option value="admin">Admin</option>
-                    <option value="super_admin">Super Admin</option>
-                  </select>
-
-                  <button onClick={() => remove(a.id, a.name)} className="text-red-400 hover:text-red-300 text-sm font-medium">
-                    Sil
-                  </button>
-                </div>
+          <div style={{ display: "flex", gap: 12 }}>
+            {[
+              { val: admins.length, label: "Ümumi" },
+              { val: superCount, label: "Super Admin" },
+            ].map((s, i) => (
+              <div key={i} style={{
+                background: "var(--surface)", border: "1px solid var(--border)",
+                borderRadius: 14, padding: "12px 20px", textAlign: "center", minWidth: 96
+              }}>
+                <div style={{ fontSize: "1.5rem", fontWeight: 900, color: "#D4AF37", lineHeight: 1 }}>{s.val}</div>
+                <div style={{ fontSize: "0.7rem", color: "var(--text-light)", fontWeight: 700, marginTop: 4 }}>{s.label}</div>
               </div>
-            ))
-          )}
-
-          {!loading && admins.length === 0 && (
-            <p className="text-slate-500 text-center py-10">Admin yoxdur.</p>
-          )}
+            ))}
+          </div>
         </div>
 
-        <p className="text-[11px] text-slate-600 mt-3">
-          ⓘ Öz hesabınızı silə və ya rolunuzu dəyişə bilməzsiniz. Sistemdə ən azı bir super admin qalmalıdır.
-        </p>
-      </div>
-    </div>
+        {toast && (
+          <div style={{
+            marginBottom: 20, padding: "13px 18px", borderRadius: 12,
+            fontSize: "0.87rem", fontWeight: 700,
+            background: toast.ok ? "rgba(16,185,129,0.1)" : "rgba(239,68,68,0.1)",
+            border: `1px solid ${toast.ok ? "rgba(16,185,129,0.3)" : "rgba(239,68,68,0.3)"}`,
+            color: toast.ok ? "#047857" : "#B91C1C",
+          }}>
+            {toast.ok ? "✓" : "✕"} {toast.text}
+          </div>
+        )}
+
+        <div className="admins-grid" style={{ display: "grid", gridTemplateColumns: "360px 1fr", gap: 20, alignItems: "start" }}>
+
+          {/* ══ SOL — forma ══ */}
+          <form
+            onSubmit={handleSubmit}
+            style={{
+              background: "var(--surface)", border: "1px solid var(--border)",
+              borderRadius: 20, padding: 24, position: "sticky", top: 90,
+            }}
+          >
+            <h2 style={{ fontSize: "1rem", fontWeight: 900, margin: "0 0 4px" }}>Yeni Administrator</h2>
+            <p style={{ fontSize: "0.79rem", color: "var(--text-light)", margin: "0 0 20px" }}>
+              Hesab avtomatik təsdiqlənir və dərhal aktiv olur.
+            </p>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 13 }}>
+              <div>
+                <label style={labelStyle}>Ad Soyad *</label>
+                <input name="name" value={form.name} onChange={handleChange} required placeholder="Nərmin Əliyeva" style={inputStyle} />
+              </div>
+
+              <div>
+                <label style={labelStyle}>Email *</label>
+                <input name="email" type="email" value={form.email} onChange={handleChange} required placeholder="admin@novacare.az" style={inputStyle} />
+              </div>
+
+              <div>
+                <label style={labelStyle}>Parol *</label>
+                <input name="password" type="password" value={form.password} onChange={handleChange} required placeholder="Min 8 simvol, hərf + rəqəm" style={inputStyle} />
+              </div>
+
+              <div>
+                <label style={labelStyle}>Parolu təkrarla *</label>
+                <input name="password_confirmation" type="password" value={form.password_confirmation} onChange={handleChange} required placeholder="••••••••" style={inputStyle} />
+              </div>
+
+              {/* Rol seçimi — kart şəklində */}
+              <div>
+                <label style={labelStyle}>Səlahiyyət səviyyəsi</label>
+                <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
+                  {[
+                    { value: "admin", title: "Admin", desc: "Həkim, pasiyent və şöbə idarəetməsi" },
+                    { value: "super_admin", title: "Super Admin", desc: "Tam səlahiyyət + administrator idarəetməsi" },
+                  ].map((r) => {
+                    const active = form.role === r.value;
+                    return (
+                      <label
+                        key={r.value}
+                        style={{
+                          display: "flex", alignItems: "flex-start", gap: 11, cursor: "pointer",
+                          padding: "12px 14px", borderRadius: 13,
+                          border: active ? "1.5px solid #D4AF37" : "1px solid var(--border)",
+                          background: active ? "rgba(212,175,55,0.08)" : "var(--bg)",
+                          transition: "all 0.2s",
+                        }}
+                      >
+                        <input
+                          type="radio"
+                          name="role"
+                          value={r.value}
+                          checked={active}
+                          onChange={handleChange}
+                          style={{ marginTop: 3, accentColor: "#D4AF37", flexShrink: 0 }}
+                        />
+                        <div>
+                          <p style={{ fontSize: "0.86rem", fontWeight: 800, margin: 0, color: active ? "#D4AF37" : "var(--text-dark)" }}>
+                            {r.title}
+                          </p>
+                          <p style={{ fontSize: "0.75rem", color: "var(--text-light)", margin: "3px 0 0", lineHeight: 1.45 }}>
+                            {r.desc}
+                          </p>
+                        </div>
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={saving}
+                style={{
+                  width: "100%", padding: "13px", borderRadius: 12, border: "none",
+                  background: saving ? "var(--border)" : "#D4AF37",
+                  color: "#111", fontSize: "0.88rem", fontWeight: 900,
+                  cursor: saving ? "default" : "pointer", marginTop: 4,
+                }}
+              >
+                {saving ? "Gözləyin..." : "Əlavə et"}
+              </button>
+            </div>
+          </form>
+
+          {/* ══ SAĞ — siyahı ══ */}
+          <div>
+            <div style={{
+              background: "var(--surface)", border: "1px solid var(--border)",
+              borderRadius: 20, overflow: "hidden"
+            }}>
+              <div style={{ padding: "16px 22px", borderBottom: "1px solid var(--border)" }}>
+                <h2 style={{ fontSize: "1rem", fontWeight: 900, margin: 0 }}>Sistem Administratorları</h2>
+              </div>
+
+              {loading ? (
+                <p style={{ padding: "60px 24px", textAlign: "center", color: "var(--text-light)" }}>Yüklənir...</p>
+              ) : admins.length === 0 ? (
+                <p style={{ padding: "60px 24px", textAlign: "center", color: "var(--text-light)" }}>Administrator yoxdur.</p>
+              ) : (
+                admins.map((a) => {
+                  const role = ROLES[a.role] || ROLES.admin;
+                  const isMe = a.id === myId;
+                  const isLastSuper = a.role === "super_admin" && superCount <= 1;
+                  const locked = isMe || isLastSuper;
+
+                  return (
+                    <div
+                      key={a.id}
+                      style={{
+                        padding: "16px 22px", borderBottom: "1px solid var(--border)",
+                        display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap",
+                        background: isMe ? "rgba(212,175,55,0.06)" : "transparent",
+                      }}
+                    >
+                      <div style={{
+                        width: 46, height: 46, borderRadius: "50%", flexShrink: 0,
+                        background: a.role === "super_admin"
+                          ? "linear-gradient(135deg, #D4AF37 0%, #B8860B 100%)"
+                          : "linear-gradient(135deg, #333333 0%, #111111 100%)",
+                        color: a.role === "super_admin" ? "#121212" : "#FFFFFF", display: "flex", alignItems: "center",
+                        justifyContent: "center", fontSize: "0.9rem", fontWeight: 900
+                      }}>
+                        {a.name?.charAt(0)?.toUpperCase() || "?"}
+                      </div>
+
+                      <div style={{ minWidth: 0, flex: 1 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 9, flexWrap: "wrap" }}>
+                          <p style={{ fontSize: "0.95rem", fontWeight: 800, margin: 0, color: "var(--text-dark)" }}>
+                            {a.name}
+                          </p>
+
+                          <span style={{
+                            fontSize: "0.68rem", fontWeight: 800, padding: "3px 11px", borderRadius: 20,
+                            background: role.bg, color: role.color, border: `1px solid ${role.border}`,
+                          }}>
+                            {role.label}
+                          </span>
+
+                          {isMe && (
+                            <span style={{
+                              fontSize: "0.65rem", fontWeight: 900, padding: "3px 10px", borderRadius: 20,
+                              background: "var(--surface)", color: "var(--text-mid)",
+                              border: "1px solid var(--border)",
+                            }}>
+                              SİZ
+                            </span>
+                          )}
+                        </div>
+
+                        <p style={{ fontSize: "0.79rem", color: "var(--text-light)", margin: "3px 0 0" }}>
+                          {a.email} · {a.created_at}
+                        </p>
+                      </div>
+
+                      <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
+                        <select
+                          value={a.role}
+                          onChange={(e) => changeRole(a.id, e.target.value)}
+                          disabled={isMe}
+                          title={isMe ? "Öz rolunuzu dəyişə bilməzsiniz" : ""}
+                          style={{
+                            padding: "7px 12px", borderRadius: 10,
+                            border: "1px solid var(--border)", background: isMe ? "var(--bg)" : "var(--surface)",
+                            color: isMe ? "var(--text-light)" : "var(--text-dark)",
+                            fontSize: "0.78rem", fontWeight: 700, outline: "none",
+                            cursor: isMe ? "not-allowed" : "pointer",
+                            opacity: isMe ? 0.6 : 1,
+                          }}
+                        >
+                          <option value="admin">Admin</option>
+                          <option value="super_admin">Super Admin</option>
+                        </select>
+
+                        <button
+                          onClick={() => remove(a.id, a.name)}
+                          disabled={locked}
+                          title={isMe ? "Öz hesabınızı silə bilməzsiniz" : isLastSuper ? "Sonuncu super admin silinə bilməz" : ""}
+                          style={{
+                            padding: "7px 15px", borderRadius: 10,
+                            border: "1px solid var(--border)", background: "transparent",
+                            color: locked ? "var(--text-light)" : "#B91C1C",
+                            fontSize: "0.78rem", fontWeight: 800,
+                            cursor: locked ? "not-allowed" : "pointer",
+                            opacity: locked ? 0.5 : 1,
+                          }}
+                        >
+                          Sil
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+
+            {/* Qayda qeydi */}
+            <div style={{
+              marginTop: 14, padding: "16px 20px", borderRadius: 16,
+              background: "var(--surface)", border: "1px solid var(--border)",
+              display: "flex", gap: 14,
+            }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 1 }}>
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+              <div>
+                <p style={{ fontSize: "0.85rem", fontWeight: 800, margin: "0 0 6px", color: "var(--text-dark)" }}>
+                  Təhlükəsizlik qaydaları
+                </p>
+                <p style={{ fontSize: "0.79rem", color: "var(--text-light)", margin: 0, lineHeight: 1.6 }}>
+                  Öz hesabınızı silə və ya rolunuzu dəyişə bilməzsiniz. Sistemdə ən azı bir super admin qalmalıdır.
+                  İlk super admin yalnız serverdə <code style={{ background: "var(--bg)", padding: "1px 6px", borderRadius: 5, fontSize: "0.75rem" }}>php artisan hms:reset-superadmin</code> komandası ilə yaradılır.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </>
   );
 }

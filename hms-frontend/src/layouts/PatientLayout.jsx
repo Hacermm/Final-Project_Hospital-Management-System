@@ -56,14 +56,14 @@ export default function PatientLayout() {
                 width: 42,
                 height: 42,
                 borderRadius: 14,
-                background: "#FFFFFF",
+                background: theme === "dark" ? "rgba(0,0,0,0.3)" : "#FFFFFF",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
               }}
             >
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7F1D1D" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={theme === "dark" ? "#FFFFFF" : "#7F1D1D"} strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
               </svg>
             </div>
@@ -91,8 +91,8 @@ export default function PatientLayout() {
                     fontWeight: 700,
                     textDecoration: "none",
                     transition: "all 0.2s",
-                    background: isActive ? "#FFFFFF" : "transparent",
-                    color: isActive ? "#7F1D1D" : "rgba(255,255,255,0.85)",
+                    background: isActive ? (theme === "dark" ? "rgba(0,0,0,0.3)" : "#FFFFFF") : "transparent",
+                    color: isActive ? (theme === "dark" ? "#FFFFFF" : "#7F1D1D") : "rgba(255,255,255,0.85)",
                     boxShadow: isActive ? "0 4px 12px rgba(0,0,0,0.12)" : "none",
                   }}
                 >
@@ -126,8 +126,8 @@ export default function PatientLayout() {
               width: "100%",
               padding: "9px 0",
               borderRadius: 10,
-              background: "#FFFFFF",
-              color: "#7F1D1D",
+              background: theme === "dark" ? "rgba(0,0,0,0.3)" : "#FFFFFF",
+              color: theme === "dark" ? "#FFFFFF" : "#7F1D1D",
               fontWeight: 800,
               fontSize: "0.76rem",
               textDecoration: "none",

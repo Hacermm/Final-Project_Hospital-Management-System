@@ -1,0 +1,237 @@
+import { useEffect, useState } from "react";
+import { Link, useNavigate, useLocation, Outlet } from "react-router-dom";
+import { useTheme } from "../context/ThemeContext";
+
+export default function AdminLayout() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { theme, toggleTheme } = useTheme();
+
+  const role = localStorage.getItem("role");
+  const isSuper = role === "super_admin";
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    navigate("/login");
+  };
+
+  const menuItems = [
+    { to: isSuper ? "/admin/super" : "/admin", label: "İdarəetmə Paneli" },
+    { to: "/admin/departments", label: "Şöbələr" },
+    { to: "/admin/doctors", label: "Həkimlər" },
+    { to: "/admin/patients", label: "Pasiyentlər" },
+    { to: "/admin/analytics", label: "Analitika" },
+    { to: "/admin/messages", label: "Mesajlar" },
+  ];
+
+  if (isSuper) {
+    menuItems.push({ to: "/admin/admins", label: "Administratorlar" });
+  }
+
+  return (
+    <div
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        background: "var(--bg)",
+        color: "var(--text-dark)",
+        fontFamily: "'Plus Jakarta Sans', sans-serif",
+        transition: "background 0.3s ease",
+      }}
+    >
+      {/* ═ ═ ═ ═ ═ ═ ═ LEFT SIDEBAR ═ ═ ═ ═ ═ ═ ═ */}
+      <aside
+        style={{
+          width: 260,
+          flexShrink: 0,
+          background: isSuper ? "#121212" : "#1F2937",
+          color: "#FFFFFF",
+          padding: "28px 20px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          borderRight: "1px solid rgba(255,255,255,0.08)",
+          boxSizing: "border-box",
+        }}
+      >
+        <div>
+          {/* Logo */}
+          <Link to="/" style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 36, textDecoration: "none" }}>
+            <div
+              style={{
+                width: 42,
+                height: 42,
+                borderRadius: 14,
+                background: isSuper ? "#222222" : (theme === "dark" ? "rgba(0,0,0,0.3)" : "#FFFFFF"),
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+              }}
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={isSuper ? "#D4AF37" : (theme === "dark" ? "#FFFFFF" : "#1F2937")} strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+              </svg>
+            </div>
+            <div>
+              <span style={{ fontSize: "1.25rem", fontWeight: 900, color: "#FFFFFF", letterSpacing: "-0.5px", display: "block" }}>NovaCare</span>
+              <span style={{ fontSize: "0.62rem", fontWeight: 800, color: "#9CA3AF", letterSpacing: "1px", textTransform: "uppercase", display: "block" }}>
+                {isSuper ? "Super Admin" : "Admin Portal"}
+              </span>
+            </div>
+          </Link>
+
+          {/* Navigation Links */}
+          <nav style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            {menuItems.map((item) => {
+              const isActive = (item.to === "/admin" || item.to === "/admin/super")
+                ? location.pathname === item.to 
+                : location.pathname.startsWith(item.to);
+              
+              let bg = "transparent";
+              let color = isSuper ? "white" : "rgba(255,255,255,0.7)";
+              let shadow = "none";
+              
+              if (isSuper) {
+                if (isActive) {
+                   bg = "#D4AF37";
+                   color = "#121212";
+                }
+              } else {
+                 if (isActive) {
+                   bg = "#D4AF37";
+                   color = "#121212";
+                 }
+              }
+
+              return (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 12,
+                    padding: "12px 16px",
+                    borderRadius: 12,
+                    fontSize: "0.84rem",
+                    fontWeight: 700,
+                    textDecoration: "none",
+                    transition: "all 0.2s",
+                    background: bg,
+                    color: color,
+                    boxShadow: shadow,
+                  }}
+                  onMouseEnter={(e) => {
+                     if (!isActive && isSuper) e.currentTarget.style.background = "#1F1F1F";
+                  }}
+                  onMouseLeave={(e) => {
+                     if (!isActive && isSuper) e.currentTarget.style.background = "transparent";
+                  }}
+                >
+                  <span>{item.label}</span>
+                </Link>
+              );
+            })}
+          </nav>
+        </div>
+
+        {/* Bottom Support Card */}
+        <div
+          style={{
+            padding: 16,
+            borderRadius: 16,
+            background: isSuper ? "#222222" : "rgba(255,255,255,0.06)",
+            backdropFilter: isSuper ? "none" : "blur(8px)",
+            border: isSuper ? "1px solid #333333" : "1px solid rgba(255,255,255,0.1)",
+            textAlign: "center",
+            marginTop: 24,
+          }}
+        >
+          <div style={{ fontSize: "1.3rem", marginBottom: 6 }}></div>
+          <h4 style={{ fontSize: "0.82rem", fontWeight: 800, color: "#FFFFFF", marginBottom: 4 }}>
+            Sayta Qayıt
+          </h4>
+          <p style={{ fontSize: "0.72rem", color: "#9CA3AF", lineHeight: 1.5, marginBottom: 12 }}>
+            Sistemdən çıxmadan əsas səhifəyə geri dönün.
+          </p>
+          <Link
+            to="/"
+            style={{
+              display: "block",
+              width: "100%",
+              padding: "9px 0",
+              borderRadius: 10,
+              background: isSuper ? "#D4AF37" : (theme === "dark" ? "rgba(255,255,255,0.15)" : "#FFFFFF"),
+              color: isSuper ? "#121212" : (theme === "dark" ? "#FFFFFF" : "#1F2937"),
+              fontWeight: 800,
+              fontSize: "0.76rem",
+              textDecoration: "none",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+              boxSizing: "border-box",
+            }}
+          >
+            ƏSAS SƏHİFƏ
+          </Link>
+        </div>
+      </aside>
+
+      {/* ═ ═ ═ ═ ═ ═ ═ MAIN CONTENT AREA ═ ═ ═ ═ ═ ═ ═ */}
+      <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column" }}>
+        
+        {/* Top Header Ribbon */}
+        <header
+          style={{
+            height: 72,
+            padding: "0 32px",
+            background: "var(--surface)",
+            borderBottom: "1px solid var(--border)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            position: "sticky",
+            top: 0,
+            zIndex: 30,
+            boxSizing: "border-box",
+          }}
+        >
+          <h1 style={{ fontSize: "1.3rem", fontWeight: 900, color: "var(--text-dark)", letterSpacing: "-0.3px", margin: 0 }}>
+            {isSuper ? "Super Admin" : "Admin Portalı"}
+          </h1>
+
+          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+            <button onClick={toggleTheme} className="ac-theme-toggle" title={theme === "dark" ? "İşıqlı rejimə keç" : "Qaranlıq rejimə keç"}>
+              {theme === "dark" ? (
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg>
+              ) : (
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+              )}
+            </button>
+
+            <button
+              onClick={logout}
+              style={{
+                padding: "9px 16px",
+                borderRadius: 10,
+                fontSize: "0.82rem",
+                fontWeight: 800,
+                color: "#dc2626",
+                background: "rgba(239,68,68,0.08)",
+                border: "1px solid rgba(239,68,68,0.25)",
+                cursor: "pointer",
+                whiteSpace: "nowrap",
+              }}
+            >
+               Çıxış
+            </button>
+          </div>
+        </header>
+
+        {/* Nested Routes Content */}
+        <Outlet />
+
+      </div>
+    </div>
+  );
+}

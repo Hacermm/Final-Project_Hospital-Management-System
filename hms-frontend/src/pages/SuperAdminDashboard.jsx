@@ -1,101 +1,277 @@
-import { Link, useNavigate } from "react-router-dom";
-import { useTheme } from "../context/ThemeContext";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import api from "../lib/api";
+
+const ICONS = {
+  building: "M3 21h18M5 21V7l8-4v18M19 21V11l-6-4M9 9h.01M9 13h.01M9 17h.01",
+  stethoscope: "M11 2v2M6 2v2M6 4v5a5 5 0 0 0 10 0V4M11 14v2a5 5 0 0 0 10 0v-2M21 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4z",
+  users: "M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.87",
+  shield: "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z",
+  chart: "M3 3v18h18M7 16l4-6 4 3 5-8",
+  mail: "M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM22 6l-10 7L2 6",
+  calendar: "M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z",
+  file: "M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6",
+  terminal: "M4 17l6-6-6-6M12 19h8",
+};
+
+// Super admin = indiqo/gecə mavisi (adminin qırmızısından fərqlənir)
+const ACCENT = "#4F46E5";
+const ACCENT_SOFT = "rgba(79,70,229,0.1)";
+const ACCENT_BORDER = "rgba(79,70,229,0.25)";
+
+const MODULES = [
+  { to: "/admin/admins", icon: "shield", title: "Administratorlar", desc: "Admin hesabları yaradın, rolları dəyişin və səlahiyyətləri idarə edin", tag: "Yalnız Super Admin", primary: true },
+  { to: "/admin/departments", icon: "building", title: "Şöbələr", desc: "Klinik şöbələri yaradın və redaktə edin", tag: "Struktur" },
+  { to: "/admin/doctors", icon: "stethoscope", title: "Həkimlər", desc: "Mütəxəssis hesabları, profil və müayinə haqqı", tag: "Heyət" },
+  { to: "/admin/patients", icon: "users", title: "Pasiyentlər", desc: "Pasiyent qeydiyyatları və məlumat bazası", tag: "Qeydiyyat" },
+  { to: "/admin/analytics", icon: "chart", title: "Analitika", desc: "Sistem göstəriciləri və hesabatlar", tag: "Hesabat" },
+  { to: "/admin/messages", icon: "mail", title: "Müraciətlər", desc: "Saytdan gələn əlaqə mesajları", tag: "Müraciət" },
+];
 
 export default function SuperAdminDashboard() {
-  const navigate = useNavigate();
-  const { theme, toggleTheme } = useTheme();
-  const logout = () => { localStorage.removeItem("token"); localStorage.removeItem("role"); navigate("/login"); };
+  const [stats, setStats] = useState(null);
+  const [adminCount, setAdminCount] = useState(null);
+  const [unread, setUnread] = useState(0);
+  const [name, setName] = useState("");
 
-  const menuItems = [
-    { to: "/admin/departments", icon: "", title: "Şöbə İdarəetməsi", desc: "Şöbələri əlavə edin, redaktə edin və ya silin", badge: "Şöbələr" },
-    { to: "/admin/doctors", icon: "", title: "Həkim İdarəetməsi", desc: "Bütün mütəxəssis həkim hesabları və qiymətləri", badge: "Həkimlər" },
-    { to: "/admin/patients", icon: "", title: "Xəstə İdarəetməsi", desc: "Bütün pasiyent profilləri və bazası", badge: "Pasiyentlər" },
+  useEffect(() => {
+    api.get("/me").then((r) => setName(r.data.user?.name || "")).catch(() => {});
+    api.get("/analytics").then((r) => setStats(r.data.summary)).catch(() => {});
+    api.get("/admins").then((r) => setAdminCount((r.data.data || []).length)).catch(() => {});
+    api.get("/contact-messages").then((r) => setUnread(r.data.unread || 0)).catch(() => {});
+  }, []);
+
+  const cards = [
+    { val: adminCount ?? "—", label: "Administrator", icon: "shield", accent: true },
+    { val: stats?.doctors ?? "—", label: "Həkim", icon: "stethoscope" },
+    { val: stats?.patients ?? "—", label: "Pasiyent", icon: "users" },
+    { val: stats?.departments ?? "—", label: "Şöbə", icon: "building" },
+    { val: stats?.appointments ?? "—", label: "Randevu", icon: "calendar" },
+    { val: stats?.medical_records ?? "—", label: "Tibbi qeyd", icon: "file" },
   ];
 
   return (
-    <div className="ac-dash-wrap">
-      <nav className="ac-dash-nav">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-3.5 group">
-            <div
-              className="w-10 h-10 rounded-2xl flex items-center justify-center text-white shadow-md transition-transform group-hover:scale-105"
-              style={{ background: "linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%)", border: "1.5px solid var(--secondary)" }}
+    <div style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text-dark)", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+
+      <main style={{ maxWidth: 1240, margin: "0 auto", padding: "28px 24px 64px", width: "100%" }}>
+
+        {/* Hero — indiqo (admin panelindən fərqli) */}
+        <div style={{
+          background: "linear-gradient(135deg, #0F172A 0%, #1E1B4B 55%, #312E81 100%)",
+          borderRadius: 24, padding: "34px 32px", color: "#FFFFFF",
+          position: "relative", overflow: "hidden", marginBottom: 24,
+        }}>
+          <div style={{
+            position: "absolute", inset: 0, pointerEvents: "none",
+            backgroundImage: "radial-gradient(rgba(255,255,255,0.07) 1px, transparent 1px)",
+            backgroundSize: "26px 26px",
+          }} />
+          <div style={{
+            position: "absolute", top: -70, right: -40, width: 300, height: 300,
+            borderRadius: "50%", background: "radial-gradient(circle, rgba(99,102,241,0.28) 0%, transparent 70%)",
+            pointerEvents: "none",
+          }} />
+
+          <div style={{ position: "relative", zIndex: 2, display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 24, flexWrap: "wrap" }}>
+            <div>
+              <span style={{
+                display: "inline-flex", alignItems: "center", gap: 8,
+                background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.22)",
+                borderRadius: 30, padding: "5px 16px", fontSize: "0.7rem",
+                fontWeight: 900, letterSpacing: "1px", color: "#C7D2FE", marginBottom: 14,
+              }}>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                  <path d={ICONS.shield} />
+                </svg>
+                SUPER ADMİN SƏLAHİYYƏTİ
+              </span>
+
+              <h1 style={{ fontSize: "clamp(1.6rem, 3vw, 2.2rem)", fontWeight: 900, margin: "0 0 8px", letterSpacing: "-0.9px" }}>
+                Xoş gəldiniz{name ? `, ${name}` : ""}
+              </h1>
+              <p style={{ fontSize: "0.94rem", color: "rgba(255,255,255,0.78)", margin: 0, maxWidth: 540, lineHeight: 1.6 }}>
+                Sistemin bütün modullarına tam çıxışınız var — administrator hesablarını yaratmaq və səlahiyyətləri idarə etmək daxil olmaqla.
+              </p>
+            </div>
+
+            <Link
+              to="/admin/admins"
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 9,
+                padding: "13px 24px", borderRadius: 13, textDecoration: "none",
+                background: "#FFFFFF", color: "#312E81",
+                fontSize: "0.88rem", fontWeight: 900, flexShrink: 0,
+                boxShadow: "0 8px 24px rgba(0,0,0,0.22)",
+              }}
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d={ICONS.shield} />
+              </svg>
+              Administratorları idarə et
+            </Link>
+          </div>
+        </div>
+
+        {/* Statistika */}
+        <div className="sa-stats" style={{ display: "grid", gridTemplateColumns: "repeat(6, 1fr)", gap: 12, marginBottom: 24 }}>
+          {cards.map((c, i) => (
+            <div key={i} style={{
+              background: "var(--surface)",
+              border: c.accent ? `1px solid ${ACCENT_BORDER}` : "1px solid var(--border)",
+              borderRadius: 16, padding: "18px 16px", textAlign: "center",
+            }}>
+              <div style={{
+                width: 38, height: 38, borderRadius: 12, margin: "0 auto 10px",
+                background: c.accent ? ACCENT_SOFT : "var(--bg)",
+                border: `1px solid ${c.accent ? ACCENT_BORDER : "var(--border)"}`,
+                display: "flex", alignItems: "center", justifyContent: "center",
+              }}>
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
+                  stroke={c.accent ? ACCENT : "var(--text-mid)"} strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+                  <path d={ICONS[c.icon]} />
+                </svg>
+              </div>
+              <div style={{ fontSize: "1.45rem", fontWeight: 900, lineHeight: 1, color: c.accent ? ACCENT : "var(--text-dark)" }}>
+                {c.val}
+              </div>
+              <div style={{ fontSize: "0.7rem", color: "var(--text-light)", fontWeight: 700, marginTop: 6 }}>
+                {c.label}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Diqqət tələb edən */}
+        {(stats?.pending > 0 || unread > 0) && (
+          <div style={{
+            background: "var(--surface)", border: "1px solid var(--border)",
+            borderRadius: 16, padding: "16px 22px", marginBottom: 24,
+            display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap",
+          }}>
+            <div style={{
+              width: 40, height: 40, borderRadius: 12, flexShrink: 0,
+              background: "rgba(245,158,11,0.12)", border: "1px solid rgba(245,158,11,0.28)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+            }}>
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#B45309" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 9v4M12 17h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
               </svg>
             </div>
-            <div className="flex flex-col">
-              <span className="font-display font-extrabold text-lg tracking-tight leading-none" style={{ color: "var(--primary)" }}>
-                NovaCare<span style={{ color: "var(--secondary)" }}> Hospital</span>
-              </span>
-              <span className="text-[10px] font-black tracking-widest uppercase mt-0.5" style={{ color: "var(--text-light)" }}>Sistem Nəzarəti</span>
-            </div>
-            <span className="apollo-badge apollo-badge-gold ml-2">SUPER ADMİN</span>
-          </Link>
-          <div className="flex items-center gap-3">
-            <button onClick={toggleTheme} className="ac-theme-toggle" title={theme === "dark" ? "İşıqlı rejimə keç" : "Qaranlıq rejimə keç"}>
-              {theme === "dark" ? (
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
-                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-                  <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
-                </svg>
-              ) : (
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-                </svg>
-              )}
-            </button>
-            <Link to="/" className="btn-apollo-outline !py-2 !px-3.5 text-xs font-bold">
-              ← Əsas Səhifə
-            </Link>
-            <button onClick={logout} className="btn-apollo-outline !py-2 !px-3.5 text-xs font-bold" style={{ color: "#ef4444", borderColor: "#fca5a5" }}
-              onMouseEnter={e => { e.currentTarget.style.background = "rgba(239,68,68,0.08)"; }}
-              onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
-            >
-               Çıxış
-            </button>
-          </div>
-        </div>
-      </nav>
 
-      <main className="max-w-7xl mx-auto px-4 lg:px-6 py-12 flex-1 w-full space-y-8">
-        <div className="apollo-card p-8 text-white relative overflow-hidden" style={{ background: "linear-gradient(135deg, #C62828 0%, #B71C1C 100%)" }}>
-          <div className="relative z-10 space-y-2">
-            <span className="apollo-badge" style={{ background: "rgba(255,255,255,0.15)", borderColor: "rgba(255,255,255,0.3)", color: "#FFFFFF" }}>SUPER İDARƏÇİ</span>
-            <h1 className="font-display text-3xl font-extrabold text-white">NovaCare Super Admin Paneli</h1>
-            <p className="text-sm text-red-100 max-w-xl font-normal">
-              Hospital sisteminin bütün poliklinikalarını, heyyət hesablarını və məlumat bazalarını tam idarə edin.
+            <p style={{ flex: 1, minWidth: 200, fontSize: "0.87rem", color: "var(--text-mid)", margin: 0, fontWeight: 700 }}>
+              {stats?.pending > 0 && `${stats.pending} randevu təsdiq gözləyir`}
+              {stats?.pending > 0 && unread > 0 && " · "}
+              {unread > 0 && `${unread} oxunmamış müraciət`}
             </p>
-          </div>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {menuItems.map((item) => (
+            {unread > 0 && (
+              <Link to="/admin/messages" style={{
+                padding: "8px 18px", borderRadius: 10, textDecoration: "none",
+                background: ACCENT, color: "#FFFFFF", fontSize: "0.81rem", fontWeight: 800,
+              }}>
+                Müraciətlərə bax
+              </Link>
+            )}
+          </div>
+        )}
+
+        {/* Modullar */}
+        <h2 style={{ fontSize: "1rem", fontWeight: 900, margin: "0 0 14px" }}>Sistem Modulları</h2>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(290px, 1fr))", gap: 18, marginBottom: 24 }}>
+          {MODULES.map((m) => (
             <Link
-              key={item.to}
-              to={item.to}
-              className="apollo-card p-7 hover:-translate-y-1.5 group block flex flex-col justify-between"
-              style={{ textDecoration: "none" }}
+              key={m.to}
+              to={m.to}
+              style={{
+                background: "var(--surface)",
+                border: m.primary ? `1.5px solid ${ACCENT}` : "1px solid var(--border)",
+                borderRadius: 20, padding: 24, textDecoration: "none",
+                display: "flex", flexDirection: "column", justifyContent: "space-between",
+                transition: "transform 0.25s ease, box-shadow 0.25s ease",
+                boxShadow: m.primary ? `0 6px 20px ${ACCENT_SOFT}` : "0 3px 14px rgba(0,0,0,0.04)",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-4px)";
+                e.currentTarget.style.boxShadow = `0 14px 32px ${ACCENT_SOFT}`;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = m.primary ? `0 6px 20px ${ACCENT_SOFT}` : "0 3px 14px rgba(0,0,0,0.04)";
+              }}
             >
               <div>
-                <div className="flex items-center justify-between mb-5">
-                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl font-bold transition-colors shadow-sm"
-                    style={{ background: "var(--primary-light)" }}>
-                    {item.icon}
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+                  <div style={{
+                    width: 50, height: 50, borderRadius: 15,
+                    background: m.primary ? ACCENT : "var(--bg)",
+                    border: m.primary ? "none" : "1px solid var(--border)",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                  }}>
+                    <svg width="23" height="23" viewBox="0 0 24 24" fill="none"
+                      stroke={m.primary ? "#FFFFFF" : "var(--text-mid)"} strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+                      <path d={ICONS[m.icon]} />
+                    </svg>
                   </div>
-                  <span className="apollo-badge apollo-badge-gold">{item.badge}</span>
+
+                  <span style={{
+                    fontSize: "0.66rem", fontWeight: 800, padding: "4px 11px", borderRadius: 20,
+                    background: m.primary ? ACCENT_SOFT : "var(--bg)",
+                    color: m.primary ? ACCENT : "var(--text-light)",
+                    border: `1px solid ${m.primary ? ACCENT_BORDER : "var(--border)"}`,
+                  }}>
+                    {m.tag}
+                  </span>
                 </div>
-                <h3 className="font-display font-extrabold text-lg mb-1.5 group-hover:opacity-80 transition-opacity" style={{ color: "var(--text-dark)" }}>{item.title}</h3>
-                <p className="text-xs leading-relaxed mb-6 font-normal" style={{ color: "var(--text-light)" }}>{item.desc}</p>
+
+                <h3 style={{ fontSize: "1.06rem", fontWeight: 800, margin: "0 0 6px", color: "var(--text-dark)" }}>
+                  {m.title}
+                </h3>
+                <p style={{ fontSize: "0.83rem", color: "var(--text-light)", lineHeight: 1.6, margin: "0 0 18px" }}>
+                  {m.desc}
+                </p>
               </div>
-              <div className="pt-4 flex items-center justify-between text-xs font-bold" style={{ borderTop: "1px solid var(--border)", color: "var(--primary)" }}>
-                <span>İdarə et</span>
-                <span className="transition-transform group-hover:translate-x-1">→</span>
+
+              <div style={{
+                paddingTop: 14, borderTop: "1px solid var(--border)",
+                display: "flex", alignItems: "center", justifyContent: "space-between",
+                fontSize: "0.81rem", fontWeight: 800,
+                color: m.primary ? ACCENT : "var(--text-mid)",
+              }}>
+                <span>Keçid et</span>
+                <span>→</span>
               </div>
             </Link>
           ))}
+        </div>
+
+        {/* Sistem qeydi */}
+        <div style={{
+          background: "var(--surface)", border: "1px solid var(--border)",
+          borderRadius: 16, padding: "18px 22px", display: "flex", gap: 15,
+        }}>
+          <div style={{
+            width: 38, height: 38, borderRadius: 11, flexShrink: 0,
+            background: ACCENT_SOFT, border: `1px solid ${ACCENT_BORDER}`,
+            display: "flex", alignItems: "center", justifyContent: "center",
+          }}>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={ACCENT} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d={ICONS.terminal} />
+            </svg>
+          </div>
+          <div>
+            <p style={{ fontSize: "0.85rem", fontWeight: 800, margin: "0 0 5px", color: "var(--text-dark)" }}>
+              Rol iyerarxiyası
+            </p>
+            <p style={{ fontSize: "0.79rem", color: "var(--text-light)", margin: 0, lineHeight: 1.65 }}>
+              Super Admin → Admin → Həkim/Pasiyent. Heç bir rol özündən yüksək hesab yarada bilmir.
+              İlk super admin yalnız serverdə{" "}
+              <code style={{ background: "var(--bg)", padding: "2px 7px", borderRadius: 5, fontSize: "0.75rem", fontWeight: 700 }}>
+                php artisan hms:reset-superadmin
+              </code>{" "}
+              komandası ilə yaradılır.
+            </p>
+          </div>
         </div>
       </main>
     </div>

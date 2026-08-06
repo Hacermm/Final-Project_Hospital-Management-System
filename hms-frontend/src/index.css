@@ -528,3 +528,39 @@ body {
   .chat-main-hidden { display: none !important; }
   .chat-back { display: block !important; }
 }
+
+@media (max-width: 640px) {
+  .doc-stats { grid-template-columns: 1fr !important; }
+}
+
+@media (max-width: 900px) {
+  .sched-grid { grid-template-columns: 1fr !important; }
+}
+
+@media (max-width: 560px) {
+  .presc-grid { grid-template-columns: 1fr !important; }
+}
+
+@media (max-width: 900px) {
+  .lab-grid { grid-template-columns: 1fr !important; }
+}
+
+@media (max-width: 1000px) { .admin-stats { grid-template-columns: repeat(2, 1fr) !important; } }
+@media (max-width: 520px)  { .admin-stats { grid-template-columns: 1fr !important; } }
+
+@media (max-width: 900px) {
+  .dept-grid { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 1000px) {
+  .doc-manage-grid { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 1000px) {
+  .pat-grid { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 1000px) {
+  .an-cards { grid-template-columns: repeat(2, 1fr) !important; }
+  .an-charts { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 520px) {
+  .an-cards { grid-template-columns: 1fr !important; }
+}

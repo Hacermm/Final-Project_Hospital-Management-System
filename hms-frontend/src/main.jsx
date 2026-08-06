@@ -23,6 +23,8 @@ import ManageDoctors from './pages/admin/ManageDoctors.jsx'
 import ManagePatients from './pages/admin/ManagePatients.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
 import PatientLayout from './layouts/PatientLayout.jsx'
+import DoctorLayout from './layouts/DoctorLayout.jsx'
+import AdminLayout from './layouts/AdminLayout.jsx'
 import BookAppointment from './pages/patient/BookAppointment.jsx'
 import MyAppointments from './pages/patient/MyAppointments.jsx'
 import DoctorAppointments from './pages/doctor/DoctorAppointments.jsx'
@@ -62,53 +64,31 @@ createRoot(document.getElementById('root')).render(
             <Route path="/patient/history" element={<MedicalHistory />} />
             <Route path="/patient/lab-tests" element={<MyLabTests />} />
           </Route>
-          <Route path="/doctor" element={
-            <ProtectedRoute allowedRole="doctor"><DoctorDashboard /></ProtectedRoute>
-          } />
-          <Route path="/admin" element={
-            <ProtectedRoute allowedRole="admin"><AdminDashboard /></ProtectedRoute>
-          } />
-          <Route path="/admin/super" element={
-            <ProtectedRoute allowedRole="super_admin"><SuperAdminDashboard /></ProtectedRoute>
-          } />
+          <Route element={<ProtectedRoute allowedRole="doctor"><DoctorLayout /></ProtectedRoute>}>
+            <Route path="/doctor" element={<DoctorDashboard />} />
+            <Route path="/doctor/appointments" element={<DoctorAppointments />} />
+            <Route path="/doctor/schedule" element={<DoctorSchedule />} />
+            <Route path="/doctor/records/new" element={<WriteMedicalRecord />} />
+            <Route path="/doctor/lab-tests" element={<UploadLabTest />} />
+          </Route>
+          <Route element={<ProtectedRoute allowedRole="admin"><AdminLayout /></ProtectedRoute>}>
+            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin/departments" element={<ManageDepartments />} />
+            <Route path="/admin/doctors" element={<ManageDoctors />} />
+            <Route path="/admin/patients" element={<ManagePatients />} />
+            <Route path="/admin/messages" element={<ContactMessages />} />
+            <Route path="/admin/analytics" element={<Analytics />} />
+          </Route>
 
-          <Route path="/admin/departments" element={
-            <ProtectedRoute allowedRole="admin"><ManageDepartments /></ProtectedRoute>
-          } />
-          <Route path="/admin/doctors" element={
-            <ProtectedRoute allowedRole="admin"><ManageDoctors /></ProtectedRoute>
-          } />
-          <Route path="/admin/patients" element={
-            <ProtectedRoute allowedRole="admin"><ManagePatients /></ProtectedRoute>
-          } />
-          <Route path="/admin/messages" element={
-            <ProtectedRoute allowedRole="admin"><ContactMessages /></ProtectedRoute>
-          } />
-
-          <Route path="/doctor/appointments" element={
-            <ProtectedRoute allowedRole="doctor"><DoctorAppointments /></ProtectedRoute>
-          } />
-          <Route path="/doctor/schedule" element={
-            <ProtectedRoute allowedRole="doctor"><DoctorSchedule /></ProtectedRoute>
-          } />
-          <Route path="/doctor/records/new" element={
-            <ProtectedRoute allowedRole="doctor"><WriteMedicalRecord /></ProtectedRoute>
-          } />
-
-          <Route path="/doctor/lab-tests" element={
-            <ProtectedRoute allowedRole="doctor"><UploadLabTest /></ProtectedRoute>
-          } />
+          <Route element={<ProtectedRoute allowedRole="super_admin"><AdminLayout /></ProtectedRoute>}>
+            <Route path="/admin/super" element={<SuperAdminDashboard />} />
+            <Route path="/admin/admins" element={<ManageAdmins />} />
+          </Route>
 
           <Route path="/chat" element={
             <ProtectedRoute><Chat /></ProtectedRoute>
           } />
-          <Route path="/admin/analytics" element={
-            <ProtectedRoute allowedRole="admin"><Analytics /></ProtectedRoute>
-          } />
           <Route path="/ai" element={<AiAssistant />
-          } />
-          <Route path="/admin/admins" element={
-         <ProtectedRoute allowedRole="super_admin"><ManageAdmins /></ProtectedRoute>
           } />
         </Routes>
         <AiWidget />
