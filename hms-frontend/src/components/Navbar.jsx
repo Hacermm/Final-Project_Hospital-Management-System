@@ -203,7 +203,23 @@ export default function Navbar() {
               {token ? (
                 <button
                   onClick={logout}
-                  className="hidden lg:inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-extrabold tracking-wider uppercase transition-all shadow-sm text-red-600 bg-red-500/10 border border-red-500/30 hover:bg-red-500/20"
+                  className="hidden lg:flex items-center"
+                  style={{
+                    gap: "8px",
+                    padding: "9px 18px",
+                    borderRadius: "30px",
+                    fontSize: "0.82rem",
+                    fontWeight: 800,
+                    color: "#dc2626",
+                    background: "rgba(239,68,68,0.08)",
+                    border: "1px solid rgba(239,68,68,0.25)",
+                    cursor: "pointer",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.5px",
+                    transition: "all 0.2s"
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(239,68,68,0.15)"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(239,68,68,0.08)"; }}
                 >
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
@@ -280,10 +296,24 @@ export default function Navbar() {
                 {token ? (
                   <button
                     onClick={() => { setOpen(false); logout(); }}
-                    className="w-full text-left px-4 py-3 rounded-xl text-sm font-extrabold flex items-center gap-2"
-                    style={{ color: "#ef4444", background: "rgba(239,68,68,0.08)" }}
+                    className="w-full text-left flex items-center gap-2 transition-all"
+                    style={{
+                      padding: "12px 18px",
+                      borderRadius: "14px",
+                      fontSize: "0.85rem",
+                      fontWeight: 800,
+                      color: "#dc2626",
+                      background: "rgba(239,68,68,0.08)",
+                      border: "1px solid rgba(239,68,68,0.25)",
+                      cursor: "pointer",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.5px",
+                    }}
                   >
-                    <span></span> ÇIXIŞ ET
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+                    </svg>
+                    ÇIXIŞ ET
                   </button>
                 ) : (
                   <>

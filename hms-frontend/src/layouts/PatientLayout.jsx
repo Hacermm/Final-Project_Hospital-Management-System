@@ -191,8 +191,11 @@ export default function PatientLayout() {
             <button
               onClick={logout}
               style={{
-                padding: "9px 16px",
-                borderRadius: 10,
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "9px 18px",
+                borderRadius: "30px",
                 fontSize: "0.82rem",
                 fontWeight: 800,
                 color: "#dc2626",
@@ -200,9 +203,17 @@ export default function PatientLayout() {
                 border: "1px solid rgba(239,68,68,0.25)",
                 cursor: "pointer",
                 whiteSpace: "nowrap",
+                textTransform: "uppercase",
+                letterSpacing: "0.5px",
+                transition: "all 0.2s"
               }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(239,68,68,0.15)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(239,68,68,0.08)"; }}
             >
-               Çıxış
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+              </svg>
+              ÇIXIŞ
             </button>
           </div>
         </header>
