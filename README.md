@@ -277,7 +277,7 @@ php artisan reverb:start
 
 Password for all accounts: `password`
 
-| Role | Email | 
+| Role | Email | Name |
 |---|---|---|
 | Super Admin | `superadmin@hms.test` | 
 | Admin | `admin@hms.test` | 
