@@ -18,6 +18,7 @@ export default function PatientLayout() {
     { to: "/patient/appointments", label: "Randevularım", icon: "" },
     { to: "/patient/history", label: "Tibbi Tarixçəm", icon: "" },
     { to: "/patient/lab-tests", label: "Lab Nəticələri", icon: "" },
+    { to: "/patient/reviews", label: "Rəylərim", icon: "" },
     { to: "/chat", label: "Mesajlar", icon: "" },
     { to: "/ai", label: "AI Tibbi Assistent", icon: "" },
   ];

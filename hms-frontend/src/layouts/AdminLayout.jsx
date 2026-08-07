@@ -23,6 +23,7 @@ export default function AdminLayout() {
     { to: "/admin/patients", label: "Pasiyentlər" },
     { to: "/admin/analytics", label: "Analitika" },
     { to: "/admin/messages", label: "Mesajlar" },
+    { to: "/admin/reviews", label: "Rəylər" },
   ];
 
   if (isSuper) {

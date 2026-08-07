@@ -39,6 +39,8 @@ import AiWidget from './components/AiWidget.jsx'
 import Analytics from './pages/admin/Analytics.jsx'
 import ManageAdmins from './pages/admin/ManageAdmins.jsx'
 import ContactMessages from './pages/admin/ContactMessages.jsx'
+import MyReviews from './pages/patient/MyReviews.jsx'
+import ManageReviews from './pages/admin/ManageReviews.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -63,6 +65,7 @@ createRoot(document.getElementById('root')).render(
             <Route path="/patient/appointments" element={<MyAppointments />} />
             <Route path="/patient/history" element={<MedicalHistory />} />
             <Route path="/patient/lab-tests" element={<MyLabTests />} />
+            <Route path="/patient/reviews" element={<MyReviews />} />
           </Route>
           <Route element={<ProtectedRoute allowedRole="doctor"><DoctorLayout /></ProtectedRoute>}>
             <Route path="/doctor" element={<DoctorDashboard />} />
@@ -78,6 +81,7 @@ createRoot(document.getElementById('root')).render(
             <Route path="/admin/patients" element={<ManagePatients />} />
             <Route path="/admin/messages" element={<ContactMessages />} />
             <Route path="/admin/analytics" element={<Analytics />} />
+            <Route path="/admin/reviews" element={<ManageReviews />} />
           </Route>
 
           <Route element={<ProtectedRoute allowedRole="super_admin"><AdminLayout /></ProtectedRoute>}>

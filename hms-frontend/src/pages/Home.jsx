@@ -89,29 +89,11 @@ const STEPS = [
   { num: "04", title: "Qeydlər & Bərpa", desc: "Reseptlərinizə baxın və müalicə prosesini izləyin." },
 ];
 
-const REVIEWS = [
-  {
-    name: "Leyla Məmmədova",
-    role: "Xəstə",
-    comment: "NovaCare Hospital sistemi sayəsində həkimimə növbə gözləmədən randevu aldım. Analiz nəticələrim dərhal şəxsi kabinetimə yükləndi. Çox razı qaldım!",
-    stars: 5,
-  },
-  {
-    name: "Elvin Əliyev",
-    role: "Xəstə",
-    comment: "AI Assistent xidməti mükəmməldir. Simptomlarımı yazan kimi məni doğru şöbəyə yönləndirdi. Müasir xəstəxana idarəetmə sistemi!",
-    stars: 5,
-  },
-  {
-    name: "Nigar Həsənova",
-    role: "Xəstə",
-    comment: "Həkimlə canlı çat vasitəsilə suallarıma tez cavab tapdım. İnterfeys çox rahat və gözəldir.",
-    stars: 5,
-  },
-];
+
 
 export default function Home() {
   const [stats, setStats] = useState({ doctors: 0, departments: 0 });
+  const [reviews, setReviews] = useState([]);
   const { toggleTheme } = useTheme();
 
   useEffect(() => {
@@ -123,6 +105,10 @@ export default function Home() {
         })
       )
       .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    api.get("/reviews").then((r) => setReviews(r.data.data || [])).catch(() => {});
   }, []);
 
   return (
@@ -394,35 +380,39 @@ export default function Home() {
         </div>
       </section>
 
-      <section style={{ maxWidth: 1240, margin: "0 auto", padding: "80px 24px" }}>
-        <div style={{ textAlign: "center", marginBottom: 52 }}>
-          <span className="ac-section-label">XƏSTƏ RƏYLƏRİ</span>
-          <h2 className="ac-section-title">Bizi Seçənlərin Fikirləri</h2>
-          <p className="ac-section-sub">Xəstələrimizin məmnuniyyəti bizim ən böyük mükafatımızdır.</p>
-        </div>
+      {reviews.length > 0 && (
+        <section style={{ maxWidth: 1240, margin: "0 auto", padding: "80px 24px" }}>
+          <div style={{ textAlign: "center", marginBottom: 52 }}>
+            <span className="ac-section-label">XƏSTƏ RƏYLƏRİ</span>
+            <h2 className="ac-section-title">Bizi Seçənlərin Fikirləri</h2>
+            <p className="ac-section-sub">Xəstələrimizin məmnuniyyəti bizim ən böyük mükafatımızdır.</p>
+          </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 24 }}>
-          {REVIEWS.map((r, i) => (
-            <div key={i} className="ac-card" style={{ padding: 28 }}>
-              <div style={{ color: "var(--secondary)", fontSize: "1.1rem", marginBottom: 12 }}>
-                {"".repeat(r.stars)}
-              </div>
-              <p style={{ fontSize: "0.92rem", color: "var(--text-mid)", lineHeight: 1.65, fontStyle: "italic", marginBottom: 20 }}>
-                "{r.comment}"
-              </p>
-              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <div style={{ width: 40, height: 40, borderRadius: "50%", background: "var(--primary)", color: "#FFFFFF", fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.9rem" }}>
-                  {r.name.charAt(0)}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 24 }}>
+            {reviews.map((r) => (
+              <div key={r.id} className="ac-card" style={{ padding: 28 }}>
+                <div style={{ color: "var(--secondary)", fontSize: "1.1rem", marginBottom: 12 }}>
+                  {"★".repeat(r.rating)}
                 </div>
-                <div>
-                  <h4 style={{ fontWeight: 800, fontSize: "0.92rem", color: "var(--text-dark)" }}>{r.name}</h4>
-                  <span style={{ fontSize: "0.75rem", color: "var(--text-light)" }}>{r.role}</span>
+                <p style={{ fontSize: "0.92rem", color: "var(--text-mid)", lineHeight: 1.65, fontStyle: "italic", marginBottom: 20 }}>
+                  "{r.comment}"
+                </p>
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  <div style={{ width: 40, height: 40, borderRadius: "50%", background: "var(--primary)", color: "#FFFFFF", fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.9rem" }}>
+                    {r.author?.charAt(0)}
+                  </div>
+                  <div>
+                    <h4 style={{ fontWeight: 800, fontSize: "0.92rem", color: "var(--text-dark)" }}>{r.author}</h4>
+                    <span style={{ fontSize: "0.75rem", color: "var(--text-light)" }}>
+                      {r.doctor || "Pasiyent"}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-      </section>
+            ))}
+          </div>
+        </section>
+      )}
 
    
       <section style={{ background: "linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%)", color: "#FFFFFF", padding: "72px 24px", textAlign: "center" }}>

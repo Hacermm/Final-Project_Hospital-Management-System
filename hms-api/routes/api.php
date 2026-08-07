@@ -19,6 +19,7 @@ use App\Http\Controllers\Api\AiController;
 use App\Http\Controllers\Api\AnalyticsController;
 use App\Http\Controllers\Api\AdminManagementController;
 use App\Http\Controllers\Api\ContactController;
+use App\Http\Controllers\Api\ReviewController;
 
 Broadcast::routes(['middleware' => ['auth:sanctum']]);
 
@@ -158,4 +159,17 @@ Route::middleware(['auth:sanctum', 'role:admin|super_admin'])->group(function ()
     Route::get('/contact-messages', [ContactController::class, 'index']);
     Route::put('/contact-messages/{contactMessage}', [ContactController::class, 'markAsRead']);
     Route::delete('/contact-messages/{contactMessage}', [ContactController::class, 'destroy']);
+});
+
+Route::get('/reviews', [ReviewController::class, 'public']);  
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/my-reviews', [ReviewController::class, 'myReviews']);
+    Route::post('/reviews', [ReviewController::class, 'store'])->middleware('throttle:5,1');
+});
+
+Route::middleware(['auth:sanctum', 'role:admin|super_admin'])->group(function () {
+    Route::get('/admin/reviews', [ReviewController::class, 'index']);
+    Route::put('/admin/reviews/{review}', [ReviewController::class, 'toggle']);
+    Route::delete('/admin/reviews/{review}', [ReviewController::class, 'destroy']);
 });

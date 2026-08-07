@@ -10,7 +10,9 @@ const menus = {
     { to: "/patient/appointments", label: "Randevularım", icon: "" },
     { to: "/patient/history", label: "Tibbi Tarixçə", icon: "" },
     { to: "/patient/lab-tests", label: "Lab Nəticələri", icon: "" },
+    { to: "/patient/reviews", label: "Rəylər", icon: "" },
     { to: "/chat", label: "Mesajlar", icon: "", badge: true },
+    { to: "/ai", label: "AI", icon: "" },
   ],
   doctor: [
     { to: "/doctor", label: "Panel" },
@@ -27,6 +29,7 @@ const menus = {
     { to: "/admin/patients", label: "Xəstələr", icon: "" },
     { to: "/admin/departments", label: "Şöbələr", icon: "" },
     { to: "/admin/messages", label: "Mesajlar", icon: "" },
+    { to: "/admin/reviews", label: "Rəylər", icon: "" },
   ],
   super_admin: [
     { to: "/admin/super", label: "Super Panel", icon: "" },
@@ -34,6 +37,7 @@ const menus = {
     { to: "/admin/patients", label: "Xəstələr", icon: "" },
     { to: "/admin/departments", label: "Şöbələr", icon: "" },
     { to: "/admin/messages", label: "Mesajlar", icon: "" },
+    { to: "/admin/reviews", label: "Rəylər", icon: "" },
   ],
   guest: [
     { to: "/departments", label: "Şöbələr" },
