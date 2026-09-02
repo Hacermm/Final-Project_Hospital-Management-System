@@ -16,6 +16,7 @@ class CallSignal implements ShouldBroadcastNow
         public int $toUserId,       
         public int $fromUserId,
         public string $fromName,
+        public ?string $fromPhoto,
         public string $type,
         public mixed $payload = null
     ) {}
@@ -35,6 +36,7 @@ class CallSignal implements ShouldBroadcastNow
         return [
             'from_user_id' => $this->fromUserId,
             'from_name' => $this->fromName,
+            'from_photo' => $this->fromPhoto ? url('storage/' . $this->fromPhoto) : null,
             'type' => $this->type,
             'payload' => $this->payload,
         ];

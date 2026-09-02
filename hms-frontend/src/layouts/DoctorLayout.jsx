@@ -1,10 +1,12 @@
 import { Link, useNavigate, useLocation, Outlet } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
+import { useUnreadCount } from "../hooks/useUnreadCount";
 
 export default function DoctorLayout() {
   const navigate = useNavigate();
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
+  const unreadCount = useUnreadCount();
 
   const logout = () => {
     localStorage.removeItem("token");
@@ -84,6 +86,7 @@ export default function DoctorLayout() {
                   style={{
                     display: "flex",
                     alignItems: "center",
+                    justifyContent: "space-between",
                     gap: 12,
                     padding: "12px 16px",
                     borderRadius: 12,
@@ -96,7 +99,24 @@ export default function DoctorLayout() {
                     boxShadow: isActive ? "0 4px 12px rgba(0,0,0,0.12)" : "none",
                   }}
                 >
-                  <span>{item.label}</span>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                    <span>{item.label}</span>
+                  </div>
+                  {item.to === "/chat" && unreadCount > 0 && (
+                    <span style={{
+                      background: theme === "dark" ? "#EF4444" : "#DC2626",
+                      color: "#FFFFFF",
+                      fontSize: "0.7rem",
+                      fontWeight: 900,
+                      padding: "2px 8px",
+                      borderRadius: 12,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center"
+                    }}>
+                      {unreadCount}
+                    </span>
+                  )}
                 </Link>
               );
             })}

@@ -505,6 +505,14 @@ body {
   .responsive-dash-grid {
     grid-template-columns: 1fr !important;
   }
+  
+  /* Timeline grid on About page */
+  .responsive-timeline-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .timeline-line {
+    display: none !important;
+  }
 }
 
 @media (max-width: 480px) {

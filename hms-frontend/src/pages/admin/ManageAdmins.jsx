@@ -344,25 +344,7 @@ export default function ManageAdmins() {
               )}
             </div>
 
-            {/* Qayda qeydi */}
-            <div style={{
-              marginTop: 14, padding: "16px 20px", borderRadius: 16,
-              background: "var(--surface)", border: "1px solid var(--border)",
-              display: "flex", gap: 14,
-            }}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 1 }}>
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-              </svg>
-              <div>
-                <p style={{ fontSize: "0.85rem", fontWeight: 800, margin: "0 0 6px", color: "var(--text-dark)" }}>
-                  Təhlükəsizlik qaydaları
-                </p>
-                <p style={{ fontSize: "0.79rem", color: "var(--text-light)", margin: 0, lineHeight: 1.6 }}>
-                  Öz hesabınızı silə və ya rolunuzu dəyişə bilməzsiniz. Sistemdə ən azı bir super admin qalmalıdır.
-                  İlk super admin yalnız serverdə <code style={{ background: "var(--bg)", padding: "1px 6px", borderRadius: 5, fontSize: "0.75rem" }}>php artisan hms:reset-superadmin</code> komandası ilə yaradılır.
-                </p>
-              </div>
-            </div>
+          
           </div>
         </div>
       </main>

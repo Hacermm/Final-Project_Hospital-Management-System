@@ -1,9 +1,73 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import api from "../lib/api";
 import Navbar from "../components/Navbar";
+import { useTranslation } from "react-i18next";
+
+const AnimatedNumber = ({ value, suffix = "", isFloat = false }) => {
+  const [count, setCount] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+  const elementRef = useRef(null);
+  
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setIsVisible(true);
+        } else {
+          setIsVisible(false);
+          setCount(0);
+        }
+      },
+      { threshold: 0.1 }
+    );
+    
+    if (elementRef.current) {
+      observer.observe(elementRef.current);
+    }
+    
+    return () => {
+      if (elementRef.current) observer.unobserve(elementRef.current);
+    };
+  }, []);
+  
+  useEffect(() => {
+    if (!isVisible || typeof value !== 'number' || value === 0) {
+      return;
+    }
+    
+    const duration = 2000;
+    let startTimestamp = null;
+    let animationFrameId;
+    
+    const step = (timestamp) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      const ease = 1 - Math.pow(1 - progress, 3);
+      
+      const current = ease * value;
+      setCount(current);
+      
+      if (progress < 1) {
+        animationFrameId = window.requestAnimationFrame(step);
+      } else {
+        setCount(value);
+      }
+    };
+    animationFrameId = window.requestAnimationFrame(step);
+    
+    return () => {
+      if (animationFrameId) window.cancelAnimationFrame(animationFrameId);
+    };
+  }, [value, isVisible]);
+
+  const displayValue = isFloat ? count.toFixed(1) : Math.floor(count);
+
+  return <span ref={elementRef}>{displayValue}{suffix}</span>;
+};
 
 export default function About() {
+  const { t } = useTranslation();
   const [doctors, setDoctors] = useState([]);
   const [departments, setDepartments] = useState([]);
 
@@ -18,8 +82,8 @@ export default function About() {
   }, []);
 
 
-  const docCount = doctors.length > 0 ? doctors.length : 50;
-  const deptCount = departments.length > 0 ? departments.length : 15;
+  const docCount = doctors.length;
+  const deptCount = departments.length;
 
   return (
     <div style={{ background: "var(--bg)", color: "var(--text-dark)", minHeight: "100vh", fontFamily: "'Plus Jakarta Sans', sans-serif", transition: "background-color 0.3s ease, color 0.3s ease", display: "flex", flexDirection: "column" }}>
@@ -48,26 +112,26 @@ export default function About() {
             {/* SOL TƏRƏF */}
             <div>
               <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.22)", borderRadius: 40, padding: "6px 20px", marginBottom: 24, backdropFilter: "blur(8px)" }}>
-                <span style={{ fontSize: "0.74rem", fontWeight: 800, letterSpacing: "1px", color: "#FFCDD2", textTransform: "uppercase" }}>NİYƏ NOVACARE?</span>
+                <span style={{ fontSize: "0.74rem", fontWeight: 800, letterSpacing: "1px", color: "#FFCDD2", textTransform: "uppercase" }}>{t("NİYƏ NOVACARE?")}</span>
               </div>
 
               <h1 style={{ fontSize: "clamp(2.2rem, 4.2vw, 3.4rem)", fontWeight: 900, lineHeight: 1.12, marginBottom: 20, letterSpacing: "-1.5px" }}>
-                Sağlamlığınızın
+                {t("Sağlamlığınızın")}
                 <span style={{ display: "block", background: "linear-gradient(90deg, #FFCDD2, #FF8A80)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-                  Rəqəmsal Gələcəyi
+                  {t("Rəqəmsal Gələcəyi")}
                 </span>
               </h1>
 
               <p style={{ fontSize: "1.05rem", lineHeight: 1.7, color: "rgba(255,255,255,0.9)", maxWidth: 520, marginBottom: 32, fontWeight: 500 }}>
-                Səhiyyə xidmətini hər kəs üçün əlçatan və şəffaf etmək missiyası ilə, xəstə və həkim arasındakı məsafəni ən müasir rəqəmsal həllərlə aradan qaldırırıq.
+                {t("Səhiyyə xidmətini hər kəs üçün əlçatan və şəffaf etmək missiyası ilə, xəstə və həkim arasındakı məsafəni ən müasir rəqəmsal həllərlə aradan qaldırırıq.")}
               </p>
 
               <div style={{ display: "flex", gap: 14, flexWrap: "wrap", marginBottom: 40 }}>
                 <Link to="/patient/book" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 28px", borderRadius: 12, background: "#FFFFFF", color: "#C62828", fontWeight: 800, fontSize: "0.95rem", textDecoration: "none", boxShadow: "0 8px 24px rgba(0,0,0,0.2)" }}>
-                  Randevu Al →
+                  {t("Randevu Al →")}
                 </Link>
                 <Link to="/doctors" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 28px", borderRadius: 12, background: "transparent", color: "#FFFFFF", fontWeight: 700, fontSize: "0.95rem", textDecoration: "none", border: "1.5px solid rgba(255,255,255,0.35)", backdropFilter: "blur(8px)" }}>
-                  Həkimlərimiz
+                  {t("Həkimlərimiz")}
                 </Link>
               </div>
 
@@ -86,8 +150,8 @@ export default function About() {
                     padding: "12px 16px",
                     backdropFilter: "blur(8px)"
                   }}>
-                    <div style={{ fontSize: "0.9rem", fontWeight: 800, color: "#FFFFFF" }}>{item.title}</div>
-                    <div style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.7)", marginTop: 2 }}>{item.sub}</div>
+                    <div style={{ fontSize: "0.9rem", fontWeight: 800, color: "#FFFFFF" }}>{t(item.title)}</div>
+                    <div style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.7)", marginTop: 2 }}>{t(item.sub)}</div>
                   </div>
                 ))}
               </div>
@@ -113,8 +177,8 @@ export default function About() {
                 <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 40%, rgba(26,3,3,0.85) 100%)" }} />
 
                 <div style={{ position: "absolute", bottom: 20, left: 24, right: 24 }}>
-                  <div style={{ fontSize: "0.75rem", color: "#FFCDD2", fontWeight: 700, letterSpacing: "1px" }}>RƏQƏMSAL XƏSTƏXANA İNFRASTRUKTURU</div>
-                  <div style={{ fontSize: "1.2rem", fontWeight: 900, color: "#FFFFFF", marginTop: 4 }}>NovaCare Tibb &amp; Texnologiya</div>
+                  <div style={{ fontSize: "0.75rem", color: "#FFCDD2", fontWeight: 700, letterSpacing: "1px" }}>{t("RƏQƏMSAL XƏSTƏXANA İNFRASTRUKTURU")}</div>
+                  <div style={{ fontSize: "1.2rem", fontWeight: 900, color: "#FFFFFF", marginTop: 4 }}>{t("NovaCare Tibb & Texnologiya")}</div>
                 </div>
               </div>
 
@@ -130,8 +194,8 @@ export default function About() {
                 padding: "12px 18px",
                 boxShadow: "0 12px 30px rgba(0,0,0,0.2)"
               }}>
-                <div style={{ fontSize: "0.7rem", color: "rgba(255,255,255,0.7)", fontWeight: 700 }}>FƏAL HƏKİMLƏR</div>
-                <div style={{ fontSize: "1.3rem", fontWeight: 900, color: "#FFFFFF", marginTop: 2 }}>{docCount}+ Mütəxəssis</div>
+                <div style={{ fontSize: "0.7rem", color: "rgba(255,255,255,0.7)", fontWeight: 700 }}>{t("FƏAL HƏKİMLƏR")}</div>
+                <div style={{ fontSize: "1.3rem", fontWeight: 900, color: "#FFFFFF", marginTop: 2 }}><AnimatedNumber value={docCount} suffix="+" /> {t("Mütəxəssis")}</div>
               </div>
 
               {/* Floating card bottom-left */}
@@ -146,8 +210,8 @@ export default function About() {
                 padding: "14px 20px",
                 boxShadow: "0 12px 30px rgba(0,0,0,0.2)"
               }}>
-                <div style={{ fontSize: "0.7rem", color: "#FFCDD2", fontWeight: 700 }}>RƏQƏMSAL ARXİV</div>
-                <div style={{ fontSize: "1rem", fontWeight: 800, color: "#FFFFFF", marginTop: 2 }}>100% Onlayn PDF Nəticələr</div>
+                <div style={{ fontSize: "0.7rem", color: "#FFCDD2", fontWeight: 700 }}>{t("RƏQƏMSAL ARXİV")}</div>
+                <div style={{ fontSize: "1rem", fontWeight: 800, color: "#FFFFFF", marginTop: 2 }}>{t("100% Onlayn PDF Nəticələr")}</div>
               </div>
             </div>
           </div>
@@ -164,18 +228,24 @@ export default function About() {
             gridTemplateColumns: "repeat(4, 1fr)"
           }}>
             {[
-              { val: `${docCount}+`, label: "İxtisaslı Həkim" },
-              { val: `${deptCount}+`, label: "Tibb Şöbəsi" },
-              { val: "24/7", label: "Onlayn Platforma" },
-              { val: "99%", label: "Məmnuniyyət" },
+              { value: docCount, suffix: "+", label: "İxtisaslı Həkim", staticText: null },
+              { value: deptCount, suffix: "+", label: "Tibb Şöbəsi", staticText: null },
+              { value: null, suffix: "", label: "Onlayn Platforma", staticText: "24/7" },
+              { value: 99, suffix: "%", label: "Məmnuniyyət", staticText: null },
             ].map((stat, idx) => (
               <div key={idx} style={{
                 padding: "32px 20px",
                 textAlign: "center",
                 borderRight: idx < 3 ? "1px solid var(--border)" : "none"
               }}>
-                <div style={{ fontSize: "2.4rem", fontWeight: 900, color: "var(--primary)", lineHeight: 1.1 }}>{stat.val}</div>
-                <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--text-dark)", marginTop: 8, textTransform: "uppercase", letterSpacing: "0.5px" }}>{stat.label}</div>
+                <div style={{ fontSize: "2.4rem", fontWeight: 900, color: "var(--primary)", lineHeight: 1.1 }}>
+                  {stat.staticText ? (
+                    stat.staticText
+                  ) : (
+                    <AnimatedNumber value={stat.value} suffix={stat.suffix} />
+                  )}
+                </div>
+                <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--text-dark)", marginTop: 8, textTransform: "uppercase", letterSpacing: "0.5px" }}>{t(stat.label)}</div>
               </div>
             ))}
           </div>
@@ -190,13 +260,13 @@ export default function About() {
               padding: "5px 16px", fontSize: "0.75rem", fontWeight: 800,
               letterSpacing: "1px", color: "var(--primary)", marginBottom: 14,
             }}>
-              MÜQAYİSƏ
+              {t("MÜQAYİSƏ")}
             </span>
             <h2 style={{ fontSize: "clamp(1.8rem, 3.4vw, 2.6rem)", fontWeight: 900, color: "var(--text-dark)", marginBottom: 12, letterSpacing: "-1px" }}>
-              Ənənəvi Yanaşma vs NovaCare
+              {t("Ənənəvi Yanaşma vs NovaCare")}
             </h2>
             <p style={{ fontSize: "1rem", color: "var(--text-mid)", maxWidth: 620, margin: "0 auto" }}>
-              Köhnəlmiş xəstəxana prosedurları ilə müasir rəqəmsal platformamızın real üstünlüklərini müqayisə edin.
+              {t("Köhnəlmiş xəstəxana prosedurları ilə müasir rəqəmsal platformamızın real üstünlüklərini müqayisə edin.")}
             </p>
           </div>
 
@@ -224,8 +294,8 @@ export default function About() {
                   </svg>
                 </div>
                 <div>
-                  <h3 style={{ fontSize: "1.3rem", fontWeight: 800, color: "var(--text-mid)" }}>Ənənəvi Yanaşma</h3>
-                  <p style={{ fontSize: "0.82rem", color: "var(--text-light)", marginTop: 2 }}>Klassik xəstəxana növbələri və kağız proseslər</p>
+                  <h3 style={{ fontSize: "1.3rem", fontWeight: 800, color: "var(--text-mid)" }}>{t("Ənənəvi Yanaşma")}</h3>
+                  <p style={{ fontSize: "0.82rem", color: "var(--text-light)", marginTop: 2 }}>{t("Klassik xəstəxana növbələri və kağız proseslər")}</p>
                 </div>
               </div>
 
@@ -273,8 +343,8 @@ export default function About() {
                       {item.icon}
                     </span>
                     <div>
-                      <div style={{ fontSize: "0.98rem", fontWeight: 800, color: "var(--text-dark)" }}>{item.title}</div>
-                      <div style={{ fontSize: "0.84rem", color: "var(--text-light)", marginTop: 4 }}>{item.desc}</div>
+                      <div style={{ fontSize: "0.98rem", fontWeight: 800, color: "var(--text-dark)" }}>{t(item.title)}</div>
+                      <div style={{ fontSize: "0.84rem", color: "var(--text-light)", marginTop: 4 }}>{t(item.desc)}</div>
                     </div>
                   </div>
                 ))}
@@ -294,7 +364,7 @@ export default function About() {
               position: "relative"
             }}>
               <div style={{ position: "absolute", top: 16, right: 24, background: "var(--primary)", color: "#FFFFFF", padding: "4px 12px", borderRadius: 20, fontSize: "0.7rem", fontWeight: 800, letterSpacing: "0.5px" }}>
-                RƏQƏMSAL HƏLL
+                {t("RƏQƏMSAL HƏLL")}
               </div>
 
               <div style={{ display: "flex", alignItems: "center", gap: 12, borderBottom: "1px solid var(--border)", paddingBottom: 18 }}>
@@ -304,8 +374,8 @@ export default function About() {
                   </svg>
                 </div>
                 <div>
-                  <h3 style={{ fontSize: "1.3rem", fontWeight: 900, color: "var(--primary)" }}>NovaCare</h3>
-                  <p style={{ fontSize: "0.82rem", color: "var(--text-mid)", marginTop: 2 }}>Tam onlayn və sürətli xəstəxana idarəetmə platforması</p>
+                  <h3 style={{ fontSize: "1.3rem", fontWeight: 900, color: "var(--primary)" }}>{t("NovaCare")}</h3>
+                  <p style={{ fontSize: "0.82rem", color: "var(--text-mid)", marginTop: 2 }}>{t("Tam onlayn və sürətli xəstəxana idarəetmə platforması")}</p>
                 </div>
               </div>
 
@@ -353,8 +423,8 @@ export default function About() {
                       {item.icon}
                     </span>
                     <div>
-                      <div style={{ fontSize: "0.98rem", fontWeight: 800, color: "var(--text-dark)" }}>{item.title}</div>
-                      <div style={{ fontSize: "0.84rem", color: "var(--text-mid)", marginTop: 4 }}>{item.desc}</div>
+                      <div style={{ fontSize: "0.98rem", fontWeight: 800, color: "var(--text-dark)" }}>{t(item.title)}</div>
+                      <div style={{ fontSize: "0.84rem", color: "var(--text-mid)", marginTop: 4 }}>{t(item.desc)}</div>
                     </div>
                   </div>
                 ))}
@@ -373,13 +443,13 @@ export default function About() {
                 padding: "5px 16px", fontSize: "0.75rem", fontWeight: 800,
                 letterSpacing: "1px", color: "var(--primary)", marginBottom: 14,
               }}>
-                PRİNSİPLƏRİMİZ
+                {t("PRİNSİPLƏRİMİZ")}
               </span>
               <h2 style={{ fontSize: "clamp(1.8rem, 3.4vw, 2.6rem)", fontWeight: 900, color: "var(--text-dark)", marginBottom: 12, letterSpacing: "-1px" }}>
-                Dəyərlərimiz
+                {t("Dəyərlərimiz")}
               </h2>
               <p style={{ fontSize: "1rem", color: "var(--text-mid)", maxWidth: 580, margin: "0 auto" }}>
-                Hər bir qərarımızın və texnoloji yeniliyin arxasında dayanan təməl prinsiplər.
+                {t("Hər bir qərarımızın və texnoloji yeniliyin arxasında dayanan təməl prinsiplər.")}
               </p>
             </div>
 
@@ -439,8 +509,8 @@ export default function About() {
                   }}>
                     {val.icon}
                   </div>
-                  <h3 style={{ fontSize: "1.2rem", fontWeight: 800, color: "var(--text-dark)" }}>{val.title}</h3>
-                  <p style={{ fontSize: "0.9rem", color: "var(--text-light)", lineHeight: 1.65 }}>{val.text}</p>
+                  <h3 style={{ fontSize: "1.2rem", fontWeight: 800, color: "var(--text-dark)" }}>{t(val.title)}</h3>
+                  <p style={{ fontSize: "0.9rem", color: "var(--text-light)", lineHeight: 1.65 }}>{t(val.text)}</p>
                 </div>
               ))}
             </div>
@@ -469,13 +539,13 @@ export default function About() {
                 padding: "5px 16px", fontSize: "0.75rem", fontWeight: 800,
                 letterSpacing: "1px", color: "#FCA5A5", marginBottom: 14,
               }}>
-                PROSES
+                {t("PROSES")}
               </span>
               <h2 style={{ fontSize: "clamp(1.8rem, 3.4vw, 2.6rem)", fontWeight: 900, marginBottom: 12, letterSpacing: "-1px" }}>
-                Necə İşləyir?
+                {t("Necə İşləyir?")}
               </h2>
               <p style={{ fontSize: "1rem", color: "rgba(255,255,255,0.7)", maxWidth: 580, margin: "0 auto" }}>
-                Səhiyyə platformasından yararlanmaq üçün 4 ardıcıl addım.
+                {t("Səhiyyə platformasından yararlanmaq üçün 4 ardıcıl addım.")}
               </p>
             </div>
 
@@ -517,8 +587,8 @@ export default function About() {
                     }}>
                       {step.num}
                     </div>
-                    <h3 style={{ fontSize: "1.1rem", fontWeight: 800, color: "#FFFFFF", marginBottom: 8 }}>{step.title}</h3>
-                    <p style={{ fontSize: "0.86rem", color: "rgba(255,255,255,0.65)", lineHeight: 1.6, maxWidth: 220, margin: "0 auto" }}>{step.desc}</p>
+                    <h3 style={{ fontSize: "1.1rem", fontWeight: 800, color: "#FFFFFF", marginBottom: 8 }}>{t(step.title)}</h3>
+                    <p style={{ fontSize: "0.86rem", color: "rgba(255,255,255,0.65)", lineHeight: 1.6, maxWidth: 220, margin: "0 auto" }}>{t(step.desc)}</p>
                   </div>
                 ))}
               </div>
@@ -536,13 +606,13 @@ export default function About() {
               padding: "5px 16px", fontSize: "0.75rem", fontWeight: 800,
               letterSpacing: "1px", color: "var(--primary)", marginBottom: 14,
             }}>
-              QALEREYA VƏ MÜHİT
+              {t("QALEREYA VƏ MÜHİT")}
             </span>
             <h2 style={{ fontSize: "clamp(1.8rem, 3.4vw, 2.6rem)", fontWeight: 900, color: "var(--text-dark)", marginBottom: 12, letterSpacing: "-1px" }}>
-              Xəstəxanamızla Tanış Olun
+              {t("Xəstəxanamızla Tanış Olun")}
             </h2>
             <p style={{ fontSize: "1rem", color: "var(--text-mid)", maxWidth: 580, margin: "0 auto" }}>
-              Müasir avadanlıqlar, rahat qəbul otaqları və yüksək texnoloji diaqnostika şöbələrimiz.
+              {t("Müasir avadanlıqlar, rahat qəbul otaqları və yüksək texnoloji diaqnostika şöbələrimiz.")}
             </p>
           </div>
 
@@ -561,11 +631,11 @@ export default function About() {
                 border: "1px solid var(--border)",
                 boxShadow: "0 8px 24px rgba(0,0,0,0.06)"
               }}>
-                <img src={pic.img} alt={pic.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                <img src={pic.img} alt={t(pic.title)} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.75) 100%)" }} />
                 <div style={{ position: "absolute", bottom: 18, left: 20, right: 20 }}>
-                  <div style={{ fontSize: "0.75rem", color: "#FFCDD2", fontWeight: 700, textTransform: "uppercase" }}>{pic.sub}</div>
-                  <div style={{ fontSize: "1.1rem", fontWeight: 800, color: "#FFFFFF", marginTop: 2 }}>{pic.title}</div>
+                  <div style={{ fontSize: "0.75rem", color: "#FFCDD2", fontWeight: 700, textTransform: "uppercase" }}>{t(pic.sub)}</div>
+                  <div style={{ fontSize: "1.1rem", fontWeight: 800, color: "#FFFFFF", marginTop: 2 }}>{t(pic.title)}</div>
                 </div>
               </div>
             ))}
@@ -582,10 +652,10 @@ export default function About() {
                 padding: "5px 16px", fontSize: "0.75rem", fontWeight: 800,
                 letterSpacing: "1px", color: "var(--primary)", marginBottom: 14,
               }}>
-                PASİYENT RƏYLƏRİ
+                {t("PASİYENT RƏYLƏRİ")}
               </span>
               <h2 style={{ fontSize: "clamp(1.8rem, 3.4vw, 2.6rem)", fontWeight: 900, color: "var(--text-dark)", marginBottom: 12, letterSpacing: "-1px" }}>
-                Pasiyentlərimiz Nə Deyir?
+                {t("Pasiyentlərimiz Nə Deyir?")}
               </h2>
             </div>
 
@@ -625,12 +695,12 @@ export default function About() {
                       {rev.stars}
                     </div>
                     <p style={{ fontSize: "0.98rem", color: "var(--text-dark)", lineHeight: 1.65, fontStyle: "italic" }}>
-                      &ldquo;{rev.text}&rdquo;
+                      &ldquo;{t(rev.text)}&rdquo;
                     </p>
                   </div>
                   <div style={{ borderTop: "1px solid var(--border)", paddingTop: 16 }}>
                     <div style={{ fontSize: "0.95rem", fontWeight: 800, color: "var(--text-dark)" }}>{rev.author}</div>
-                    <div style={{ fontSize: "0.78rem", color: "var(--text-light)", marginTop: 2 }}>{rev.role}</div>
+                    <div style={{ fontSize: "0.78rem", color: "var(--text-light)", marginTop: 2 }}>{t(rev.role)}</div>
                   </div>
                 </div>
               ))}
@@ -644,20 +714,20 @@ export default function About() {
         <section style={{ background: "linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%)", color: "#FFFFFF", padding: "80px 24px", textAlign: "center" }}>
           <div style={{ maxWidth: 720, margin: "0 auto" }}>
             <div style={{ fontSize: "0.85rem", fontWeight: 800, letterSpacing: "1.5px", color: "#FFCDD2", marginBottom: 12, textTransform: "uppercase" }}>
-              HAZIRSINIZ?
+              {t("HAZIRSINIZ?")}
             </div>
             <h2 style={{ fontSize: "clamp(2rem, 4vw, 2.8rem)", fontWeight: 900, marginBottom: 18, letterSpacing: "-1px" }}>
-              Sağlamlığınızı NovaCare-ə Etibar Edin
+              {t("Sağlamlığınızı NovaCare-ə Etibar Edin")}
             </h2>
             <p style={{ color: "rgba(255,255,255,0.9)", fontSize: "1.08rem", lineHeight: 1.65, marginBottom: 36 }}>
-              İstər birbaşa onlayn randevu alın, istərsə də ixtisaslı həkim heyətimizlə tanış olun.
+              {t("İstər birbaşa onlayn randevu alın, istərsə də ixtisaslı həkim heyətimizlə tanış olun.")}
             </p>
             <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}>
               <Link to="/patient/book" style={{ background: "#FFFFFF", color: "var(--primary)", fontWeight: 800, padding: "15px 36px", borderRadius: 14, textDecoration: "none", fontSize: "1rem", boxShadow: "0 8px 24px rgba(0,0,0,0.2)" }}>
-                Randevu Al
+                {t("Randevu Al")}
               </Link>
               <Link to="/doctors" style={{ background: "transparent", border: "2px solid #FFFFFF", color: "#FFFFFF", fontWeight: 700, padding: "15px 32px", borderRadius: 14, textDecoration: "none", fontSize: "1rem" }}>
-                Həkimləri Görün →
+                {t("Həkimləri Görün →")}
               </Link>
             </div>
           </div>
@@ -678,36 +748,36 @@ export default function About() {
                 <span style={{ fontWeight: 900, color: "#FFFFFF", fontSize: "1.2rem" }}>NovaCare</span>
               </div>
               <p style={{ fontSize: "0.88rem", color: "rgba(255,255,255,0.65)", lineHeight: 1.7, maxWidth: 300 }}>
-                Müasir xəstəxana idarəetmə sistemi — peşəkar həkimlər, onlayn randevu və rəqəmsal səhiyyə xidmətləri.
+                {t("Müasir xəstəxana idarəetmə sistemi — peşəkar həkimlər, onlayn randevu və rəqəmsal səhiyyə xidmətləri.")}
               </p>
             </div>
 
             <div>
-              <div className="ac-footer-title">Xidmətlər</div>
-              <Link to="/departments" className="ac-footer-link">Şöbələr</Link>
-              <Link to="/doctors" className="ac-footer-link">Həkimlər</Link>
-              <Link to="/patient/book" className="ac-footer-link">Randevu Al</Link>
-              <Link to="/ai" className="ac-footer-link">AI Assistent</Link>
+              <div className="ac-footer-title">{t("Xidmətlər")}</div>
+              <Link to="/departments" className="ac-footer-link">{t("Şöbələr")}</Link>
+              <Link to="/doctors" className="ac-footer-link">{t("Həkimlər")}</Link>
+              <Link to="/patient/book" className="ac-footer-link">{t("Randevu Al")}</Link>
+              <Link to="/ai" className="ac-footer-link">{t("AI")}</Link>
             </div>
 
             <div>
-              <div className="ac-footer-title">Platforma</div>
-              <Link to="/about" className="ac-footer-link">Haqqımızda</Link>
-              <Link to="/contact" className="ac-footer-link">Əlaqə</Link>
-              <Link to="/login" className="ac-footer-link">Giriş</Link>
-              <Link to="/register" className="ac-footer-link">Qeydiyyat</Link>
+              <div className="ac-footer-title">{t("Platforma")}</div>
+              <Link to="/about" className="ac-footer-link">{t("Haqqımızda")}</Link>
+              <Link to="/contact" className="ac-footer-link">{t("Əlaqə")}</Link>
+              <Link to="/login" className="ac-footer-link">{t("Giriş")}</Link>
+              <Link to="/register" className="ac-footer-link">{t("Qeydiyyat")}</Link>
             </div>
 
             <div>
-              <div className="ac-footer-title">Əlaqə</div>
+              <div className="ac-footer-title">{t("Əlaqə")}</div>
               <a href="tel:+994123456789" className="ac-footer-link">+994 (12) 345 67 89</a>
               <a href="mailto:info@novacare.az" className="ac-footer-link">info@novacare.az</a>
-              <span className="ac-footer-link" style={{ cursor: "default" }}>Bakı ş., Azərbaycan</span>
+              <span className="ac-footer-link" style={{ cursor: "default" }}>{t("Bakı ş., Azərbaycan")}</span>
             </div>
           </div>
 
           <div className="ac-footer-bottom">
-            © 2026 NovaCare Hospital. Bütün hüquqlar qorunur.
+            {t("© 2026 NovaCare Hospital. Bütün hüquqlar qorunur.")}
           </div>
         </div>
       </footer>

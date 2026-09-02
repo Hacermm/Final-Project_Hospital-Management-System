@@ -24,6 +24,33 @@ class ChatController extends Controller
         return ConversationResource::collection($conversations)->response();
     }
 
+    public function unreadCount(Request $request): JsonResponse
+    {
+        $userId = $request->user()->id;
+        
+        $unreadCounts = \App\Models\Message::select('conversation_id', \Illuminate\Support\Facades\DB::raw('count(*) as count'))
+            ->whereHas('conversation', function ($q) use ($userId) {
+                $q->where('user_one_id', $userId)->orWhere('user_two_id', $userId);
+            })
+            ->where('sender_id', '!=', $userId)
+            ->whereNull('read_at')
+            ->groupBy('conversation_id')
+            ->get();
+            
+        $perConversation = [];
+        $total = 0;
+        
+        foreach ($unreadCounts as $item) {
+            $perConversation[$item->conversation_id] = $item->count;
+            $total += $item->count;
+        }
+
+        return response()->json([
+            'total' => $total,
+            'per_conversation' => $perConversation
+        ]);
+    }
+
     public function startConversation(Request $request): JsonResponse
     {
         $request->validate([

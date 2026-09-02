@@ -46,6 +46,7 @@ export function useCall(meId) {
   const [callState, setCallState] = useState("idle");
   const [peer, setPeer] = useState(null);
   const [error, setError] = useState("");
+  const [missedCall, setMissedCall] = useState(null);
 
   const pcRef = useRef(null);
   const localStreamRef = useRef(null);
@@ -117,10 +118,10 @@ export function useCall(meId) {
     return stream;
   };
 
-  const startCall = async (userId, userName) => {
+  const startCall = async (userId, userName, userPhoto) => {
     setError("");
     try {
-      setPeerBoth({ id: userId, name: userName });
+      setPeerBoth({ id: userId, name: userName, photo: userPhoto });
       setCallState("calling");
 
       const stream = await getMic();
@@ -169,12 +170,16 @@ export function useCall(meId) {
   }, [createPeer, cleanup]);
 
   const rejectCall = () => {
-    if (peerRef.current) sendSignal(peerRef.current.id, "reject");
+    if (peerRef.current) {
+      sendSignal(peerRef.current.id, "reject").catch((err) => console.error(err));
+    }
     cleanup();
   };
 
   const endCall = () => {
-    if (peerRef.current) sendSignal(peerRef.current.id, "end");
+    if (peerRef.current) {
+      sendSignal(peerRef.current.id, "end").catch((err) => console.error(err));
+    }
     cleanup();
   };
 
@@ -194,7 +199,7 @@ export function useCall(meId) {
           return;
         }
         incomingOfferRef.current = e.payload;
-        setPeerBoth({ id: e.from_user_id, name: e.from_name });
+        setPeerBoth({ id: e.from_user_id, name: e.from_name, photo: e.from_photo });
         setCallState("incoming");
       }
 
@@ -223,6 +228,11 @@ export function useCall(meId) {
       else if (e.type === "end") {
         cleanup();
       }
+      
+      else if (e.type === "missed") {
+        setMissedCall({ name: e.from_name, time: new Date() });
+        cleanup();
+      }
     });
 
     return () => {
@@ -234,10 +244,12 @@ export function useCall(meId) {
     callState,
     peer,
     error,
+    missedCall,
     startCall,
     accept: acceptCall,
     reject: rejectCall,
     end: endCall,
     clearError: () => setError(""),
+    clearMissedCall: () => setMissedCall(null)
   };
 }

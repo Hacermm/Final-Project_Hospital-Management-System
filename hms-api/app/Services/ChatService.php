@@ -11,7 +11,7 @@ class ChatService
 {
     public function conversationsFor(User $user): Collection
     {
-        return Conversation::with(['userOne', 'userTwo', 'messages' => fn ($q) => $q->latest()->limit(1)])
+        return Conversation::with(['userOne.doctor', 'userOne.patient', 'userTwo.doctor', 'userTwo.patient', 'latestMessage'])
             ->where('user_one_id', $user->id)
             ->orWhere('user_two_id', $user->id)
             ->latest('updated_at')
@@ -33,7 +33,7 @@ class ChatService
             ]);
         }
 
-        return $conversation->load(['userOne', 'userTwo']);
+        return $conversation->load(['userOne.doctor', 'userOne.patient', 'userTwo.doctor', 'userTwo.patient']);
     }
 
     public function messages(Conversation $conversation): Collection

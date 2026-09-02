@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import api from "../lib/api";
 import { useTheme } from "../context/ThemeContext.jsx";
 import Navbar from "../components/Navbar";
@@ -89,9 +90,70 @@ const STEPS = [
   { num: "04", title: "Qeydlər & Bərpa", desc: "Reseptlərinizə baxın və müalicə prosesini izləyin." },
 ];
 
+const AnimatedNumber = ({ value, suffix = "", isFloat = false }) => {
+  const [count, setCount] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+  const elementRef = useRef(null);
+  
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setIsVisible(true);
+        } else {
+          setIsVisible(false);
+          setCount(0);
+        }
+      },
+      { threshold: 0.1 }
+    );
+    
+    if (elementRef.current) {
+      observer.observe(elementRef.current);
+    }
+    
+    return () => {
+      if (elementRef.current) observer.unobserve(elementRef.current);
+    };
+  }, []);
+  
+  useEffect(() => {
+    if (!isVisible || typeof value !== 'number' || value === 0) {
+      return;
+    }
+    
+    const duration = 2000;
+    let startTimestamp = null;
+    let animationFrameId;
+    
+    const step = (timestamp) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      const ease = 1 - Math.pow(1 - progress, 3);
+      
+      const current = ease * value;
+      setCount(current);
+      
+      if (progress < 1) {
+        animationFrameId = window.requestAnimationFrame(step);
+      } else {
+        setCount(value);
+      }
+    };
+    animationFrameId = window.requestAnimationFrame(step);
+    
+    return () => {
+      if (animationFrameId) window.cancelAnimationFrame(animationFrameId);
+    };
+  }, [value, isVisible]);
 
+  const displayValue = isFloat ? count.toFixed(1) : Math.floor(count);
+
+  return <span ref={elementRef}>{displayValue}{suffix}</span>;
+};
 
 export default function Home() {
+  const { t } = useTranslation();
   const [stats, setStats] = useState({ doctors: 0, departments: 0 });
   const [reviews, setReviews] = useState([]);
   const { toggleTheme } = useTheme();
@@ -141,16 +203,16 @@ export default function Home() {
           <div className="animate-fade-in-up">
             <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 30, padding: "6px 18px", marginBottom: 24 }}>
               <span style={{ width: 8, height: 8, background: "#EF5350", borderRadius: "50%", display: "inline-block" }} className="animate-pulse" />
-              <span style={{ fontSize: "0.8rem", fontWeight: 700, letterSpacing: "0.6px", color: "#FFFFFF" }}>MÜASİR TİBB & YÜKSƏK XİDMƏT</span>
+              <span style={{ fontSize: "0.8rem", fontWeight: 700, letterSpacing: "0.6px", color: "#FFFFFF" }}>{t("MÜASİR TİBB & YÜKSƏK XİDMƏT")}</span>
             </div>
 
             <h1 style={{ fontSize: "clamp(2.2rem, 4.5vw, 3.5rem)", fontWeight: 800, lineHeight: 1.15, marginBottom: 20, letterSpacing: "-1px" }}>
-              Sağlamlığınız — <br />
-              <span style={{ color: "#FFCDD2" }}>Bizim Ən Böyük Prioritetimizdir</span>
+              {t("Sağlamlığınız —")} <br />
+              <span style={{ color: "#FFCDD2" }}>{t("Bizim Ən Böyük Prioritetimizdir")}</span>
             </h1>
 
             <p style={{ fontSize: "1.1rem", lineHeight: 1.7, color: "rgba(255,255,255,0.9)", marginBottom: 36, maxWidth: 540 }}>
-              Sertifikatlaşdırılmış peşəkar həkimlər, onlayn randevu, canlı söhbət, AI assistent və tam elektron tibbi qeydlər – hamısı tək platformada.
+              {t("Sertifikatlaşdırılmış peşəkar həkimlər, onlayn randevu, canlı söhbət, AI assistent və tam elektron tibbi qeydlər – hamısı tək platformada.")}
             </p>
 
             <div style={{ display: "flex", gap: 16, flexWrap: "wrap", alignItems: "center" }}>
@@ -167,9 +229,8 @@ export default function Home() {
               }}
               onMouseEnter={e => { e.currentTarget.style.background = "#FFEBEE"; e.currentTarget.style.transform = "translateY(-2px)"; }}
               onMouseLeave={e => { e.currentTarget.style.background = "#FFFFFF"; e.currentTarget.style.transform = "translateY(0)"; }}>
-                Qeydiyyatdan Keç →
+                {t("Qeydiyyatdan Keç →")}
               </Link>
-
               <Link to="/doctors" style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -204,7 +265,7 @@ export default function Home() {
                 const arrow = e.currentTarget.querySelector(".btn-arrow");
                 if (arrow) arrow.style.transform = "translateX(0)";
               }}>
-                Həkimləri Kəşf Et
+                {t("Həkimləri Kəşf Et")}
                 <svg className="btn-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transition: "transform 0.28s cubic-bezier(.4,0,.2,1)", flexShrink: 0 }}>
                   <line x1="5" y1="12" x2="19" y2="12" />
                   <polyline points="13 6 19 12 13 18" />
@@ -214,13 +275,13 @@ export default function Home() {
 
             <div style={{ display: "flex", gap: 24, marginTop: 40, paddingTop: 28, borderTop: "1px solid rgba(255,255,255,0.15)", fontSize: "0.85rem", color: "rgba(255,255,255,0.85)" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <span style={{ color: "#EF5350", fontWeight: 900 }}></span> Ani Randevu
+                <span style={{ color: "#EF5350", fontWeight: 900 }}></span> {t("Ani Randevu")}
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <span style={{ color: "#EF5350", fontWeight: 900 }}></span> 100% Məxfilik
+                <span style={{ color: "#EF5350", fontWeight: 900 }}></span> {t("100% Məxfilik")}
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <span style={{ color: "#EF5350", fontWeight: 900 }}></span> 24/7 Dəstək
+                <span style={{ color: "#EF5350", fontWeight: 900 }}></span> {t("24/7 Dəstək")}
               </div>
             </div>
           </div>
@@ -258,14 +319,27 @@ export default function Home() {
                     <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
                   </svg>
                 </div>
-                <div>
-                  <h4 style={{ fontWeight: 800, fontSize: "0.85rem", color: "var(--text-dark)", margin: 0 }}>Həkim Qəbulu</h4>
-                  <span style={{ fontSize: "0.7rem", color: "var(--text-light)" }}>Peşəkar tibbi xidmət</span>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: "0.95rem", fontWeight: 800, marginBottom: 2 }}>{t("Həkim Qəbulu")}</div>
+                  <div style={{ fontSize: "0.75rem", color: "var(--text-light)" }}>{t("Peşəkar tibbi xidmət")}</div>
                 </div>
               </div>
 
-              <Link to="/patient/book" className="ac-btn" style={{ display: "block", textAlign: "center", width: "100%", fontSize: "0.82rem", padding: "10px 16px" }}>
-                Randevu Təyin Et
+              <Link to="/patient/book" style={{
+                display: "block",
+                textAlign: "center",
+                background: "#C62828",
+                color: "#FFFFFF",
+                fontWeight: 700,
+                fontSize: "0.85rem",
+                padding: "10px",
+                borderRadius: 10,
+                textDecoration: "none",
+                transition: "background 0.2s"
+              }}
+              onMouseEnter={e => e.currentTarget.style.background = "#B71C1C"}
+              onMouseLeave={e => e.currentTarget.style.background = "#C62828"}>
+                {t("Randevu Təyin Et")}
               </Link>
             </div>
           </div>
@@ -275,17 +349,23 @@ export default function Home() {
 
    
       <section style={{ maxWidth: 1240, margin: "-40px auto 0", padding: "0 24px", position: "relative", zIndex: 10 }}>
-        <div className="responsive-dash-grid" style={{ background: "var(--surface)", borderRadius: 20, border: "1px solid var(--border)", boxShadow: "var(--shadow-md)", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", transition: "all 0.3s ease" }}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" style={{ background: "var(--surface)", borderRadius: 20, border: "1px solid var(--border)", boxShadow: "var(--shadow-md)", transition: "all 0.3s ease" }}>
           {[
-            { num: stats.doctors ? `${stats.doctors}+` : "25+", label: "Həkim Heyəti", sub: "İxtisaslaşmış Mütəxəssislər" },
-            { num: stats.departments ? `${stats.departments}+` : "12+", label: "Tibbi Şöbələr", sub: "Müasir Avadanlıqla" },
-            { num: "24/7", label: "Təcili Xidmət", sub: "Daimi Tibbi Dəstək" },
-            { num: "99.4%", label: "Məmnuniyyət", sub: "Xəstə Rəyləri" },
+            { value: stats.doctors, suffix: "+", label: "Həkim Heyəti", sub: "İxtisaslaşmış Mütəxəssislər", staticText: null },
+            { value: stats.departments, suffix: "+", label: "Tibbi Şöbələr", sub: "Müasir Avadanlıqla", staticText: null },
+            { value: null, suffix: "", label: "Təcili Xidmət", sub: "Daimi Tibbi Dəstək", staticText: "24/7" },
+            { value: 99.4, suffix: "%", label: "Məmnuniyyət", sub: "Xəstə Rəyləri", staticText: null, isFloat: true },
           ].map((st, i) => (
-            <div key={i} style={{ padding: "28px 20px", textAlign: "center", borderRight: i < 3 ? "1px solid var(--border)" : "none" }}>
-              <div style={{ fontSize: "2.2rem", fontWeight: 900, color: "var(--primary)", lineHeight: 1.1 }}>{st.num}</div>
-              <div style={{ fontSize: "0.92rem", fontWeight: 700, color: "var(--text-dark)", marginTop: 6 }}>{st.label}</div>
-              <div style={{ fontSize: "0.78rem", color: "var(--text-light)", marginTop: 2 }}>{st.sub}</div>
+            <div key={i} className="border-b sm:border-b-0 lg:border-r border-[var(--border)] last:border-0" style={{ padding: "28px 20px", textAlign: "center" }}>
+              <div style={{ fontSize: "2.2rem", fontWeight: 900, color: "var(--primary)", lineHeight: 1.1 }}>
+                {st.staticText ? (
+                  st.staticText
+                ) : (
+                  <AnimatedNumber value={st.value} suffix={st.suffix} isFloat={st.isFloat} />
+                )}
+              </div>
+              <div style={{ fontSize: "0.92rem", fontWeight: 700, color: "var(--text-dark)", marginTop: 6 }}>{t(st.label)}</div>
+              <div style={{ fontSize: "0.78rem", color: "var(--text-light)", marginTop: 2 }}>{t(st.sub)}</div>
             </div>
           ))}
         </div>
@@ -294,9 +374,9 @@ export default function Home() {
 
       <section style={{ maxWidth: 1240, margin: "0 auto", padding: "80px 24px 60px" }}>
         <div style={{ textAlign: "center", marginBottom: 52 }}>
-          <span className="ac-section-label">TİBBİ XİDMƏTLƏR</span>
-          <h2 className="ac-section-title">Sağlamlığınız üçün Hərtərəfli Həllər</h2>
-          <p className="ac-section-sub">NovaCare Hospital vasitəsilə bütün tibbi ehtiyaclarınızı rəqəmsal olaraq idarə edin.</p>
+          <span className="ac-section-label">{t("TİBBİ XİDMƏTLƏR")}</span>
+          <h2 className="ac-section-title">{t("Sağlamlığınız üçün Hərtərəfli Həllər")}</h2>
+          <p className="ac-section-sub">{t("NovaCare Hospital vasitəsilə bütün tibbi ehtiyaclarınızı rəqəmsal olaraq idarə edin.")}</p>
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))", gap: 24 }}>
@@ -308,17 +388,17 @@ export default function Home() {
                     {s.icon}
                   </div>
                   <span style={{ fontSize: "0.72rem", fontWeight: 700, color: "var(--primary)", background: "var(--primary-light)", padding: "4px 12px", borderRadius: 20, border: "1px solid var(--secondary-light)" }}>
-                    {s.badge}
+                    {t(s.badge)}
                   </span>
                 </div>
-                <h3 style={{ fontSize: "1.15rem", fontWeight: 800, color: "var(--text-dark)", marginBottom: 10 }}>{s.title}</h3>
-                <p style={{ fontSize: "0.9rem", color: "var(--text-light)", lineHeight: 1.65, marginBottom: 24 }}>{s.desc}</p>
+                <h3 style={{ fontSize: "1.15rem", fontWeight: 800, color: "var(--text-dark)", marginBottom: 10 }}>{t(s.title)}</h3>
+                <p style={{ fontSize: "0.9rem", color: "var(--text-light)", lineHeight: 1.65, marginBottom: 24 }}>{t(s.desc)}</p>
               </div>
 
               <Link to={s.link} style={{ display: "inline-flex", alignItems: "center", gap: 6, color: "var(--primary)", fontWeight: 700, fontSize: "0.88rem", textDecoration: "none", transition: "gap 0.2s" }}
                 onMouseEnter={e => e.currentTarget.style.gap = "10px"}
                 onMouseLeave={e => e.currentTarget.style.gap = "6px"}>
-                Keçid Et →
+                {t("Keçid Et →")}
               </Link>
             </div>
           ))}
@@ -326,23 +406,23 @@ export default function Home() {
       </section>
 
       <section style={{ maxWidth: 1240, margin: "0 auto 80px", padding: "0 24px" }}>
-        <div style={{ background: "linear-gradient(135deg, #18181C 0%, #27272A 100%)", borderRadius: 24, padding: "52px 40px", color: "#FFFFFF", display: "grid", gridTemplateColumns: "1.2fr 0.8fr", gap: 40, alignItems: "center", border: "1px solid var(--border)", boxShadow: "0 16px 40px rgba(0,0,0,0.2)" }}>
+        <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-10" style={{ background: "linear-gradient(135deg, #18181C 0%, #27272A 100%)", borderRadius: 24, padding: "52px 40px", color: "#FFFFFF", border: "1px solid var(--border)", boxShadow: "0 16px 40px rgba(0,0,0,0.2)" }}>
           <div>
             <span style={{ background: "var(--primary)", color: "#FFFFFF", fontSize: "0.75rem", fontWeight: 800, padding: "4px 14px", borderRadius: 20, letterSpacing: "1px" }}>
-              RƏQƏMSAL SƏHİYYƏ
+              {t("RƏQƏMSAL SƏHİYYƏ")}
             </span>
-            <h2 style={{ fontSize: "2rem", fontWeight: 800, marginTop: 16, marginBottom: 14, color: "#FFFFFF" }}>Süni İntellekt (AI) & Canlı Konsultasiya</h2>
+            <h2 style={{ fontSize: "2rem", fontWeight: 800, marginTop: 16, marginBottom: 14, color: "#FFFFFF" }}>{t("Süni İntellekt (AI) & Canlı Konsultasiya")}</h2>
             <p style={{ color: "rgba(255,255,255,0.85)", fontSize: "0.98rem", lineHeight: 1.7, marginBottom: 28 }}>
-              Simptomlarınız barədə şübhəniz var? Bizim AI Assistentimiz sizə ilk tibbi tövsiyələri verməyə hazırdır. Həmçinin həkiminizlə dərhal canlı çata başlaya bilərsiniz.
+              {t("Simptomlarınız barədə şübhəniz var? Bizim AI Assistentimiz sizə ilk tibbi tövsiyələri verməyə hazırdır. Həmçinin həkiminizlə dərhal canlı çata başlaya bilərsiniz.")}
             </p>
             <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
               <Link to="/ai" className="ac-btn" style={{ padding: "12px 24px", fontSize: "0.9rem" }}>
-                 AI Assistentlə Danış
+                 {t("AI Assistentlə Danış")}
               </Link>
               <Link to="/chat" style={{ background: "transparent", border: "1.5px solid var(--secondary)", color: "var(--secondary)", fontWeight: 700, padding: "12px 24px", borderRadius: 10, textDecoration: "none", fontSize: "0.9rem", transition: "all 0.2s" }}
                 onMouseEnter={e => { e.currentTarget.style.background = "var(--secondary)"; e.currentTarget.style.color = "#FFFFFF"; }}
                 onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--secondary)"; }}>
-                 Canlı Çat
+                 {t("Canlı Çat")}
               </Link>
             </div>
           </div>
@@ -350,10 +430,10 @@ export default function Home() {
           <div style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 18, padding: 24 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
               <div style={{ width: 10, height: 10, background: "var(--secondary)", borderRadius: "50%" }} />
-              <span style={{ fontWeight: 700, fontSize: "0.88rem", color: "#FFFFFF" }}>AI Sağlamlıq İcmalı</span>
+              <span style={{ fontWeight: 700, fontSize: "0.88rem", color: "#FFFFFF" }}>{t("AI Sağlamlıq İcmalı")}</span>
             </div>
             <p style={{ fontSize: "0.85rem", color: "rgba(255,255,255,0.75)", lineHeight: 1.6 }}>
-              "Baş ağrısı və hərarət hiss edirsinizsə, dərhal temperaturunuzu ölçün və müvafiq Terapevt həkimə müraciət edin."
+              {t("\"Baş ağrısı və hərarət hiss edirsinizsə, dərhal temperaturunuzu ölçün və müvafiq Terapevt həkimə müraciət edin.\"")}
             </p>
           </div>
         </div>
@@ -363,17 +443,17 @@ export default function Home() {
       <section style={{ background: "var(--surface)", padding: "80px 24px", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)", transition: "all 0.3s ease" }}>
         <div style={{ maxWidth: 1240, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 56 }}>
-            <span className="ac-section-label">PROSES</span>
-            <h2 className="ac-section-title">Müalicə və Qəbul Addımları</h2>
-            <p className="ac-section-sub">Sadə 4 addımda tibbi xidmətlərimizdən yararlanın.</p>
+            <span className="ac-section-label">{t("PROSES")}</span>
+            <h2 className="ac-section-title">{t("Müalicə və Qəbul Addımları")}</h2>
+            <p className="ac-section-sub">{t("Sadə 4 addımda tibbi xidmətlərimizdən yararlanın.")}</p>
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 24 }}>
             {STEPS.map((st, i) => (
               <div key={i} style={{ background: "var(--bg)", border: "1px solid var(--border)", borderRadius: 18, padding: 30, position: "relative", transition: "all 0.3s ease" }}>
                 <div style={{ fontSize: "2.4rem", fontWeight: 900, color: "var(--secondary)", lineHeight: 1, marginBottom: 14 }}>{st.num}</div>
-                <h3 style={{ fontWeight: 800, fontSize: "1.05rem", color: "var(--text-dark)", marginBottom: 8 }}>{st.title}</h3>
-                <p style={{ fontSize: "0.88rem", color: "var(--text-light)", lineHeight: 1.6 }}>{st.desc}</p>
+                <h3 style={{ fontWeight: 800, fontSize: "1.05rem", color: "var(--text-dark)", marginBottom: 8 }}>{t(st.title)}</h3>
+                <p style={{ fontSize: "0.88rem", color: "var(--text-light)", lineHeight: 1.6 }}>{t(st.desc)}</p>
               </div>
             ))}
           </div>
@@ -383,9 +463,9 @@ export default function Home() {
       {reviews.length > 0 && (
         <section style={{ maxWidth: 1240, margin: "0 auto", padding: "80px 24px" }}>
           <div style={{ textAlign: "center", marginBottom: 52 }}>
-            <span className="ac-section-label">XƏSTƏ RƏYLƏRİ</span>
-            <h2 className="ac-section-title">Bizi Seçənlərin Fikirləri</h2>
-            <p className="ac-section-sub">Xəstələrimizin məmnuniyyəti bizim ən böyük mükafatımızdır.</p>
+            <span className="ac-section-label">{t("XƏSTƏ RƏYLƏRİ")}</span>
+            <h2 className="ac-section-title">{t("Bizi Seçənlərin Fikirləri")}</h2>
+            <p className="ac-section-sub">{t("Xəstələrimizin məmnuniyyəti bizim ən böyük mükafatımızdır.")}</p>
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 24 }}>
@@ -417,16 +497,16 @@ export default function Home() {
    
       <section style={{ background: "linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%)", color: "#FFFFFF", padding: "72px 24px", textAlign: "center" }}>
         <div style={{ maxWidth: 680, margin: "0 auto" }}>
-          <h2 style={{ fontSize: "2.2rem", fontWeight: 900, marginBottom: 16 }}>Sağlamlığınızı Təxirə Salmayın</h2>
+          <h2 style={{ fontSize: "2.2rem", fontWeight: 900, marginBottom: 16 }}>{t("Sağlamlığınızı Təxirə Salmayın")}</h2>
           <p style={{ color: "rgba(255,255,255,0.9)", fontSize: "1.05rem", lineHeight: 1.65, marginBottom: 32 }}>
-            Saniyələr ərzində hesab açın, həkiminizi seçin və onlayn randevu təyin edin.
+            {t("Saniyələr ərzində hesab açın, həkiminizi seçin və onlayn randevu təyin edin.")}
           </p>
           <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}>
             <Link to="/register" style={{ background: "#FFFFFF", color: "var(--primary)", fontWeight: 800, padding: "14px 32px", borderRadius: 12, textDecoration: "none", fontSize: "0.95rem", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
-              İndi Qeydiyyatdan Keç
+              {t("İndi Qeydiyyatdan Keç")}
             </Link>
             <Link to="/departments" style={{ background: "transparent", border: "2px solid #FFFFFF", color: "#FFFFFF", fontWeight: 700, padding: "14px 28px", borderRadius: 12, textDecoration: "none", fontSize: "0.95rem" }}>
-              Şöbələrimizə Bax
+              {t("Şöbələrimizə Bax")}
             </Link>
           </div>
         </div>

@@ -20,6 +20,12 @@ use App\Http\Controllers\Api\AnalyticsController;
 use App\Http\Controllers\Api\AdminManagementController;
 use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\ReviewController;
+use App\Http\Controllers\SettingsController;
+
+Route::get('/settings', [SettingsController::class, 'index']);
+Route::middleware(['auth:sanctum', 'role:admin|super_admin'])->group(function () {
+    Route::post('/settings', [SettingsController::class, 'update']);
+});
 
 Broadcast::routes(['middleware' => ['auth:sanctum']]);
 
@@ -77,6 +83,7 @@ Route::post('/email/verification-notification', function (Request $request) {
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
+    Route::put('/profile', [AuthController::class, 'updateProfile']);
 });
 
 Route::get('/login', function () {
@@ -123,6 +130,7 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/conversations', [ChatController::class, 'conversations']);
+    Route::get('/unread-count', [ChatController::class, 'unreadCount']);
     Route::post('/conversations', [ChatController::class, 'startConversation']);
     Route::get('/conversations/{conversation}/messages', [ChatController::class, 'messages']);
     Route::post('/conversations/{conversation}/messages', [ChatController::class, 'sendMessage']);

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import api from "../lib/api";
 import { useTheme } from "../context/ThemeContext";
 
@@ -48,6 +49,7 @@ const menus = {
 };
 
 export default function Navbar() {
+  const { t, i18n } = useTranslation();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [unread, setUnread] = useState(0);
@@ -58,6 +60,10 @@ export default function Navbar() {
   const token = localStorage.getItem("token");
   const role = localStorage.getItem("role");
   const links = token ? (menus[role] || menus.guest) : menus.guest;
+
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+  };
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -89,7 +95,7 @@ export default function Navbar() {
         <div style={{ maxWidth: 1240, margin: "0 auto", padding: "0 24px" }} className="flex items-center justify-between font-medium">
           <div className="flex items-center gap-6">
             <a href="tel:+994123456789" style={{ color: "var(--secondary)", fontWeight: 700 }} className="flex items-center gap-2 transition">
-              <span> TƏCİLİ:</span> +994 (12) 345 67 89
+              <span> {t("TƏCİLİ:")}</span> +994 (12) 345 67 89
             </a>
             <span style={{ color: "var(--border)" }}>|</span>
             <a href="mailto:info@novacare.az" style={{ color: "var(--text-mid)" }} className="flex items-center gap-2 transition hover:opacity-80">
@@ -104,7 +110,7 @@ export default function Navbar() {
           <div className="flex items-center gap-5">
             <span style={{ background: "var(--primary-light)", color: "var(--primary)", border: "1px solid var(--secondary-light)" }} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider">
               <span style={{ background: "var(--secondary)" }} className="w-1.5 h-1.5 rounded-full animate-ping"></span>
-              24/7 ONLAYN TİBBİ XİDMƏT
+              {t("24/7 ONLAYN TİBBİ XİDMƏT")}
             </span>
           </div>
         </div>
@@ -159,7 +165,7 @@ export default function Navbar() {
                     }}
                   >
                     {l.icon && <span className="text-sm">{l.icon}</span>}
-                    <span>{l.label}</span>
+                    <span>{t(l.label)}</span>
                     {isActive && (
                       <span className="absolute bottom-0 left-4 right-4 h-0.5 rounded-full" style={{ background: "var(--primary)" }}></span>
                     )}
@@ -175,6 +181,16 @@ export default function Navbar() {
 
             {/* Right Action Buttons */}
             <div className="flex items-center gap-3 shrink-0">
+              <select 
+                onChange={(e) => changeLanguage(e.target.value)} 
+                value={i18n.language}
+                className="bg-transparent border border-[var(--border)] rounded-md text-[var(--text-dark)] text-sm outline-none px-2 py-1 mr-2"
+              >
+                <option value="az">AZ</option>
+                <option value="en">EN</option>
+                <option value="ru">RU</option>
+              </select>
+
               <button
                 onClick={toggleTheme}
                 className="ac-theme-toggle"
@@ -224,7 +240,7 @@ export default function Navbar() {
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
                   </svg>
-                  ÇIXIŞ
+                  {t("ÇIXIŞ")}
                 </button>
               ) : (
                 <div className="hidden lg:flex items-center gap-3">
@@ -242,10 +258,10 @@ export default function Navbar() {
                     }}
                     className="transition-all hover:border-[var(--primary)] hover:text-[var(--primary)]"
                   >
-                    Giriş
+                    {t("Giriş")}
                   </Link>
                   <Link to="/register" className="ac-btn" style={{ padding: "10px 22px", fontSize: "0.88rem" }}>
-                    Qeydiyyat
+                    {t("Qeydiyyat")}
                   </Link>
                 </div>
               )}
@@ -282,7 +298,7 @@ export default function Navbar() {
                 >
                   <div className="flex items-center gap-2.5">
                     {l.icon && <span>{l.icon}</span>}
-                    <span>{l.label}</span>
+                    <span>{t(l.label)}</span>
                   </div>
                   {l.badge && unread > 0 && (
                     <span className="min-w-[20px] h-[20px] px-1.5 rounded-full text-white text-[11px] font-bold flex items-center justify-center" style={{ background: "var(--primary)" }}>
@@ -313,7 +329,7 @@ export default function Navbar() {
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
                     </svg>
-                    ÇIXIŞ ET
+                    {t("ÇIXIŞ ET")}
                   </button>
                 ) : (
                   <>
@@ -323,7 +339,7 @@ export default function Navbar() {
                       className="block text-center px-4 py-3 rounded-xl text-sm font-bold transition-all text-decoration-none"
                       style={{ background: "var(--bg)", color: "var(--text-dark)", border: "1px solid var(--border)" }}
                     >
-                      Giriş
+                      {t("Giriş")}
                     </Link>
                     <Link
                       to="/register"
@@ -331,7 +347,7 @@ export default function Navbar() {
                       className="block text-center text-white font-bold !py-3 !rounded-xl w-full text-decoration-none"
                       style={{ background: "var(--primary)" }}
                     >
-                      Qeydiyyat
+                      {t("Qeydiyyat")}
                     </Link>
                   </>
                 )}

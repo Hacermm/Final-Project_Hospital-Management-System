@@ -10,6 +10,10 @@ export default function PatientDashboard() {
   const [activeTab, setActiveTab] = useState("future");
   const [loading, setLoading] = useState(true);
 
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editForm, setEditForm] = useState({});
+  const [saving, setSaving] = useState(false);
+
   useEffect(() => {
     Promise.all([
       api.get("/me").catch(() => ({ data: { user: null } })),
@@ -26,6 +30,35 @@ export default function PatientDashboard() {
       .finally(() => setLoading(false));
   }, []);
 
+  const handleEditClick = () => {
+    setEditForm({
+      name: user?.name || "",
+      phone: user?.patient?.phone || "",
+      date_of_birth: user?.patient?.date_of_birth ? user.patient.date_of_birth.split("T")[0] : "",
+      gender: user?.patient?.gender || "",
+      blood_group: user?.patient?.blood_group || "",
+      address: user?.patient?.address || "",
+      allergies: user?.patient?.allergies || "",
+      chronic_diseases: user?.patient?.chronic_diseases || "",
+      past_diseases: user?.patient?.past_diseases || "",
+    });
+    setShowEditModal(true);
+  };
+
+  const handleSaveProfile = async (e) => {
+    e.preventDefault();
+    setSaving(true);
+    try {
+      const res = await api.put("/profile", editForm);
+      setUser(res.data.user);
+      setShowEditModal(false);
+    } catch (error) {
+      alert("Xəta baş verdi: " + (error.response?.data?.message || error.message));
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const todayStr = new Date().toISOString().split("T")[0];
   const futureAppointments = appointments.filter(a => a.date >= todayStr && a.status !== "cancelled");
   const pastAppointments = appointments.filter(a => a.date < todayStr || a.status === "completed" || a.status === "cancelled");
@@ -37,6 +70,13 @@ export default function PatientDashboard() {
     cancelled: { bg: "rgba(239, 68, 68, 0.12)", color: "#dc2626", border: "1px solid rgba(239, 68, 68, 0.3)" },
   };
   const statusLabels = { pending: "Gözləyir", confirmed: "Təsdiqlənib", completed: "Tamamlanıb", cancelled: "Ləğv edilib" };
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <p>Yüklənir...</p>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -86,13 +126,13 @@ export default function PatientDashboard() {
 
               <div>
                 <h3 style={{ fontSize: "1.2rem", fontWeight: 900, color: "var(--text-dark)", marginBottom: 4 }}>
-                  {user?.name || "Pasiyent Məmmədova"}
+                  {user?.name || "Qeyd olunmayıb"}
                 </h3>
                 <p style={{ fontSize: "0.84rem", fontWeight: 800, color: "var(--primary)", marginBottom: 2 }}>
-                  {user?.phone || "+994 (50) 123 45 67"}
+                  {user?.patient?.phone || user?.phone || "Qeyd olunmayıb"}
                 </p>
                 <p style={{ fontSize: "0.8rem", color: "var(--text-light)", margin: 0 }}>
-                  {user?.email || "patient@novacare.az"}
+                  {user?.email || "Qeyd olunmayıb"}
                 </p>
               </div>
 
@@ -122,25 +162,29 @@ export default function PatientDashboard() {
                 <h4 style={{ fontSize: "0.95rem", fontWeight: 900, color: "var(--text-dark)", display: "flex", alignItems: "center", gap: 8, margin: 0 }}>
                   <span></span> Ümumi Məlumatlar
                 </h4>
-                <span style={{ fontSize: "0.78rem", fontWeight: 800, color: "var(--primary)", cursor: "pointer" }}>Düzəliş Et</span>
+                <span onClick={handleEditClick} style={{ fontSize: "0.78rem", fontWeight: 800, color: "var(--primary)", cursor: "pointer" }}>Düzəliş Et</span>
               </div>
 
               <div style={{ display: "flex", flexDirection: "column", gap: 10, fontSize: "0.84rem" }}>
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                   <span style={{ color: "var(--text-light)", fontWeight: 600 }}>Doğum Tarixi:</span>
-                  <span style={{ fontWeight: 800, color: "var(--text-dark)" }}>15.08.1992</span>
+                  <span style={{ fontWeight: 800, color: "var(--text-dark)" }}>{user?.patient?.date_of_birth ? user.patient.date_of_birth.split("T")[0] : "Qeyd olunmayıb"}</span>
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                   <span style={{ color: "var(--text-light)", fontWeight: 600 }}>Ünvan:</span>
-                  <span style={{ fontWeight: 800, color: "var(--text-dark)" }}>Bakı ş., Nərimanov r.</span>
+                  <span style={{ fontWeight: 800, color: "var(--text-dark)" }}>{user?.patient?.address || "Qeyd olunmayıb"}</span>
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                   <span style={{ color: "var(--text-light)", fontWeight: 600 }}>Qeydiyyat Tarixi:</span>
-                  <span style={{ fontWeight: 800, color: "var(--text-dark)" }}>2024-01-10</span>
+                  <span style={{ fontWeight: 800, color: "var(--text-dark)" }}>
+                    {user?.created_at ? String(user.created_at).split("T")[0].split(" ")[0] : "Qeyd olunmayıb"}
+                  </span>
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                   <span style={{ color: "var(--text-light)", fontWeight: 600 }}>Cins:</span>
-                  <span style={{ fontWeight: 800, color: "var(--text-dark)" }}>Qadın / Kişi</span>
+                  <span style={{ fontWeight: 800, color: "var(--text-dark)" }}>
+                    {user?.patient?.gender === 'male' ? 'Kişi' : user?.patient?.gender === 'female' ? 'Qadın' : user?.patient?.gender === 'other' ? 'Digər' : 'Qeyd olunmayıb'}
+                  </span>
                 </div>
               </div>
 
@@ -172,21 +216,27 @@ export default function PatientDashboard() {
               <div style={{ display: "flex", flexDirection: "column", gap: 10, fontSize: "0.84rem" }}>
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                   <span style={{ color: "var(--text-light)", fontWeight: 600 }}>Allergiyalar:</span>
-                  <span style={{ fontWeight: 800, color: "#d97706" }}>Penisilin, Toz</span>
+                  <span style={{ fontWeight: 800, color: user?.patient?.allergies ? "#d97706" : "var(--text-dark)" }}>
+                    {user?.patient?.allergies || "Qeyd olunmayıb"}
+                  </span>
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                   <span style={{ color: "var(--text-light)", fontWeight: 600 }}>Xroniki Xəstəliklər:</span>
-                  <span style={{ fontWeight: 800, color: "var(--text-dark)" }}>Yoxdur</span>
+                  <span style={{ fontWeight: 800, color: "var(--text-dark)" }}>
+                    {user?.patient?.chronic_diseases || "Qeyd olunmayıb"}
+                  </span>
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <span style={{ color: "var(--text-light)", fontWeight: 600 }}>Qan Qrupu:</span>
                   <span style={{ padding: "3px 10px", borderRadius: 8, fontSize: "0.78rem", fontWeight: 900, background: "var(--primary-light)", color: "var(--primary)", border: "1px solid var(--secondary-light)" }}>
-                    A(II) Rh+
+                    {user?.patient?.blood_group || "Qeyd olunmayıb"}
                   </span>
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                   <span style={{ color: "var(--text-light)", fontWeight: 600 }}>Keçirilmiş Xəstəliklər:</span>
-                  <span style={{ fontWeight: 800, color: "var(--text-dark)" }}>Bronxit (2023)</span>
+                  <span style={{ fontWeight: 800, color: "var(--text-dark)" }}>
+                    {user?.patient?.past_diseases || "Qeyd olunmayıb"}
+                  </span>
                 </div>
               </div>
 
@@ -360,38 +410,44 @@ export default function PatientDashboard() {
                 </div>
 
                 <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                  {[
-                    { name: "Qanın_Ümumi_Analizi.pdf", date: "2026-07-28" },
-                    { name: "Kardiologiya_EKQ_Nəticə.pdf", date: "2026-07-20" },
-                    { name: "Həkim_Resepti_v2.pdf", date: "2026-07-15" },
-                  ].map((file, i) => (
-                    <div
-                      key={i}
-                      style={{
-                        padding: "12px 14px",
-                        borderRadius: 12,
-                        border: "1px solid var(--border)",
-                        background: "var(--bg)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        fontSize: "0.82rem",
-                      }}
-                    >
-                      <div style={{ display: "flex", alignItems: "center", gap: 10, overflow: "hidden" }}>
-                        <span style={{ fontSize: "1.2rem", color: "var(--primary)" }}></span>
-                        <div style={{ overflow: "hidden" }}>
-                          <p style={{ fontWeight: 800, color: "var(--text-dark)", margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                            {file.name}
-                          </p>
-                          <span style={{ fontSize: "0.7rem", color: "var(--text-light)" }}>{file.date}</span>
-                        </div>
-                      </div>
-                      <span style={{ padding: "3px 8px", borderRadius: 6, fontSize: "0.7rem", fontWeight: 900, background: "var(--primary-light)", color: "var(--primary)", border: "1px solid var(--secondary-light)" }}>
-                        PDF
-                      </span>
+                  {labTests.length === 0 ? (
+                    <div style={{ textAlign: "center", padding: "16px", color: "var(--text-light)", fontSize: "0.85rem" }}>
+                      Heç bir analiz nəticəsi tapılmadı.
                     </div>
-                  ))}
+                  ) : (
+                    labTests.slice(0, 3).map((test) => (
+                      <div
+                        key={test.id}
+                        style={{
+                          padding: "12px 14px",
+                          borderRadius: 12,
+                          border: "1px solid var(--border)",
+                          background: "var(--bg)",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          fontSize: "0.82rem",
+                        }}
+                      >
+                        <div style={{ display: "flex", alignItems: "center", gap: 10, overflow: "hidden" }}>
+                          <span style={{ fontSize: "1.2rem", color: "var(--primary)" }}></span>
+                          <div style={{ overflow: "hidden" }}>
+                            <p style={{ fontWeight: 800, color: "var(--text-dark)", margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                              {test.title || "Analiz Nəticəsi"}
+                            </p>
+                            <span style={{ fontSize: "0.7rem", color: "var(--text-light)" }}>
+                              {test.date || "Tarix yoxdur"}
+                            </span>
+                          </div>
+                        </div>
+                        {test.file_path && (
+                          <a href={test.file_url || "#"} target="_blank" rel="noreferrer" style={{ padding: "3px 8px", borderRadius: 6, fontSize: "0.7rem", fontWeight: 900, background: "var(--primary-light)", color: "var(--primary)", border: "1px solid var(--secondary-light)", textDecoration: "none" }}>
+                            PDF
+                          </a>
+                        )}
+                      </div>
+                    ))
+                  )}
                 </div>
               </div>
 
@@ -406,14 +462,20 @@ export default function PatientDashboard() {
                   </Link>
                 </div>
 
-                <div style={{ padding: "14px", borderRadius: 12, border: "1px solid var(--border)", background: "var(--bg)", fontSize: "0.82rem" }}>
-                  <p style={{ fontWeight: 800, color: "var(--text-dark)", marginBottom: 4, margin: "0 0 4px 0" }}>
-                    Profilaktik Tibbi Müayinə
-                  </p>
-                  <p style={{ color: "var(--text-light)", fontSize: "0.78rem", lineHeight: 1.5, margin: 0 }}>
-                    Növbəti check-up müayinəsi üçün kardioloq qəbuluna yazılmağınız tövsiyə olunur.
-                  </p>
-                </div>
+                {medicalRecords.length === 0 ? (
+                  <div style={{ padding: "14px", borderRadius: 12, border: "1px dashed var(--border)", background: "transparent", fontSize: "0.82rem", textAlign: "center", color: "var(--text-light)" }}>
+                    Hələ heç bir həkim qeydi yoxdur.
+                  </div>
+                ) : (
+                  <div style={{ padding: "14px", borderRadius: 12, border: "1px solid var(--border)", background: "var(--bg)", fontSize: "0.82rem" }}>
+                    <p style={{ fontWeight: 800, color: "var(--text-dark)", marginBottom: 4, margin: "0 0 4px 0" }}>
+                      {medicalRecords[0].doctor?.name || "Həkim"} - {medicalRecords[0].diagnosis}
+                    </p>
+                    <p style={{ color: "var(--text-light)", fontSize: "0.78rem", lineHeight: 1.5, margin: 0 }}>
+                      {medicalRecords[0].treatment}
+                    </p>
+                  </div>
+                )}
               </div>
 
             </div>
@@ -421,6 +483,64 @@ export default function PatientDashboard() {
           </div>
 
         </main>
+
+        {showEditModal && (
+          <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }}>
+            <div className="ac-card" style={{ padding: "24px", width: "90%", maxWidth: 500, background: "var(--bg)", borderRadius: 16, maxHeight: "90vh", overflowY: "auto" }}>
+              <h3 style={{ marginTop: 0, marginBottom: 16, color: "var(--text-dark)" }}>Profildə Düzəliş Et</h3>
+              <form onSubmit={handleSaveProfile} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                <div>
+                  <label style={{ fontSize: "0.8rem", color: "var(--text-light)" }}>Ad Soyad</label>
+                  <input required value={editForm.name} onChange={e => setEditForm({...editForm, name: e.target.value})} style={{ width: "100%", padding: "8px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--surface)", color: "var(--text-dark)", boxSizing: "border-box" }} />
+                </div>
+                <div>
+                  <label style={{ fontSize: "0.8rem", color: "var(--text-light)" }}>Telefon</label>
+                  <input value={editForm.phone} onChange={e => setEditForm({...editForm, phone: e.target.value})} style={{ width: "100%", padding: "8px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--surface)", color: "var(--text-dark)", boxSizing: "border-box" }} />
+                </div>
+                <div>
+                  <label style={{ fontSize: "0.8rem", color: "var(--text-light)" }}>Doğum Tarixi</label>
+                  <input type="date" value={editForm.date_of_birth} onChange={e => setEditForm({...editForm, date_of_birth: e.target.value})} style={{ width: "100%", padding: "8px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--surface)", color: "var(--text-dark)", boxSizing: "border-box" }} />
+                </div>
+                <div>
+                  <label style={{ fontSize: "0.8rem", color: "var(--text-light)" }}>Cins</label>
+                  <select value={editForm.gender} onChange={e => setEditForm({...editForm, gender: e.target.value})} style={{ width: "100%", padding: "8px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--surface)", color: "var(--text-dark)", boxSizing: "border-box" }}>
+                    <option value="">Seçin...</option>
+                    <option value="male">Kişi</option>
+                    <option value="female">Qadın</option>
+                  </select>
+                </div>
+                <div>
+                  <label style={{ fontSize: "0.8rem", color: "var(--text-light)" }}>Qan Qrupu</label>
+                  <input value={editForm.blood_group} onChange={e => setEditForm({...editForm, blood_group: e.target.value})} style={{ width: "100%", padding: "8px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--surface)", color: "var(--text-dark)", boxSizing: "border-box" }} />
+                </div>
+                <div>
+                  <label style={{ fontSize: "0.8rem", color: "var(--text-light)" }}>Ünvan</label>
+                  <input value={editForm.address} onChange={e => setEditForm({...editForm, address: e.target.value})} style={{ width: "100%", padding: "8px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--surface)", color: "var(--text-dark)", boxSizing: "border-box" }} />
+                </div>
+                
+                <hr style={{ border: "none", borderTop: "1px solid var(--border)", margin: "8px 0" }} />
+                
+                <div>
+                  <label style={{ fontSize: "0.8rem", color: "var(--text-light)" }}>Allergiyalar (Məs: Penisilin, Toz)</label>
+                  <input value={editForm.allergies} onChange={e => setEditForm({...editForm, allergies: e.target.value})} style={{ width: "100%", padding: "8px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--surface)", color: "var(--text-dark)", boxSizing: "border-box" }} />
+                </div>
+                <div>
+                  <label style={{ fontSize: "0.8rem", color: "var(--text-light)" }}>Xroniki Xəstəliklər</label>
+                  <input value={editForm.chronic_diseases} onChange={e => setEditForm({...editForm, chronic_diseases: e.target.value})} style={{ width: "100%", padding: "8px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--surface)", color: "var(--text-dark)", boxSizing: "border-box" }} />
+                </div>
+                <div>
+                  <label style={{ fontSize: "0.8rem", color: "var(--text-light)" }}>Keçirilmiş Xəstəliklər</label>
+                  <input value={editForm.past_diseases} onChange={e => setEditForm({...editForm, past_diseases: e.target.value})} style={{ width: "100%", padding: "8px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--surface)", color: "var(--text-dark)", boxSizing: "border-box" }} />
+                </div>
+                
+                <div style={{ display: "flex", justifyContent: "flex-end", gap: 10, marginTop: 16 }}>
+                  <button type="button" onClick={() => setShowEditModal(false)} style={{ padding: "8px 16px", borderRadius: 8, border: "1px solid var(--border)", background: "transparent", color: "var(--text-dark)", cursor: "pointer" }}>Ləğv et</button>
+                  <button type="submit" disabled={saving} style={{ padding: "8px 16px", borderRadius: 8, border: "none", background: "var(--primary)", color: "#fff", fontWeight: "bold", cursor: saving ? "not-allowed" : "pointer" }}>{saving ? "Saxlanılır..." : "Yadda Saxla"}</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
     </>
   );
 }

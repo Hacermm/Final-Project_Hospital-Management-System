@@ -12,13 +12,16 @@ class ConversationResource extends JsonResource
         $me = $request->user();
         $other = $this->user_one_id === $me->id ? $this->userTwo : $this->userOne;
 
+        $photo = $other ? ($other->doctor?->photo ?? $other->patient?->photo) : null;
+
         return [
             'id' => $this->id,
             'other_user' => [
                 'id' => $other?->id,
                 'name' => $other?->name,
+                'photo' => $photo ? url('storage/' . $photo) : null,
             ],
-            'last_message' => $this->messages->first()?->body,
+            'last_message' => $this->latestMessage?->body,
             'updated_at' => $this->updated_at->format('Y-m-d H:i'),
         ];
     }

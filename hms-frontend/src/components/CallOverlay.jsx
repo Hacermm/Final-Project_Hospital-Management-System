@@ -16,31 +16,43 @@ export default function CallOverlay({ callState, peer, error, onAccept, onReject
 
   const label = {
     calling: "Zəng edilir...",
-    incoming: "Gələn tibbi video-zəng",
+    incoming: "Gələn tibbi zəng",
     active: "Canlı danışıq gedir",
   }[callState];
 
   return (
-    <div className="fixed inset-0 z-[100] bg-[#0f172a]/90 backdrop-blur-xl flex flex-col items-center justify-center px-6 animate-fade-in">
-      <div className="card-dark p-10 max-w-sm w-full text-center flex flex-col items-center shadow-2xl border border-white/10 relative overflow-hidden">
+    <div className="fixed inset-0 z-[100] bg-slate-900/80 backdrop-blur-2xl flex flex-col items-center justify-center px-6 transition-all duration-500 animate-fade-in">
+      <div className="relative p-10 max-w-sm w-full text-center flex flex-col items-center rounded-3xl bg-white/5 border border-white/10 shadow-[0_0_80px_rgba(59,130,246,0.15)] overflow-visible">
         {/* Soft glow indicator */}
-        <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-48 h-48 rounded-full bg-blue-500/20 blur-3xl pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-blue-500/20 rounded-full blur-[80px] pointer-events-none" />
 
         {/* Avatar */}
-        <div className="relative mb-7">
-          <div className="w-28 h-28 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-3xl font-extrabold text-white shadow-lg border border-white/20">
-            {getInitials(peer?.name)}
-          </div>
+        <div className="relative mb-8 z-10">
           {(callState === "calling" || callState === "incoming") && (
-            <div className="absolute -inset-2 rounded-2xl border-2 border-blue-400/40 animate-ping" />
+            <>
+              <div className="absolute inset-0 rounded-full bg-blue-500/30 animate-ping" style={{ animationDuration: '2s' }} />
+              <div className="absolute -inset-4 rounded-full border border-blue-400/20 animate-pulse" />
+            </>
+          )}
+          
+          {peer?.photo ? (
+            <img 
+              src={peer.photo} 
+              alt={peer.name} 
+              className="w-32 h-32 rounded-full object-cover shadow-2xl border-4 border-white/10 relative z-10"
+            />
+          ) : (
+            <div className="w-32 h-32 rounded-full bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-4xl font-extrabold text-white shadow-2xl border-4 border-white/10 relative z-10">
+              {getInitials(peer?.name)}
+            </div>
           )}
         </div>
 
-        <h2 className="text-2xl font-black text-white mb-1.5">{peer?.name || "Pasiyent / Həkim"}</h2>
-        <p className="text-slate-300 text-sm font-medium mb-4">{label}</p>
+        <h2 className="text-3xl font-black text-white mb-2 tracking-tight z-10">{peer?.name || "Pasiyent / Həkim"}</h2>
+        <p className="text-blue-200/80 text-sm font-medium mb-6 uppercase tracking-widest z-10">{label}</p>
 
         {callState === "active" && (
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-bold mb-8">
+          <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold mb-8 z-10 shadow-[0_0_20px_rgba(16,185,129,0.1)]">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
             Bağlantı şifrələnib
           </div>

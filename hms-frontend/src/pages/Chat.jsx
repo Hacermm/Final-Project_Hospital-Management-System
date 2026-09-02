@@ -2,8 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import api from "../lib/api";
 import { createEcho } from "../lib/echo";
 import Navbar from "../components/Navbar";
-import { useCall } from "../hooks/useCall";
-import CallOverlay from "../components/CallOverlay";
+import { useGlobalCall } from "../components/GlobalCallHandler";
 
 export default function Chat() {
   const [conversations, setConversations] = useState([]);
@@ -11,6 +10,7 @@ export default function Chat() {
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
   const [users, setUsers] = useState([]);
+  const [usersLoading, setUsersLoading] = useState(true);
   const [unread, setUnread] = useState({});
   const [myId, setMyId] = useState(null);
   const [search, setSearch] = useState("");
@@ -18,7 +18,8 @@ export default function Chat() {
   const bottomRef = useRef(null);
   const meId = useRef(null);
 
-  const { callState, peer, error, startCall, accept, reject, end, clearError } = useCall(myId);
+  const callManager = useGlobalCall();
+  const startCall = callManager?.startCall || (() => {});
 
   const loadConversations = async () => {
     const r = await api.get("/conversations");
@@ -32,6 +33,7 @@ export default function Chat() {
   };
 
   const loadPossibleUsers = async () => {
+    setUsersLoading(true);
     const role = localStorage.getItem("role");
     try {
       if (role === "patient") {
@@ -43,6 +45,8 @@ export default function Chat() {
       }
     } catch {
       setUsers([]);
+    } finally {
+      setUsersLoading(false);
     }
   };
 
@@ -51,11 +55,31 @@ export default function Chat() {
       const me = await api.get("/me");
       meId.current = me.data.user.id;
       setMyId(me.data.user.id);
-      await loadConversations();
-      await loadPossibleUsers();
+      await Promise.all([
+        loadConversations(),
+        loadPossibleUsers()
+      ]);
     };
     init();
   }, []);
+
+  useEffect(() => {
+    if (!myId) return;
+    if (!echoRef.current) echoRef.current = createEcho();
+
+    const channelName = `user.${myId}`;
+    const channel = echoRef.current.private(channelName);
+
+    channel.listen(".message.sent", (e) => {
+      // Əgər mesaj aktiv söhbətdə gəlibsə, onu onsuz da o biri useEffect handle edir.
+      // Amma söhbətlər siyahısını (və oxunmamış sayğacı) yeniləmək üçün:
+      loadConversations();
+    });
+
+    return () => {
+      echoRef.current?.leave(channelName);
+    };
+  }, [myId]);
 
   useEffect(() => {
     if (!activeConv) return;
@@ -80,6 +104,7 @@ export default function Chat() {
           sender_name: e.sender_name,
           is_mine: e.sender_id === meId.current,
           created_at: e.created_at,
+          is_new: e.sender_id !== meId.current
         }];
       });
     });
@@ -102,12 +127,29 @@ export default function Chat() {
     if (!text.trim() || !activeConv) return;
     const body = text;
     setText("");
-    const r = await api.post(
-      `/conversations/${activeConv.id}/messages`,
-      { body },
-      { headers: { "X-Socket-Id": echoRef.current?.socketId() } }
-    );
-    setMessages((prev) => [...prev, r.data.data]);
+    
+    const tempId = Date.now();
+    const tempMessage = {
+      id: tempId,
+      body: body,
+      sender_id: meId.current,
+      sender_name: "Siz",
+      is_mine: true,
+      created_at: new Date().toLocaleTimeString('az-AZ', { hour: '2-digit', minute: '2-digit' })
+    };
+    
+    setMessages((prev) => [...prev, tempMessage]);
+
+    try {
+      const r = await api.post(
+        `/conversations/${activeConv.id}/messages`,
+        { body },
+        { headers: { "X-Socket-Id": echoRef.current?.socketId() } }
+      );
+      setMessages((prev) => prev.map(m => m.id === tempId ? r.data.data : m));
+    } catch (error) {
+      setMessages((prev) => prev.filter(m => m.id !== tempId));
+    }
   };
 
   const getInitials = (name) =>
@@ -182,8 +224,9 @@ export default function Chat() {
                 color: "var(--primary)", fontSize: "0.84rem", fontWeight: 800,
                 cursor: "pointer", outline: "none"
               }}
+              disabled={usersLoading}
             >
-              <option value="">+ Yeni söhbət başlat</option>
+              <option value="">{usersLoading ? "Yüklənir..." : "+ Yeni söhbət başlat"}</option>
               {users.map((u) => <option key={u.id} value={u.id}>{u.name}</option>)}
             </select>
           </div>
@@ -208,18 +251,26 @@ export default function Chat() {
                   onMouseEnter={(e) => { if (!isSelected) e.currentTarget.style.background = "var(--bg)"; }}
                   onMouseLeave={(e) => { if (!isSelected) e.currentTarget.style.background = "transparent"; }}
                 >
-                  <div style={{
-                    width: 44, height: 44, borderRadius: "50%", flexShrink: 0,
-                    background: isSelected
-                      ? "linear-gradient(135deg, #C62828 0%, #8B1A1A 100%)"
-                      : "var(--bg)",
-                    border: isSelected ? "none" : "1px solid var(--border)",
-                    color: isSelected ? "#FFFFFF" : "var(--text-mid)",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    fontSize: "0.85rem", fontWeight: 900
-                  }}>
-                    {getInitials(c.other_user?.name)}
-                  </div>
+                  {c.other_user?.photo ? (
+                    <img
+                      src={c.other_user.photo}
+                      alt={c.other_user.name}
+                      style={{ width: 44, height: 44, borderRadius: "50%", flexShrink: 0, objectFit: "cover", border: isSelected ? "none" : "1px solid var(--border)" }}
+                    />
+                  ) : (
+                    <div style={{
+                      width: 44, height: 44, borderRadius: "50%", flexShrink: 0,
+                      background: isSelected
+                        ? "linear-gradient(135deg, #C62828 0%, #8B1A1A 100%)"
+                        : "var(--bg)",
+                      border: isSelected ? "none" : "1px solid var(--border)",
+                      color: isSelected ? "#FFFFFF" : "var(--text-mid)",
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      fontSize: "0.85rem", fontWeight: 900
+                    }}>
+                      {getInitials(c.other_user?.name)}
+                    </div>
+                  )}
 
                   <div style={{ minWidth: 0, flex: 1 }}>
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
@@ -247,7 +298,7 @@ export default function Chat() {
                       color: count > 0 ? "var(--text-dark)" : "var(--text-light)",
                       fontWeight: count > 0 ? 700 : 500
                     }}>
-                      {c.last_message || "Mesaj yoxdur"}
+                      {c.last_message === '[MISSED_CALL]' ? "📞 Buraxılmış zəng" : (c.last_message || "Mesaj yoxdur")}
                     </p>
                   </div>
                 </button>
@@ -297,14 +348,22 @@ export default function Chat() {
                 </button>
 
                 <div style={{ position: "relative", flexShrink: 0 }}>
-                  <div style={{
-                    width: 44, height: 44, borderRadius: "50%",
-                    background: "linear-gradient(135deg, #C62828 0%, #8B1A1A 100%)",
-                    color: "#FFFFFF", display: "flex", alignItems: "center",
-                    justifyContent: "center", fontSize: "0.88rem", fontWeight: 900
-                  }}>
-                    {getInitials(activeConv.other_user?.name)}
-                  </div>
+                  {activeConv.other_user?.photo ? (
+                    <img
+                      src={activeConv.other_user.photo}
+                      alt={activeConv.other_user.name}
+                      style={{ width: 44, height: 44, borderRadius: "50%", objectFit: "cover" }}
+                    />
+                  ) : (
+                    <div style={{
+                      width: 44, height: 44, borderRadius: "50%",
+                      background: "linear-gradient(135deg, #C62828 0%, #8B1A1A 100%)",
+                      color: "#FFFFFF", display: "flex", alignItems: "center",
+                      justifyContent: "center", fontSize: "0.88rem", fontWeight: 900
+                    }}>
+                      {getInitials(activeConv.other_user?.name)}
+                    </div>
+                  )}
                   <span style={{
                     position: "absolute", bottom: 1, right: 1, width: 12, height: 12,
                     borderRadius: "50%", background: "#10B981",
@@ -322,7 +381,7 @@ export default function Chat() {
                 </div>
 
                 <button
-                  onClick={() => startCall(activeConv.other_user.id, activeConv.other_user.name)}
+                  onClick={() => startCall(activeConv.other_user.id, activeConv.other_user.name, activeConv.other_user.photo)}
                   style={{
                     width: 42, height: 42, borderRadius: 12, flexShrink: 0,
                     background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.28)",
@@ -351,16 +410,19 @@ export default function Chat() {
                 )}
 
                 {messages.map((m, i) => (
-                  <div key={m.id ?? i} style={{ display: "flex", justifyContent: m.is_mine ? "flex-end" : "flex-start" }}>
+                  <div key={m.id ?? i} style={{ display: "flex", justifyContent: m.is_mine ? "flex-end" : "flex-start", flexDirection: "column", alignItems: m.is_mine ? "flex-end" : "flex-start" }}>
+                    {m.is_new && (
+                      <span style={{ fontSize: "0.65rem", background: "var(--primary)", color: "#fff", padding: "2px 6px", borderRadius: 4, marginBottom: 4, fontWeight: "bold" }}>YENİ</span>
+                    )}
                     <div style={{
                       maxWidth: "72%",
                       padding: "11px 16px",
                       borderRadius: m.is_mine ? "16px 16px 4px 16px" : "16px 16px 16px 4px",
                       background: m.is_mine
                         ? "linear-gradient(135deg, #C62828 0%, #A31919 100%)"
-                        : "var(--surface)",
+                        : (m.is_new ? "rgba(245, 158, 11, 0.15)" : "var(--surface)"),
                       color: m.is_mine ? "#FFFFFF" : "var(--text-dark)",
-                      border: m.is_mine ? "none" : "1px solid var(--border)",
+                      border: m.is_mine ? "none" : (m.is_new ? "1px solid rgba(245, 158, 11, 0.4)" : "1px solid var(--border)"),
                       boxShadow: m.is_mine ? "0 3px 12px rgba(198,40,40,0.2)" : "0 2px 8px rgba(0,0,0,0.05)"
                     }}>
                       {!m.is_mine && (
@@ -368,9 +430,21 @@ export default function Chat() {
                           {m.sender_name}
                         </p>
                       )}
-                      <p style={{ fontSize: "0.9rem", lineHeight: 1.55, margin: 0, wordBreak: "break-word" }}>
-                        {m.body}
-                      </p>
+                      {m.body === '[MISSED_CALL]' ? (
+                        <div style={{ display: "flex", alignItems: "center", gap: 8, color: m.is_mine ? "#FFCDD2" : "#DC2626", fontWeight: "bold" }}>
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M16 16.05A3.13 3.13 0 0 0 16.89 16c1.19-.08 2.06.31 3.11 1 1.25.82 2 2.18 2 3.65a1 1 0 0 1-1 1h-7.5"/>
+                            <path d="M4 21.65a1 1 0 0 1-1-1c0-1.47.75-2.83 2-3.65 1.05-.69 1.92-1.08 3.11-1a3.13 3.13 0 0 1 .89.05"/>
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+                            <line x1="2" y1="2" x2="22" y2="22"/>
+                          </svg>
+                          <span>Buraxılmış zəng</span>
+                        </div>
+                      ) : (
+                        <p style={{ fontSize: "0.9rem", lineHeight: 1.55, margin: 0, wordBreak: "break-word" }}>
+                          {m.body}
+                        </p>
+                      )}
                       <p style={{
                         fontSize: "0.67rem", margin: "5px 0 0", textAlign: "right",
                         color: m.is_mine ? "rgba(255,255,255,0.72)" : "var(--text-light)"
@@ -445,16 +519,6 @@ export default function Chat() {
           )}
         </section>
       </div>
-
-      <CallOverlay
-        callState={callState}
-        peer={peer}
-        error={error}
-        onAccept={accept}
-        onReject={reject}
-        onEnd={end}
-        onClearError={clearError}
-      />
     </div>
   );
 }

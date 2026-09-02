@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { SettingsContext } from "../context/SettingsContext";
 
 export default function Footer() {
+  const { settings } = useContext(SettingsContext);
   return (
     <footer style={{ background: "linear-gradient(180deg, #001935 0%, #000e1f 100%)" }} className="text-white border-t border-slate-800 relative overflow-hidden w-full">
       {/* Decorative Glows */}
@@ -37,14 +40,14 @@ export default function Footer() {
 
             <div className="flex items-center gap-3 pt-2">
               <a
-                href="tel:+994125000000"
+                href={`tel:${settings?.clinic_phone?.replace(/[^0-9+]/g, '') || "+994125000000"}`}
                 className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all text-slate-900 shadow-md"
                 style={{ background: "#fdb931" }}
               >
-                <span> TƏCİLİ:</span> +994 (12) 500 00 00
+                <span> TƏCİLİ:</span> {settings?.clinic_phone || "+994 (12) 500 00 00"}
               </a>
               <a
-                href="https://wa.me/994125000000"
+                href={`https://wa.me/${settings?.clinic_whatsapp || "994125000000"}`}
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all bg-emerald-500/20 border border-emerald-400/40 text-emerald-300"
@@ -85,15 +88,15 @@ export default function Footer() {
             <div className="space-y-2.5 text-xs text-slate-300">
               <p className="flex items-start gap-2">
                 <span className="text-amber-300 shrink-0 mt-0.5"></span>
-                <span>Bakı şəhəri, Nərimanov r., Atatürk pr. 58</span>
+                <span>{settings?.clinic_address || "Bakı şəhəri, Nərimanov r., Atatürk pr. 58"}</span>
               </p>
               <p className="flex items-center gap-2">
                 <span className="text-amber-300 shrink-0"></span>
-                <span>+994 (12) 500 00 00 / 24/7 Qaynar Xətt</span>
+                <span>{settings?.clinic_phone || "+994 (12) 500 00 00"} / {settings?.clinic_working_hours || "24/7 Qaynar Xətt"}</span>
               </p>
               <p className="flex items-center gap-2">
                 <span className="text-amber-300 shrink-0"></span>
-                <span>info@novacare.az</span>
+                <span>{settings?.clinic_email || "info@novacare.az"}</span>
               </p>
               <div className="pt-2">
                 <div className="p-3 rounded-xl border border-white/10 bg-white/5 space-y-1">
@@ -124,10 +127,10 @@ export default function Footer() {
         className="fixed bottom-0 left-0 right-0 z-40 md:hidden flex items-center justify-around py-2.5 px-2 text-xs font-bold text-white shadow-2xl border-t border-white/10"
         style={{ background: "#001935" }}
       >
-        <a href="tel:+994125000000" className="flex flex-col items-center gap-0.5 active:scale-95 transition" style={{ color: "#fdb931" }}>
+        <a href={`tel:${settings?.clinic_phone?.replace(/[^0-9+]/g, '') || "+994125000000"}`} className="flex flex-col items-center gap-0.5 active:scale-95 transition" style={{ color: "#fdb931" }}>
           <span className="text-base"></span><span className="text-[10px]">Təcili</span>
         </a>
-        <a href="https://wa.me/994125000000" target="_blank" rel="noreferrer" className="flex flex-col items-center gap-0.5 text-emerald-400 active:scale-95 transition">
+        <a href={`https://wa.me/${settings?.clinic_whatsapp || "994125000000"}`} target="_blank" rel="noreferrer" className="flex flex-col items-center gap-0.5 text-emerald-400 active:scale-95 transition">
           <span className="text-base"></span><span className="text-[10px]">WhatsApp</span>
         </a>
         <Link to="/doctors" className="flex flex-col items-center gap-0.5 text-sky-400 active:scale-95 transition">

@@ -245,34 +245,7 @@ export default function SuperAdminDashboard() {
           ))}
         </div>
 
-        {/* Sistem qeydi */}
-        <div style={{
-          background: "var(--surface)", border: "1px solid var(--border)",
-          borderRadius: 16, padding: "18px 22px", display: "flex", gap: 15,
-        }}>
-          <div style={{
-            width: 38, height: 38, borderRadius: 11, flexShrink: 0,
-            background: ACCENT_SOFT, border: `1px solid ${ACCENT_BORDER}`,
-            display: "flex", alignItems: "center", justifyContent: "center",
-          }}>
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={ACCENT} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d={ICONS.terminal} />
-            </svg>
-          </div>
-          <div>
-            <p style={{ fontSize: "0.85rem", fontWeight: 800, margin: "0 0 5px", color: "var(--text-dark)" }}>
-              Rol iyerarxiyası
-            </p>
-            <p style={{ fontSize: "0.79rem", color: "var(--text-light)", margin: 0, lineHeight: 1.65 }}>
-              Super Admin → Admin → Həkim/Pasiyent. Heç bir rol özündən yüksək hesab yarada bilmir.
-              İlk super admin yalnız serverdə{" "}
-              <code style={{ background: "var(--bg)", padding: "2px 7px", borderRadius: 5, fontSize: "0.75rem", fontWeight: 700 }}>
-                php artisan hms:reset-superadmin
-              </code>{" "}
-              komandası ilə yaradılır.
-            </p>
-          </div>
-        </div>
+     
       </main>
     </div>
   );

@@ -7,9 +7,14 @@ use App\Http\Controllers\Controller;
 use App\Models\CallLog;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Services\ChatService;
+use App\Events\MessageSent;
 
 class CallController extends Controller
 {
+    public function __construct(
+        private ChatService $chatService
+    ) {}
     public function signal(Request $request): JsonResponse
     {
         $data = $request->validate([
@@ -19,6 +24,7 @@ class CallController extends Controller
         ]);
 
         $me = $request->user();
+        $me->loadMissing(['doctor', 'patient']);
         $toId = (int) $data['to_user_id'];
 
         if ($data['type'] === 'offer') {
@@ -37,16 +43,26 @@ class CallController extends Controller
             ]);
         } elseif ($data['type'] === 'end') {
             $call = $this->latestCall($me->id, $toId);
-            $call?->update([
-                'status' => $call->status === 'ringing' ? 'missed' : 'ended',
-                'ended_at' => now(),
-            ]);
+            if ($call && $call->status === 'ringing') {
+                $call->update(['status' => 'missed', 'ended_at' => now()]);
+                $data['type'] = 'missed'; // Send 'missed' to receiver
+                
+                // Söhbətə "Buraxılmış zəng" mesajı əlavə edirik
+                $conversation = $this->chatService->findOrCreate($me, $toId);
+                $message = $this->chatService->sendMessage($conversation, $me, '[MISSED_CALL]');
+                broadcast(new MessageSent($message))->toOthers();
+            } else {
+                $call?->update(['status' => 'ended', 'ended_at' => now()]);
+            }
         }
+
+        $photo = $me->doctor?->photo ?? $me->patient?->photo;
 
         broadcast(new CallSignal(
             toUserId: $toId,
             fromUserId: $me->id,
             fromName: $me->name,
+            fromPhoto: $photo,
             type: $data['type'],
             payload: $data['payload'] ?? null,
         ));

@@ -24,6 +24,10 @@ class AppointmentResource extends JsonResource
             'patient' => $this->whenLoaded('patient', fn () => [
                 'id' => $this->patient->id,
                 'name' => $this->patient->user?->name,
+                'blood_group' => $this->patient->blood_group,
+                'allergies' => $this->patient->allergies,
+                'chronic_diseases' => $this->patient->chronic_diseases,
+                'past_diseases' => $this->patient->past_diseases,
             ]),
         ];
     }

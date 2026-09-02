@@ -2,7 +2,10 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './index.css'
+import './i18n.js'
 import { ThemeProvider } from './context/ThemeContext.jsx'
+import { SettingsProvider } from './context/SettingsContext.jsx'
+import GlobalCallHandler from './components/GlobalCallHandler.jsx'
 
 import Home from './pages/Home.jsx'
 import Login from './pages/Login.jsx'
@@ -41,62 +44,69 @@ import ManageAdmins from './pages/admin/ManageAdmins.jsx'
 import ContactMessages from './pages/admin/ContactMessages.jsx'
 import MyReviews from './pages/patient/MyReviews.jsx'
 import ManageReviews from './pages/admin/ManageReviews.jsx'
+import ManageSettings from './pages/admin/ManageSettings.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <ThemeProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/departments" element={<Departments />} />
-          <Route path="/doctors" element={<Doctors />} />
-          <Route path="/doctors/:id" element={<DoctorDetail />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
+      <SettingsProvider>
+        <BrowserRouter>
+          <GlobalCallHandler>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/departments" element={<Departments />} />
+              <Route path="/doctors" element={<Doctors />} />
+              <Route path="/doctors/:id" element={<DoctorDetail />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
 
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
 
-          <Route element={<ProtectedRoute allowedRole="patient"><PatientLayout /></ProtectedRoute>}>
-            <Route path="/patient" element={<PatientDashboard />} />
-            <Route path="/patient/book" element={<BookAppointment />} />
-            <Route path="/patient/appointments" element={<MyAppointments />} />
-            <Route path="/patient/history" element={<MedicalHistory />} />
-            <Route path="/patient/lab-tests" element={<MyLabTests />} />
-            <Route path="/patient/reviews" element={<MyReviews />} />
-          </Route>
-          <Route element={<ProtectedRoute allowedRole="doctor"><DoctorLayout /></ProtectedRoute>}>
-            <Route path="/doctor" element={<DoctorDashboard />} />
-            <Route path="/doctor/appointments" element={<DoctorAppointments />} />
-            <Route path="/doctor/schedule" element={<DoctorSchedule />} />
-            <Route path="/doctor/records/new" element={<WriteMedicalRecord />} />
-            <Route path="/doctor/lab-tests" element={<UploadLabTest />} />
-          </Route>
-          <Route element={<ProtectedRoute allowedRole="admin"><AdminLayout /></ProtectedRoute>}>
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/admin/departments" element={<ManageDepartments />} />
-            <Route path="/admin/doctors" element={<ManageDoctors />} />
-            <Route path="/admin/patients" element={<ManagePatients />} />
-            <Route path="/admin/messages" element={<ContactMessages />} />
-            <Route path="/admin/analytics" element={<Analytics />} />
-            <Route path="/admin/reviews" element={<ManageReviews />} />
-          </Route>
+              <Route element={<ProtectedRoute allowedRole="patient"><PatientLayout /></ProtectedRoute>}>
+                <Route path="/patient" element={<PatientDashboard />} />
+                <Route path="/patient/book" element={<BookAppointment />} />
+                <Route path="/patient/appointments" element={<MyAppointments />} />
+                <Route path="/patient/history" element={<MedicalHistory />} />
+                <Route path="/patient/lab-tests" element={<MyLabTests />} />
+                <Route path="/patient/reviews" element={<MyReviews />} />
+              </Route>
+              <Route element={<ProtectedRoute allowedRole="doctor"><DoctorLayout /></ProtectedRoute>}>
+                <Route path="/doctor" element={<DoctorDashboard />} />
+                <Route path="/doctor/appointments" element={<DoctorAppointments />} />
+                <Route path="/doctor/schedule" element={<DoctorSchedule />} />
+                <Route path="/doctor/records/new" element={<WriteMedicalRecord />} />
+                <Route path="/doctor/lab-tests" element={<UploadLabTest />} />
+              </Route>
+              <Route element={<ProtectedRoute allowedRole="admin"><AdminLayout /></ProtectedRoute>}>
+                <Route path="/admin" element={<AdminDashboard />} />
+                <Route path="/admin/departments" element={<ManageDepartments />} />
+                <Route path="/admin/doctors" element={<ManageDoctors />} />
+                <Route path="/admin/patients" element={<ManagePatients />} />
+                <Route path="/admin/messages" element={<ContactMessages />} />
+                <Route path="/admin/analytics" element={<Analytics />} />
+                <Route path="/admin/reviews" element={<ManageReviews />} />
+                <Route path="/admin/settings" element={<ManageSettings />} />
+              </Route>
 
-          <Route element={<ProtectedRoute allowedRole="super_admin"><AdminLayout /></ProtectedRoute>}>
-            <Route path="/admin/super" element={<SuperAdminDashboard />} />
-            <Route path="/admin/admins" element={<ManageAdmins />} />
-          </Route>
+              <Route element={<ProtectedRoute allowedRole="super_admin"><AdminLayout /></ProtectedRoute>}>
+                <Route path="/admin/super" element={<SuperAdminDashboard />} />
+                <Route path="/admin/admins" element={<ManageAdmins />} />
+                <Route path="/admin/settings" element={<ManageSettings />} />
+              </Route>
 
-          <Route path="/chat" element={
-            <ProtectedRoute><Chat /></ProtectedRoute>
-          } />
-          <Route path="/ai" element={<AiAssistant />
-          } />
-        </Routes>
-        <AiWidget />
-      </BrowserRouter>
+              <Route path="/chat" element={
+                <ProtectedRoute><Chat /></ProtectedRoute>
+              } />
+              <Route path="/ai" element={<AiAssistant />
+              } />
+            </Routes>
+            <AiWidget />
+          </GlobalCallHandler>
+        </BrowserRouter>
+      </SettingsProvider>
     </ThemeProvider>
   </StrictMode>,
 )

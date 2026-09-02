@@ -160,24 +160,38 @@ export default function WriteMedicalRecord() {
                 <div style={{
                   marginTop: 14, padding: "14px 18px", borderRadius: 14,
                   background: "var(--primary-light)", border: "1px solid var(--secondary-light)",
-                  display: "flex", alignItems: "center", gap: 14
+                  display: "flex", flexDirection: "column", gap: 14
                 }}>
-                  <div style={{
-                    width: 44, height: 44, borderRadius: "50%", flexShrink: 0,
-                    background: "linear-gradient(135deg, #C62828 0%, #8B1A1A 100%)",
-                    color: "#FFFFFF", display: "flex", alignItems: "center",
-                    justifyContent: "center", fontSize: "0.9rem", fontWeight: 900
-                  }}>
-                    {selected.patient?.name?.charAt(0)?.toUpperCase() || "?"}
+                  <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                    <div style={{
+                      width: 44, height: 44, borderRadius: "50%", flexShrink: 0,
+                      background: "linear-gradient(135deg, #C62828 0%, #8B1A1A 100%)",
+                      color: "#FFFFFF", display: "flex", alignItems: "center",
+                      justifyContent: "center", fontSize: "0.9rem", fontWeight: 900
+                    }}>
+                      {selected.patient?.name?.charAt(0)?.toUpperCase() || "?"}
+                    </div>
+                    <div style={{ minWidth: 0 }}>
+                      <p style={{ fontSize: "0.92rem", fontWeight: 800, margin: 0, color: "var(--text-dark)" }}>
+                        {selected.patient?.name}
+                      </p>
+                      <p style={{ fontSize: "0.8rem", color: "var(--text-mid)", margin: "3px 0 0" }}>
+                        {selected.date} · {selected.time}
+                        {selected.reason && ` · “${selected.reason}”`}
+                      </p>
+                    </div>
                   </div>
-                  <div style={{ minWidth: 0 }}>
-                    <p style={{ fontSize: "0.92rem", fontWeight: 800, margin: 0, color: "var(--text-dark)" }}>
-                      {selected.patient?.name}
+                  
+                  <div style={{ padding: "12px", background: "rgba(255,255,255,0.7)", borderRadius: 12, border: "1px solid rgba(0,0,0,0.05)" }}>
+                    <p style={{ fontSize: "0.75rem", fontWeight: 800, color: "var(--primary)", margin: "0 0 8px 0", textTransform: "uppercase", letterSpacing: "0.5px" }}>
+                      Pasiyentin Anamnez Məlumatları
                     </p>
-                    <p style={{ fontSize: "0.8rem", color: "var(--text-mid)", margin: "3px 0 0" }}>
-                      {selected.date} · {selected.time}
-                      {selected.reason && ` · “${selected.reason}”`}
-                    </p>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px 12px", fontSize: "0.8rem" }}>
+                      <div><span style={{ color: "var(--text-light)" }}>Allergiyalar:</span> <strong style={{ color: selected.patient?.allergies ? "#d97706" : "var(--text-dark)" }}>{selected.patient?.allergies || "Qeyd olunmayıb"}</strong></div>
+                      <div><span style={{ color: "var(--text-light)" }}>Qan Qrupu:</span> <strong>{selected.patient?.blood_group || "Qeyd olunmayıb"}</strong></div>
+                      <div><span style={{ color: "var(--text-light)" }}>Xroniki Xəstəliklər:</span> <strong>{selected.patient?.chronic_diseases || "Qeyd olunmayıb"}</strong></div>
+                      <div><span style={{ color: "var(--text-light)" }}>Keçirilmiş Xəstəliklər:</span> <strong>{selected.patient?.past_diseases || "Qeyd olunmayıb"}</strong></div>
+                    </div>
                   </div>
                 </div>
               )}

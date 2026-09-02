@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation, Outlet } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
+import { useUnreadCount } from "../hooks/useUnreadCount";
 
 export default function AdminLayout() {
   const navigate = useNavigate();
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
+  const unreadCount = useUnreadCount();
 
   const role = localStorage.getItem("role");
   const isSuper = role === "super_admin";
@@ -16,7 +18,7 @@ export default function AdminLayout() {
     navigate("/login");
   };
 
-  const menuItems = [
+    const menuItems = [
     { to: isSuper ? "/admin/super" : "/admin", label: "İdarəetmə Paneli" },
     { to: "/admin/departments", label: "Şöbələr" },
     { to: "/admin/doctors", label: "Həkimlər" },
@@ -24,6 +26,7 @@ export default function AdminLayout() {
     { to: "/admin/analytics", label: "Analitika" },
     { to: "/admin/messages", label: "Mesajlar" },
     { to: "/admin/reviews", label: "Rəylər" },
+    { to: "/admin/settings", label: "Tənzimləmələr" },
   ];
 
   if (isSuper) {
@@ -113,6 +116,7 @@ export default function AdminLayout() {
                   style={{
                     display: "flex",
                     alignItems: "center",
+                    justifyContent: "space-between",
                     gap: 12,
                     padding: "12px 16px",
                     borderRadius: 12,
@@ -131,7 +135,24 @@ export default function AdminLayout() {
                      if (!isActive && isSuper) e.currentTarget.style.background = "transparent";
                   }}
                 >
-                  <span>{item.label}</span>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                    <span>{item.label}</span>
+                  </div>
+                  {item.to === "/admin/messages" && unreadCount > 0 && (
+                    <span style={{
+                      background: theme === "dark" ? "#EF4444" : "#DC2626",
+                      color: "#FFFFFF",
+                      fontSize: "0.7rem",
+                      fontWeight: 900,
+                      padding: "2px 8px",
+                      borderRadius: 12,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center"
+                    }}>
+                      {unreadCount}
+                    </span>
+                  )}
                 </Link>
               );
             })}

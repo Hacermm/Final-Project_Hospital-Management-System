@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import api from "../lib/api";
 import Navbar from "../components/Navbar";
-
+import { useTranslation } from "react-i18next";
 
 
 const FALLBACK_AVATARS = [
@@ -13,6 +13,7 @@ const FALLBACK_AVATARS = [
 ];
 
 export default function Doctors() {
+  const { t } = useTranslation();
   const [doctors, setDoctors] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [searchParams] = useSearchParams();
@@ -46,7 +47,7 @@ export default function Doctors() {
     if (e) e.stopPropagation();
     if (!token) navigate("/login");
     else if (role === "patient") navigate(`/patient/book?doctor_id=${docId}`);
-    else alert("Randevu almaq üçün pasiyent hesabınızla giriş etməlisiniz.");
+    else alert(t("Randevu almaq üçün pasiyent hesabınızla giriş etməlisiniz."));
   };
 
   return (
@@ -63,18 +64,18 @@ export default function Doctors() {
             padding: "5px 16px", fontSize: "0.72rem", fontWeight: 800,
             letterSpacing: "1px", color: "var(--primary)", marginBottom: 12,
           }}>
-            PEŞƏKAR MÜTƏXƏSSİS HEYƏTİ
+            {t("PEŞƏKAR MÜTƏXƏSSİS HEYƏTİ")}
           </span>
 
           <h1 style={{
             fontSize: "clamp(1.8rem, 3.2vw, 2.4rem)", fontWeight: 900,
             lineHeight: 1.2, letterSpacing: "-0.8px", color: "var(--text-dark)", marginBottom: 8,
           }}>
-            Həkimlərimiz
+            {t("Həkimlərimiz")}
           </h1>
 
           <p style={{ fontSize: "0.98rem", color: "var(--text-mid)", maxWidth: 560 }}>
-            İxtisas üzrə həkim axtarın, təcrübələri ilə tanış olun və birbaşa randevu alın.
+            {t("İxtisas üzrə həkim axtarın, təcrübələri ilə tanış olun və birbaşa randevu alın.")}
           </p>
         </div>
 
@@ -98,25 +99,25 @@ export default function Doctors() {
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Həkim adı və ya ixtisas..."
+              placeholder={t("Həkim adı və ya ixtisas...")}
               className="ac-input"
               style={{ paddingLeft: 42 }}
             />
           </div>
 
           <select value={selectedDept} onChange={(e) => setSelectedDept(e.target.value)} className="ac-input" style={{ cursor: "pointer" }}>
-            <option value="">Bütün Şöbələr</option>
-            {departments.map((d) => (<option key={d.id} value={d.id}>{d.name}</option>))}
+            <option value="">{t("Bütün Şöbələr")}</option>
+            {departments.map((d) => (<option key={d.id} value={d.id}>{t(d.name)}</option>))}
           </select>
 
           <div style={{ fontSize: "0.85rem", color: "var(--text-light)", fontWeight: 700, whiteSpace: "nowrap", textAlign: "center" }}>
-            {filtered.length} həkim
+            {filtered.length} {t("həkim")}
             {(search || selectedDept) && (
               <button
                 onClick={() => { setSearch(""); setSelectedDept(""); }}
                 style={{ display: "block", marginTop: 4, background: "none", border: "none", color: "var(--primary)", fontWeight: 700, fontSize: "0.8rem", cursor: "pointer" }}
               >
-                Sıfırla
+                {t("Sıfırla")}
               </button>
             )}
           </div>
@@ -126,7 +127,7 @@ export default function Doctors() {
       <main style={{ maxWidth: 1240, margin: "0 auto", padding: "36px 24px 80px", width: "100%", flex: 1 }}>
         {loading && (
           <div style={{ padding: "80px 0", textAlign: "center", color: "var(--text-light)", fontWeight: 700, fontSize: "0.95rem" }} className="animate-pulse">
-            Həkimlər yüklənir...
+            {t("Həkimlər yüklənir...")}
           </div>
         )}
 
@@ -232,23 +233,23 @@ export default function Doctors() {
                   >
                     <div>
                       <span style={{ fontSize: "0.72rem", fontWeight: 800, color: "#FFCDD2", background: "rgba(255,255,255,0.15)", padding: "4px 12px", borderRadius: 20, display: "inline-block", marginBottom: 10 }}>
-                        {doc.department?.name || "Tibb Mərkəzi"}
+                        {doc.department?.name ? t(doc.department.name) : t("Tibb Mərkəzi")}
                       </span>
                       <h3 style={{ fontSize: "1.2rem", fontWeight: 800, color: "#FFFFFF", marginBottom: 4 }}>
                         {doc.name}
                       </h3>
                       <p style={{ fontSize: "0.85rem", fontWeight: 700, color: "#90CAF9", marginBottom: 14 }}>
-                        {doc.specialization}
+                        {doc.specialization ? t(doc.specialization) : ""}
                       </p>
                       <p style={{ fontSize: "0.82rem", color: "rgba(255,255,255,0.85)", lineHeight: 1.5, display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
-                        {doc.bio || `${doc.name} NovaCare tibb mərkəzində pasiyentlərə peşəkar xidmət göstərir.`}
+                        {doc.bio ? t(doc.bio) : `${doc.name} ${t("NovaCare tibb mərkəzində pasiyentlərə peşəkar xidmət göstərir.")}`}
                       </p>
                     </div>
 
                     <div>
                       <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.82rem", color: "rgba(255,255,255,0.9)", marginBottom: 14, paddingTop: 10, borderTop: "1px solid rgba(255,255,255,0.2)" }}>
-                        <span>Təcrübə: <strong>{doc.experience_years} il</strong></span>
-                        <span>Qəbul: <strong style={{ color: "#FFCDD2" }}>{doc.consultation_fee} AZN</strong></span>
+                        <span>{t("Təcrübə:")} <strong>{doc.experience_years} {t("il")}</strong></span>
+                        <span>{t("Qəbul:")} <strong style={{ color: "#FFCDD2" }}>{doc.consultation_fee} AZN</strong></span>
                       </div>
                       
                       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
@@ -267,7 +268,7 @@ export default function Doctors() {
                             background: "rgba(255,255,255,0.1)",
                           }}
                         >
-                          Ətraflı
+                          {t("Ətraflı")}
                         </Link>
                         <button
                           onClick={(e) => handleBook(doc.id, e)}
@@ -282,7 +283,7 @@ export default function Doctors() {
                             cursor: "pointer",
                           }}
                         >
-                          Randevu Al
+                          {t("Randevu Al")}
                         </button>
                       </div>
                     </div>
@@ -326,14 +327,14 @@ export default function Doctors() {
         {!loading && filtered.length === 0 && (
           <div className="ac-card" style={{ padding: "60px 30px", textAlign: "center", maxWidth: 440, margin: "40px auto" }}>
             <div style={{ fontSize: "3rem", marginBottom: 16 }}></div>
-            <h3 style={{ fontWeight: 800, fontSize: "1.1rem", color: "var(--text-dark)", marginBottom: 8 }}>Həkim Tapılmadı</h3>
-            <p style={{ fontSize: "0.85rem", color: "var(--text-light)", marginBottom: 20 }}>Axtarış meyarlarınıza uyğun heç bir mütəxəssis tapılmadı.</p>
+            <h3 style={{ fontWeight: 800, fontSize: "1.1rem", color: "var(--text-dark)", marginBottom: 8 }}>{t("Həkim Tapılmadı")}</h3>
+            <p style={{ fontSize: "0.85rem", color: "var(--text-light)", marginBottom: 20 }}>{t("Axtarış meyarlarınıza uyğun heç bir mütəxəssis tapılmadı.")}</p>
             <button
               onClick={() => { setSearch(""); setSelectedDept(""); }}
               className="ac-btn"
               style={{ padding: "10px 24px", fontSize: "0.85rem" }}
             >
-              Sıfırla
+              {t("Sıfırla")}
             </button>
           </div>
         )}
@@ -342,16 +343,16 @@ export default function Doctors() {
     
       <section style={{ background: "linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%)", color: "#FFFFFF", padding: "64px 24px", textAlign: "center" }}>
         <div style={{ maxWidth: 680, margin: "0 auto" }}>
-          <h2 style={{ fontSize: "2rem", fontWeight: 900, marginBottom: 14 }}>Həkiminizlə Onlayn Əlaqə Saxlayın</h2>
+          <h2 style={{ fontSize: "2rem", fontWeight: 900, marginBottom: 14 }}>{t("Həkiminizlə Onlayn Əlaqə Saxlayın")}</h2>
           <p style={{ color: "rgba(255,255,255,0.9)", fontSize: "1rem", lineHeight: 1.65, marginBottom: 28 }}>
-            Saniyələr ərzində randevu təyin edin və ya canlı çat vasitəsilə həkiminizə suallarınızı ünvanlayın.
+            {t("Saniyələr ərzində randevu təyin edin və ya canlı çat vasitəsilə həkiminizə suallarınızı ünvanlayın.")}
           </p>
           <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}>
             <Link to="/patient/book" style={{ background: "#FFFFFF", color: "var(--primary)", fontWeight: 800, padding: "14px 32px", borderRadius: 12, textDecoration: "none", fontSize: "0.95rem", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
-              Randevu Al
+              {t("Randevu Al")}
             </Link>
             <Link to="/chat" style={{ background: "transparent", border: "2px solid #FFFFFF", color: "#FFFFFF", fontWeight: 700, padding: "14px 28px", borderRadius: 12, textDecoration: "none", fontSize: "0.95rem" }}>
-              Canlı Çat
+              {t("Canlı Çat")}
             </Link>
           </div>
         </div>
@@ -371,36 +372,36 @@ export default function Doctors() {
                 <span style={{ fontWeight: 900, color: "#FFFFFF", fontSize: "1.2rem" }}>NovaCare</span>
               </div>
               <p style={{ fontSize: "0.88rem", color: "rgba(255,255,255,0.65)", lineHeight: 1.7, maxWidth: 300 }}>
-                Müasir xəstəxana idarəetmə sistemi — peşəkar həkimlər, onlayn randevu və rəqəmsal səhiyyə xidmətləri.
+                {t("Müasir xəstəxana idarəetmə sistemi — peşəkar həkimlər, onlayn randevu və rəqəmsal səhiyyə xidmətləri.")}
               </p>
             </div>
 
             <div>
-              <div className="ac-footer-title">Xidmətlər</div>
-              <Link to="/departments" className="ac-footer-link">Şöbələr</Link>
-              <Link to="/doctors" className="ac-footer-link">Həkimlər</Link>
-              <Link to="/patient/book" className="ac-footer-link">Randevu Al</Link>
-              <Link to="/ai" className="ac-footer-link">AI Assistent</Link>
+              <div className="ac-footer-title">{t("Xidmətlər")}</div>
+              <Link to="/departments" className="ac-footer-link">{t("Şöbələr")}</Link>
+              <Link to="/doctors" className="ac-footer-link">{t("Həkimlər")}</Link>
+              <Link to="/patient/book" className="ac-footer-link">{t("Randevu Al")}</Link>
+              <Link to="/ai" className="ac-footer-link">{t("AI")}</Link>
             </div>
 
             <div>
-              <div className="ac-footer-title">Platforma</div>
-              <Link to="/about" className="ac-footer-link">Haqqımızda</Link>
-              <Link to="/contact" className="ac-footer-link">Əlaqə</Link>
-              <Link to="/login" className="ac-footer-link">Giriş</Link>
-              <Link to="/register" className="ac-footer-link">Qeydiyyat</Link>
+              <div className="ac-footer-title">{t("Platforma")}</div>
+              <Link to="/about" className="ac-footer-link">{t("Haqqımızda")}</Link>
+              <Link to="/contact" className="ac-footer-link">{t("Əlaqə")}</Link>
+              <Link to="/login" className="ac-footer-link">{t("Giriş")}</Link>
+              <Link to="/register" className="ac-footer-link">{t("Qeydiyyat")}</Link>
             </div>
 
             <div>
-              <div className="ac-footer-title">Əlaqə</div>
+              <div className="ac-footer-title">{t("Əlaqə")}</div>
               <a href="tel:+994123456789" className="ac-footer-link">+994 (12) 345 67 89</a>
               <a href="mailto:info@novacare.az" className="ac-footer-link">info@novacare.az</a>
-              <span className="ac-footer-link" style={{ cursor: "default" }}>Bakı ş., Azərbaycan</span>
+              <span className="ac-footer-link" style={{ cursor: "default" }}>{t("Bakı ş., Azərbaycan")}</span>
             </div>
           </div>
 
           <div className="ac-footer-bottom">
-            © 2026 NovaCare Hospital. Bütün hüquqlar qorunur.
+            {t("© 2026 NovaCare Hospital. Bütün hüquqlar qorunur.")}
           </div>
         </div>
       </footer>

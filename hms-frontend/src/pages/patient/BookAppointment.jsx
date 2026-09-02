@@ -68,9 +68,6 @@ export default function BookAppointment() {
 
         {/* Title Card */}
         <div className="ac-card" style={{ padding: "32px 36px", marginBottom: 28, background: "linear-gradient(135deg, #7F1D1D 0%, #B71C1C 100%)", color: "#FFFFFF" }}>
-          <div style={{ display: "inline-block", padding: "4px 14px", borderRadius: 20, background: "rgba(255,255,255,0.15)", fontSize: "0.75rem", fontWeight: 800, letterSpacing: "1px", textTransform: "uppercase", marginBottom: 12 }}>
-            ONLAYN QUZEY
-          </div>
           <h1 style={{ fontSize: "1.8rem", fontWeight: 900, marginBottom: 8, letterSpacing: "-0.5px" }}>Həkim Qəbuluna Yazılın</h1>
           <p style={{ fontSize: "0.92rem", color: "rgba(255,255,255,0.85)", margin: 0 }}>
             İstədiyiniz tibbi şöbə və mütəxəssisi seçərək uyğun iş saatına onlayn randevu təyin edin.
